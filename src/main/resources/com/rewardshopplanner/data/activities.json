@@ -1,0 +1,1460 @@
+[
+    {
+        "id":  "barbarian_assault",
+        "name":  "Barbarian Assault",
+        "clogTab":  "Minigames",
+        "clogPage":  "Barbarian Assault",
+        "currencies":  [
+                           "ba_attacker",
+                           "ba_collector",
+                           "ba_healer",
+                           "ba_defender",
+                           "coins"
+                       ],
+        "clogItems":  [
+                          "Pet Penance Queen",
+                          "Fighter hat",
+                          "Ranger hat",
+                          "Runner hat",
+                          "Healer hat",
+                          "Fighter torso",
+                          "Penance skirt",
+                          "Runner boots",
+                          "Penance gloves",
+                          "Granite helm",
+                          "Granite body"
+                      ],
+        "clogItemIds":  [
+                            12703,
+                            10548,
+                            10550,
+                            10549,
+                            10547,
+                            10551,
+                            10555,
+                            10552,
+                            10553,
+                            10589,
+                            10564
+                        ],
+        "counts":  {
+                       "total":  11,
+                       "purchasable":  9,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  2
+                   },
+        "totalCost":  {
+                          "ba_attacker":  2100,
+                          "ba_collector":  2100,
+                          "ba_healer":  2100,
+                          "ba_defender":  2100,
+                          "coins":  95000
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "brimhaven_agility",
+        "name":  "Brimhaven Agility Arena",
+        "clogTab":  "Minigames",
+        "clogPage":  "Brimhaven Agility Arena",
+        "currencies":  [
+                           "brimhaven_voucher"
+                       ],
+        "clogItems":  [
+                          "Agility arena ticket",
+                          "Brimhaven voucher",
+                          "Pirate\u0027s hook",
+                          "Graceful hood (Agility Arena)",
+                          "Graceful top (Agility Arena)",
+                          "Graceful legs (Agility Arena)",
+                          "Graceful gloves (Agility Arena)",
+                          "Graceful boots (Agility Arena)",
+                          "Graceful cape (Agility Arena)"
+                      ],
+        "clogItemIds":  [
+                            29480,
+                            29482,
+                            2997,
+                            21061,
+                            21067,
+                            21070,
+                            21073,
+                            21076,
+                            21064
+                        ],
+        "counts":  {
+                       "total":  9,
+                       "purchasable":  7,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  2
+                   },
+        "totalCost":  {
+                          "brimhaven_voucher":  1050
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "castle_wars",
+        "name":  "Castle Wars",
+        "clogTab":  "Minigames",
+        "clogPage":  "Castle Wars",
+        "currencies":  [
+                           "cw_ticket"
+                       ],
+        "clogItems":  [
+                          "Decorative helm (red)",
+                          "Decorative full helm (red)",
+                          "Decorative armour (red platebody)",
+                          "Decorative sword (red)",
+                          "Decorative shield (red)",
+                          "Decorative armour (red platelegs)",
+                          "Decorative armour (red plateskirt)",
+                          "Decorative boots (red)",
+                          "Decorative helm (white)",
+                          "Decorative full helm (white)",
+                          "Decorative armour (white platebody)",
+                          "Decorative sword (white)",
+                          "Decorative shield (white)",
+                          "Decorative armour (white platelegs)",
+                          "Decorative armour (white plateskirt)",
+                          "Decorative boots (white)",
+                          "Decorative helm (gold)",
+                          "Decorative full helm (gold)",
+                          "Decorative armour (gold platebody)",
+                          "Decorative sword (gold)",
+                          "Decorative shield (gold)",
+                          "Decorative armour (gold platelegs)",
+                          "Decorative armour (gold plateskirt)",
+                          "Decorative boots (gold)",
+                          "Castlewars hood (Saradomin)",
+                          "Castlewars cloak (Saradomin)",
+                          "Castlewars hood (Zamorak)",
+                          "Castlewars cloak (Zamorak)",
+                          "Saradomin banner",
+                          "Zamorak banner",
+                          "Decorative armour (magic hat)",
+                          "Decorative armour (magic top)",
+                          "Decorative armour (magic legs)",
+                          "Decorative armour (ranged top)",
+                          "Decorative armour (ranged legs)",
+                          "Decorative armour (quiver)",
+                          "Saradomin halo",
+                          "Zamorak halo",
+                          "Guthix halo"
+                      ],
+        "clogItemIds":  [
+                            4071,
+                            25165,
+                            4069,
+                            4068,
+                            4072,
+                            4070,
+                            11893,
+                            25163,
+                            4506,
+                            25169,
+                            4504,
+                            4503,
+                            4507,
+                            4505,
+                            11894,
+                            25167,
+                            20489,
+                            25157,
+                            20485,
+                            20483,
+                            20491,
+                            20487,
+                            20493,
+                            25155,
+                            4513,
+                            4514,
+                            4515,
+                            4516,
+                            11891,
+                            11892,
+                            20499,
+                            20495,
+                            20497,
+                            20501,
+                            20503,
+                            20505,
+                            12637,
+                            12638,
+                            12639
+                        ],
+        "counts":  {
+                       "total":  39,
+                       "purchasable":  39,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "cw_ticket":  5539
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "fishing_trawler",
+        "name":  "Fishing Trawler",
+        "clogTab":  "Minigames",
+        "clogPage":  "Fishing Trawler",
+        "currencies":  [
+                           "molch_pearl"
+                       ],
+        "clogItems":  [
+                          "Angler hat",
+                          "Angler top",
+                          "Angler waders",
+                          "Angler boots"
+                      ],
+        "clogItemIds":  [
+                            13258,
+                            13259,
+                            13260,
+                            13261
+                        ],
+        "counts":  {
+                       "total":  4,
+                       "purchasable":  4,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "molch_pearl":  200
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "giants_foundry",
+        "name":  "Giants\u0027 Foundry",
+        "clogTab":  "Minigames",
+        "clogPage":  "Giants\u0027 Foundry",
+        "currencies":  [
+                           "foundry_rep"
+                       ],
+        "clogItems":  [
+                          "Smiths tunic",
+                          "Smiths trousers",
+                          "Smiths boots",
+                          "Smiths gloves",
+                          "Colossal blade",
+                          "Double ammo mould",
+                          "Kovac\u0027s grog",
+                          "Smithing catalyst",
+                          "Ore pack (Giants\u0027 Foundry)"
+                      ],
+        "clogItemIds":  [
+                            27023,
+                            27025,
+                            27027,
+                            27029,
+                            27021,
+                            27012,
+                            27014,
+                            27017,
+                            27019
+                        ],
+        "counts":  {
+                       "total":  9,
+                       "purchasable":  9,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "foundry_rep":  22515
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "gotr",
+        "name":  "Guardians of the Rift",
+        "clogTab":  "Minigames",
+        "clogPage":  "Guardians of the Rift",
+        "currencies":  [
+                           "abyssal_pearls"
+                       ],
+        "clogItems":  [
+                          "Abyssal protector",
+                          "Abyssal pearls",
+                          "Catalytic talisman",
+                          "Abyssal needle",
+                          "Abyssal green dye",
+                          "Abyssal blue dye",
+                          "Abyssal red dye",
+                          "Hat of the Eye",
+                          "Robe top of the Eye",
+                          "Robe bottoms of the Eye",
+                          "Boots of the Eye",
+                          "Ring of the elements",
+                          "Abyssal lantern",
+                          "Guardian\u0027s eye",
+                          "Intricate pouch",
+                          "Lost bag",
+                          "Tarnished locket"
+                      ],
+        "clogItemIds":  [
+                            26901,
+                            26792,
+                            26798,
+                            26813,
+                            26807,
+                            26809,
+                            26811,
+                            26850,
+                            26852,
+                            26854,
+                            26856,
+                            26818,
+                            26822,
+                            26820,
+                            26908,
+                            26984,
+                            26910
+                        ],
+        "counts":  {
+                       "total":  17,
+                       "purchasable":  8,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  9
+                   },
+        "totalCost":  {
+                          "abyssal_pearls":  7000
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "hallowed_sepulchre",
+        "name":  "Hallowed Sepulchre",
+        "clogTab":  "Minigames",
+        "clogPage":  "Hallowed Sepulchre",
+        "currencies":  [
+                           "hallowed_mark"
+                       ],
+        "clogItems":  [
+                          "Hallowed mark",
+                          "Hallowed token",
+                          "Hallowed grapple",
+                          "Hallowed focus",
+                          "Hallowed symbol",
+                          "Hallowed hammer",
+                          "Hallowed ring",
+                          "Dark dye",
+                          "Dark acorn",
+                          "Strange old lockpick",
+                          "Ring of endurance",
+                          "Mysterious page"
+                      ],
+        "clogItemIds":  [
+                            24711,
+                            24719,
+                            24721,
+                            24723,
+                            24725,
+                            24727,
+                            24731,
+                            24729,
+                            24733,
+                            24738,
+                            24736,
+                            24763
+                        ],
+        "counts":  {
+                       "total":  12,
+                       "purchasable":  8,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  4
+                   },
+        "totalCost":  {
+                          "hallowed_mark":  3960
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "lms",
+        "name":  "Last Man Standing",
+        "clogTab":  "Minigames",
+        "clogPage":  "Last Man Standing",
+        "currencies":  [
+                           "lms_points"
+                       ],
+        "clogItems":  [
+                          "Deadman\u0027s chest",
+                          "Deadman\u0027s legs",
+                          "Deadman\u0027s cape",
+                          "Armadyl halo",
+                          "Bandos halo",
+                          "Seren halo",
+                          "Ancient halo",
+                          "Brassica halo",
+                          "Animation overrides",
+                          "Victor\u0027s cape (1)",
+                          "Victor\u0027s cape (10)",
+                          "Victor\u0027s cape (50)",
+                          "Victor\u0027s cape (100)",
+                          "Victor\u0027s cape (500)",
+                          "Victor\u0027s cape (1000)",
+                          "Granite clamp",
+                          "Ornate maul handle",
+                          "Steam staff upgrade kit",
+                          "Lava staff upgrade kit",
+                          "Dragon pickaxe upgrade kit",
+                          "Ward upgrade kit",
+                          "Green dark bow paint",
+                          "Yellow dark bow paint",
+                          "White dark bow paint",
+                          "Blue dark bow paint",
+                          "Volcanic whip mix",
+                          "Frozen whip mix",
+                          "Guthixian icon",
+                          "Swift blade"
+                      ],
+        "clogItemIds":  [
+                            13317,
+                            13318,
+                            13319,
+                            24192,
+                            24195,
+                            24198,
+                            24201,
+                            24204,
+                            0,
+                            24207,
+                            24209,
+                            24211,
+                            24213,
+                            24215,
+                            24520,
+                            12849,
+                            24229,
+                            12798,
+                            21202,
+                            12800,
+                            12802,
+                            12759,
+                            12761,
+                            12763,
+                            12757,
+                            12771,
+                            12769,
+                            24217,
+                            24219
+                        ],
+        "counts":  {
+                       "total":  29,
+                       "purchasable":  23,
+                       "random":  0,
+                       "milestone":  6,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "lms_points":  3905
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "mta",
+        "name":  "Mage Training Arena",
+        "clogTab":  "Minigames",
+        "clogPage":  "Magic Training Arena",
+        "currencies":  [
+                           "mta_tele",
+                           "mta_alch",
+                           "mta_ench",
+                           "mta_grave"
+                       ],
+        "clogItems":  [
+                          "Beginner wand",
+                          "Apprentice wand",
+                          "Teacher wand",
+                          "Master wand",
+                          "Infinity hat",
+                          "Infinity top",
+                          "Infinity bottoms",
+                          "Infinity boots",
+                          "Infinity gloves",
+                          "Mage\u0027s book",
+                          "Bones to peaches"
+                      ],
+        "clogItemIds":  [
+                            6908,
+                            6910,
+                            6912,
+                            6914,
+                            6918,
+                            6916,
+                            6924,
+                            6920,
+                            6922,
+                            6889,
+                            8015
+                        ],
+        "counts":  {
+                       "total":  11,
+                       "purchasable":  11,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "mta_tele":  2675,
+                          "mta_alch":  3075,
+                          "mta_ench":  27500,
+                          "mta_grave":  2675
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "mahogany_homes",
+        "name":  "Mahogany Homes",
+        "clogTab":  "Minigames",
+        "clogPage":  "Mahogany Homes",
+        "currencies":  [
+                           "carpenter_points"
+                       ],
+        "clogItems":  [
+                          "Supply crate (Mahogany Homes)",
+                          "Carpenter\u0027s helmet",
+                          "Carpenter\u0027s shirt",
+                          "Carpenter\u0027s trousers",
+                          "Carpenter\u0027s boots",
+                          "Amy\u0027s saw",
+                          "Plank sack",
+                          "Hosidius blueprints"
+                      ],
+        "clogItemIds":  [
+                            24884,
+                            24872,
+                            24874,
+                            24876,
+                            24878,
+                            24880,
+                            24882,
+                            24885
+                        ],
+        "counts":  {
+                       "total":  8,
+                       "purchasable":  8,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "carpenter_points":  4875
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "mixology",
+        "name":  "Mastering Mixology",
+        "clogTab":  "Minigames",
+        "clogPage":  "Mastering Mixology",
+        "currencies":  [
+                           "mox_resin",
+                           "aga_resin",
+                           "lye_resin"
+                       ],
+        "clogItems":  [
+                          "Prescription goggles",
+                          "Alchemist labcoat",
+                          "Alchemist pants",
+                          "Alchemist gloves",
+                          "Alchemist\u0027s amulet",
+                          "Reagent pouch",
+                          "Chugging barrel (disassembled)"
+                      ],
+        "clogItemIds":  [
+                            29974,
+                            29978,
+                            29982,
+                            29986,
+                            29990,
+                            29996,
+                            30002
+                        ],
+        "counts":  {
+                       "total":  7,
+                       "purchasable":  7,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "mox_resin":  53300,
+                          "aga_resin":  46250,
+                          "lye_resin":  61550
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "pest_control",
+        "name":  "Pest Control",
+        "clogTab":  "Minigames",
+        "clogPage":  "Pest Control",
+        "currencies":  [
+                           "pc_points"
+                       ],
+        "clogItems":  [
+                          "Void knight mace",
+                          "Void knight top",
+                          "Void knight robe",
+                          "Void knight gloves",
+                          "Void mage helm",
+                          "Void melee helm",
+                          "Void ranger helm",
+                          "Void seal(8)",
+                          "Elite void top",
+                          "Elite void robe"
+                      ],
+        "clogItemIds":  [
+                            8841,
+                            8839,
+                            8840,
+                            8842,
+                            11663,
+                            11665,
+                            11664,
+                            11666,
+                            13072,
+                            13073
+                        ],
+        "counts":  {
+                       "total":  10,
+                       "purchasable":  10,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "pc_points":  1910
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "soul_wars",
+        "name":  "Soul Wars",
+        "clogTab":  "Minigames",
+        "clogPage":  "Soul Wars",
+        "currencies":  [
+                           "zeal"
+                       ],
+        "clogItems":  [
+                          "Lil\u0027 Creator",
+                          "Soul cape",
+                          "Ectoplasmator"
+                      ],
+        "clogItemIds":  [
+                            25348,
+                            25346,
+                            25340
+                        ],
+        "counts":  {
+                       "total":  3,
+                       "purchasable":  2,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  1
+                   },
+        "totalCost":  {
+                          "zeal":  2750
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "temple_trekking",
+        "name":  "Temple Trekking",
+        "clogTab":  "Minigames",
+        "clogPage":  "Temple Trekking",
+        "currencies":  [
+                           "anima_bark"
+                       ],
+        "clogItems":  [
+                          "Lumberjack hat",
+                          "Lumberjack top",
+                          "Lumberjack legs",
+                          "Lumberjack boots"
+                      ],
+        "clogItemIds":  [
+                            10941,
+                            10939,
+                            10940,
+                            10933
+                        ],
+        "counts":  {
+                       "total":  4,
+                       "purchasable":  4,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "anima_bark":  5000
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "tithe_farm",
+        "name":  "Tithe Farm",
+        "clogTab":  "Minigames",
+        "clogPage":  "Tithe Farm",
+        "currencies":  [
+                           "tithe_points"
+                       ],
+        "clogItems":  [
+                          "Farmer\u0027s strawhat",
+                          "Farmer\u0027s jacket",
+                          "Farmer\u0027s boro trousers",
+                          "Farmer\u0027s boots",
+                          "Seed box",
+                          "Gricoller\u0027s can",
+                          "Herb sack"
+                      ],
+        "clogItemIds":  [
+                            13647,
+                            13642,
+                            13641,
+                            13645,
+                            13639,
+                            13353,
+                            13226
+                        ],
+        "counts":  {
+                       "total":  7,
+                       "purchasable":  7,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "tithe_points":  1100
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "trouble_brewing",
+        "name":  "Trouble Brewing",
+        "clogTab":  "Minigames",
+        "clogPage":  "Trouble Brewing",
+        "currencies":  [
+                           "pieces_of_eight"
+                       ],
+        "clogItems":  [
+                          "Blue naval shirt",
+                          "Blue tricorn hat",
+                          "Blue navy slacks",
+                          "Green naval shirt",
+                          "Green tricorn hat",
+                          "Green navy slacks",
+                          "Red naval shirt",
+                          "Red tricorn hat",
+                          "Red navy slacks",
+                          "Brown naval shirt",
+                          "Brown tricorn hat",
+                          "Brown navy slacks",
+                          "Black naval shirt",
+                          "Black tricorn hat",
+                          "Black navy slacks",
+                          "Purple naval shirt",
+                          "Purple tricorn hat",
+                          "Purple navy slacks",
+                          "Grey naval shirt",
+                          "Grey tricorn hat",
+                          "Grey navy slacks",
+                          "Cutthroat flag",
+                          "Gilded smile flag",
+                          "Bronze fist flag",
+                          "Lucky shot flag",
+                          "Treasure flag",
+                          "Phasmatys flag",
+                          "The stuff",
+                          "Rum (red)",
+                          "Rum (blue)"
+                      ],
+        "clogItemIds":  [
+                            8952,
+                            8959,
+                            8991,
+                            8953,
+                            8960,
+                            8992,
+                            8954,
+                            8961,
+                            8993,
+                            8955,
+                            8962,
+                            8994,
+                            8956,
+                            8963,
+                            8995,
+                            8957,
+                            8964,
+                            8996,
+                            8958,
+                            8965,
+                            8997,
+                            8966,
+                            8967,
+                            8968,
+                            8969,
+                            8970,
+                            8971,
+                            8988,
+                            8940,
+                            8941
+                        ],
+        "counts":  {
+                       "total":  30,
+                       "purchasable":  30,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "pieces_of_eight":  39590
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "vale_totems",
+        "name":  "Vale Totems",
+        "clogTab":  "Minigames",
+        "clogPage":  "Vale Totems",
+        "currencies":  [
+                           "vale_research"
+                       ],
+        "clogItems":  [
+                          "Fletching knife",
+                          "Bow string spool",
+                          "Ent branch",
+                          "Greenman mask"
+                      ],
+        "clogItemIds":  [
+                            31043,
+                            31052,
+                            31032,
+                            31034
+                        ],
+        "counts":  {
+                       "total":  4,
+                       "purchasable":  4,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "vale_research":  1120
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "volcanic_mine",
+        "name":  "Volcanic Mine",
+        "clogTab":  "Minigames",
+        "clogPage":  "Volcanic Mine",
+        "currencies":  [
+                           "vm_points",
+                           "golden_nugget"
+                       ],
+        "clogItems":  [
+                          "Ash covered tome",
+                          "Large water container",
+                          "Volcanic mine teleport",
+                          "Dragon pickaxe (broken)",
+                          "Prospector helmet",
+                          "Prospector jacket",
+                          "Prospector legs",
+                          "Prospector boots"
+                      ],
+        "clogItemIds":  [
+                            21697,
+                            0,
+                            21541,
+                            27695,
+                            12013,
+                            12014,
+                            12015,
+                            12016
+                        ],
+        "counts":  {
+                       "total":  8,
+                       "purchasable":  6,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  2
+                   },
+        "totalCost":  {
+                          "vm_points":  160200
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "tempoross",
+        "name":  "Tempoross",
+        "clogTab":  "Bosses",
+        "clogPage":  "Tempoross",
+        "currencies":  [
+                           "spirit_flakes"
+                       ],
+        "clogItems":  [
+                          "Tiny tempor",
+                          "Big harpoonfish",
+                          "Spirit angler headband",
+                          "Spirit angler top",
+                          "Spirit angler waders",
+                          "Spirit angler boots",
+                          "Tome of Water (empty)",
+                          "Soaked page",
+                          "Tackle box",
+                          "Fish barrel",
+                          "Dragon harpoon",
+                          "Spirit flakes"
+                      ],
+        "clogItemIds":  [
+                            25602,
+                            25559,
+                            25592,
+                            25594,
+                            25596,
+                            25598,
+                            25576,
+                            25578,
+                            25580,
+                            25582,
+                            21028,
+                            25588
+                        ],
+        "counts":  {
+                       "total":  12,
+                       "purchasable":  2,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  10
+                   },
+        "totalCost":  {
+                          "spirit_flakes":  12000
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "aerial_fishing",
+        "name":  "Aerial Fishing",
+        "clogTab":  "Other",
+        "clogPage":  "Aerial Fishing",
+        "currencies":  [
+                           "molch_pearl"
+                       ],
+        "clogItems":  [
+                          "Golden tench",
+                          "Pearl fishing rod",
+                          "Pearl fly fishing rod",
+                          "Pearl barbarian rod",
+                          "Fish sack",
+                          "Angler hat",
+                          "Angler top",
+                          "Angler waders",
+                          "Angler boots"
+                      ],
+        "clogItemIds":  [
+                            22840,
+                            22846,
+                            22844,
+                            22842,
+                            22838,
+                            13258,
+                            13259,
+                            13260,
+                            13261
+                        ],
+        "counts":  {
+                       "total":  9,
+                       "purchasable":  8,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  1
+                   },
+        "totalCost":  {
+                          "molch_pearl":  1070
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "colossal_wyrm",
+        "name":  "Colossal Wyrm Agility",
+        "clogTab":  "Other",
+        "clogPage":  "Colossal Wyrm Agility",
+        "currencies":  [
+                           "termites"
+                       ],
+        "clogItems":  [
+                          "Colossal wyrm teleport scroll",
+                          "Calcified acorn",
+                          "Graceful hood (Varlamore)",
+                          "Graceful top (Varlamore)",
+                          "Graceful legs (Varlamore)",
+                          "Graceful gloves (Varlamore)",
+                          "Graceful boots (Varlamore)",
+                          "Graceful cape (Varlamore)"
+                      ],
+        "clogItemIds":  [
+                            30040,
+                            30042,
+                            30045,
+                            30051,
+                            30054,
+                            30057,
+                            30060,
+                            30048
+                        ],
+        "counts":  {
+                       "total":  8,
+                       "purchasable":  8,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "termites":  1590
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "forestry",
+        "name":  "Forestry",
+        "clogTab":  "Other",
+        "clogPage":  "Forestry",
+        "currencies":  [
+                           "anima_bark",
+                           "pheasant_feather"
+                       ],
+        "clogItems":  [
+                          "Fox whistle",
+                          "Golden pheasant egg",
+                          "Lumberjack hat",
+                          "Lumberjack top",
+                          "Lumberjack legs",
+                          "Lumberjack boots",
+                          "Forestry hat",
+                          "Forestry top",
+                          "Forestry legs",
+                          "Forestry boots",
+                          "Twitcher\u0027s gloves",
+                          "Funky shaped log",
+                          "Log basket",
+                          "Log brace",
+                          "Clothes pouch blueprint",
+                          "Cape pouch",
+                          "Felling axe handle",
+                          "Pheasant hat",
+                          "Pheasant legs",
+                          "Pheasant boots",
+                          "Pheasant cape",
+                          "Petal garland",
+                          "Sturdy beehive parts"
+                      ],
+        "clogItemIds":  [
+                            28626,
+                            28663,
+                            10941,
+                            10939,
+                            10940,
+                            10933,
+                            28173,
+                            28169,
+                            28171,
+                            28175,
+                            28630,
+                            28138,
+                            28140,
+                            28146,
+                            28166,
+                            28613,
+                            28177,
+                            28620,
+                            28622,
+                            28618,
+                            28616,
+                            28655,
+                            28674
+                        ],
+        "counts":  {
+                       "total":  23,
+                       "purchasable":  21,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  2
+                   },
+        "totalCost":  {
+                          "anima_bark":  210500,
+                          "pheasant_feather":  60
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "motherlode_mine",
+        "name":  "Motherlode Mine",
+        "clogTab":  "Other",
+        "clogPage":  "Motherlode Mine",
+        "currencies":  [
+                           "golden_nugget",
+                           "vm_points"
+                       ],
+        "clogItems":  [
+                          "Coal bag",
+                          "Gem bag",
+                          "Prospector helmet",
+                          "Prospector jacket",
+                          "Prospector legs",
+                          "Prospector boots"
+                      ],
+        "clogItemIds":  [
+                            12019,
+                            12020,
+                            12013,
+                            12014,
+                            12015,
+                            12016
+                        ],
+        "counts":  {
+                       "total":  6,
+                       "purchasable":  6,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "golden_nugget":  380
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "rooftop_agility",
+        "name":  "Rooftop Agility",
+        "clogTab":  "Other",
+        "clogPage":  "Rooftop Agility",
+        "currencies":  [
+                           "mark_of_grace"
+                       ],
+        "clogItems":  [
+                          "Mark of Grace",
+                          "Graceful hood",
+                          "Graceful cape",
+                          "Graceful top",
+                          "Graceful legs",
+                          "Graceful gloves",
+                          "Graceful boots"
+                      ],
+        "clogItemIds":  [
+                            11849,
+                            11850,
+                            11852,
+                            11854,
+                            11856,
+                            11858,
+                            11860
+                        ],
+        "counts":  {
+                       "total":  7,
+                       "purchasable":  6,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  1
+                   },
+        "totalCost":  {
+                          "mark_of_grace":  260
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "shooting_stars",
+        "name":  "Shooting Stars",
+        "clogTab":  "Other",
+        "clogPage":  "Shooting Stars",
+        "currencies":  [
+                           "stardust"
+                       ],
+        "clogItems":  [
+                          "Celestial ring (uncharged)",
+                          "Star fragment"
+                      ],
+        "clogItemIds":  [
+                            25539,
+                            25547
+                        ],
+        "counts":  {
+                       "total":  2,
+                       "purchasable":  2,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "stardust":  5000
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "tzhaar",
+        "name":  "TzHaar",
+        "clogTab":  "Other",
+        "clogPage":  "TzHaar",
+        "currencies":  [
+                           "tokkul"
+                       ],
+        "clogItems":  [
+                          "Obsidian cape",
+                          "Toktz-ket-xil",
+                          "Tzhaar-ket-om",
+                          "Toktz-xil-ak",
+                          "Toktz-xil-ek",
+                          "Toktz-mej-tal",
+                          "Toktz-xil-ul",
+                          "Obsidian helmet",
+                          "Obsidian platebody",
+                          "Obsidian platelegs"
+                      ],
+        "clogItemIds":  [
+                            6568,
+                            6524,
+                            6528,
+                            6523,
+                            6525,
+                            6526,
+                            6522,
+                            21298,
+                            21301,
+                            21304
+                        ],
+        "counts":  {
+                       "total":  10,
+                       "purchasable":  10,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  0
+                   },
+        "totalCost":  {
+                          "tokkul":  693856
+                      },
+        "notes":  "Preço padrão; com Karamja gloves fica ~13% mais barato."
+    },
+    {
+        "id":  "miscellaneous",
+        "name":  "Miscellaneous",
+        "clogTab":  "Other",
+        "clogPage":  "Miscellaneous",
+        "currencies":  [
+                           "unid_minerals",
+                           "mermaids_tear"
+                       ],
+        "clogItems":  [
+                          "Herbi",
+                          "Chompy chick",
+                          "Dragon warhammer",
+                          "Big swordfish",
+                          "Big shark",
+                          "Big bass",
+                          "Giant blue krill",
+                          "Golden haddock",
+                          "Orangefin",
+                          "Huge halibut",
+                          "Purplefin",
+                          "Swift marlin",
+                          "Long bone",
+                          "Curved bone",
+                          "Ecumenical key",
+                          "Pharaoh\u0027s sceptre (uncharged)",
+                          "Dark totem base",
+                          "Dark totem middle",
+                          "Dark totem top",
+                          "Chewed bones",
+                          "Dragon full helm",
+                          "Shield left half",
+                          "Dragon metal slice",
+                          "Dragon metal lump",
+                          "Dragon limbs",
+                          "Dragon spear",
+                          "Amulet of eternal glory",
+                          "Shaman mask",
+                          "Evil chicken head",
+                          "Evil chicken wings",
+                          "Evil chicken legs",
+                          "Evil chicken feet",
+                          "Mining gloves",
+                          "Superior mining gloves",
+                          "Expert mining gloves",
+                          "Right skull half",
+                          "Left skull half",
+                          "Top of sceptre",
+                          "Bottom of sceptre",
+                          "Mossy key",
+                          "Giant key",
+                          "Hespori seed",
+                          "Fresh crab claw",
+                          "Fresh crab shell",
+                          "Xeric\u0027s talisman (inert)",
+                          "Mask of Ranul",
+                          "Elven signet",
+                          "Crystal grail",
+                          "Enhanced crystal teleport seed",
+                          "Dragonstone full helm",
+                          "Dragonstone platebody",
+                          "Dragonstone platelegs",
+                          "Dragonstone gauntlets",
+                          "Dragonstone boots",
+                          "Uncut onyx",
+                          "Merfolk trident",
+                          "Orange egg sac",
+                          "Blue egg sac",
+                          "Broken zombie axe",
+                          "Broken zombie helmet",
+                          "Helmet of the moon",
+                          "Squid beak",
+                          "Jeweller\u0027s chisel"
+                      ],
+        "clogItemIds":  [
+                            21509,
+                            13071,
+                            13576,
+                            7991,
+                            7993,
+                            7989,
+                            31408,
+                            31412,
+                            31416,
+                            31420,
+                            31424,
+                            31428,
+                            10976,
+                            10977,
+                            11942,
+                            26945,
+                            19679,
+                            19681,
+                            19683,
+                            11338,
+                            11335,
+                            2366,
+                            22100,
+                            22103,
+                            21918,
+                            1249,
+                            19707,
+                            21838,
+                            20439,
+                            20436,
+                            20442,
+                            20433,
+                            21343,
+                            21345,
+                            21392,
+                            9007,
+                            9008,
+                            9010,
+                            9011,
+                            22374,
+                            20754,
+                            22875,
+                            7536,
+                            7538,
+                            13392,
+                            23522,
+                            23943,
+                            24000,
+                            23959,
+                            24034,
+                            24037,
+                            24040,
+                            24046,
+                            24043,
+                            6571,
+                            21649,
+                            25844,
+                            25846,
+                            28813,
+                            30324,
+                            30111,
+                            31572,
+                            34024
+                        ],
+        "counts":  {
+                       "total":  63,
+                       "purchasable":  4,
+                       "random":  0,
+                       "milestone":  0,
+                       "notPurchasable":  59
+                   },
+        "totalCost":  {
+                          "unid_minerals":  180,
+                          "mermaids_tear":  400
+                      },
+        "notes":  null
+    },
+    {
+        "id":  "chompy",
+        "name":  "Chompy Bird Hunting",
+        "clogTab":  "Other",
+        "clogPage":  "Chompy Bird Hunting",
+        "currencies":  [
+
+                       ],
+        "clogItems":  [
+                          "Chompy chick",
+                          "Chompy bird hat (ogre bowman)",
+                          "Chompy bird hat (bowman)",
+                          "Chompy bird hat (ogre yeoman)",
+                          "Chompy bird hat (yeoman)",
+                          "Chompy bird hat (ogre marksman)",
+                          "Chompy bird hat (marksman)",
+                          "Chompy bird hat (ogre woodsman)",
+                          "Chompy bird hat (woodsman)",
+                          "Chompy bird hat (ogre forester)",
+                          "Chompy bird hat (forester)",
+                          "Chompy bird hat (ogre bowmaster)",
+                          "Chompy bird hat (bowmaster)",
+                          "Chompy bird hat (ogre expert)",
+                          "Chompy bird hat (expert)",
+                          "Chompy bird hat (ogre dragon archer)",
+                          "Chompy bird hat (dragon archer)",
+                          "Chompy bird hat (expert ogre dragon archer)",
+                          "Chompy bird hat (expert dragon archer)"
+                      ],
+        "clogItemIds":  [
+                            13071,
+                            2978,
+                            2979,
+                            2980,
+                            2981,
+                            2982,
+                            2983,
+                            2984,
+                            2985,
+                            2986,
+                            2987,
+                            2988,
+                            2989,
+                            2990,
+                            2991,
+                            2992,
+                            2993,
+                            2994,
+                            2995
+                        ],
+        "counts":  {
+                       "total":  19,
+                       "purchasable":  0,
+                       "random":  0,
+                       "milestone":  18,
+                       "notPurchasable":  1
+                   },
+        "totalCost":  {
+
+                      },
+        "notes":  null
+    }
+]

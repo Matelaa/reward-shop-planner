@@ -1,0 +1,49 @@
+# Weekly refresh of the bundled reward data from the OSRS Wiki.
+# Regenerates the JSON, runs the tests and opens a pull request when something changed.
+# Needs "Allow GitHub Actions to create and approve pull requests" (Settings > Actions > General).
+name: Update reward data
+
+on:
+  schedule:
+    - cron: '0 9 * * 1'   # Mondays 09:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update:
+    # Windows PowerShell 5.1, the same shell the generator is developed with, so the JSON
+    # formatting stays identical and the diff only shows real data changes.
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '11'
+
+      - name: Regenerate data from the wiki
+        shell: powershell
+        run: powershell -ExecutionPolicy Bypass -File scripts/generate-data.ps1
+
+      - name: Run tests
+        shell: powershell
+        run: .\gradlew.bat test --console=plain
+
+      - name: Open pull request if the data changed
+        uses: peter-evans/create-pull-request@v6
+        with:
+          branch: data/weekly-update
+          commit-message: Update reward data from the OSRS Wiki
+          title: Update reward data from the OSRS Wiki
+          body: |
+            Weekly regeneration of `src/main/resources/com/rewardshopplanner/data` with `scripts/generate-data.ps1`.
+
+            Review `docs/data-review.md` in the diff for price or item changes, then merge and publish a new plugin version.
+          add-paths: |
+            src/main/resources/com/rewardshopplanner/data/*.json
+            docs/data-review.md
+          delete-branch: true

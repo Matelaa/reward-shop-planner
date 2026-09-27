@@ -1,0 +1,286 @@
+[
+    {
+        "id":  "anima_bark",
+        "name":  "Anima-infused bark",
+        "source":  "ITEM",
+        "wikiItem":  "Anima-infused bark",
+        "itemId":  28134
+    },
+    {
+        "id":  "cw_ticket",
+        "name":  "Castle wars ticket",
+        "source":  "ITEM",
+        "wikiItem":  "Castle wars ticket",
+        "itemId":  4067
+    },
+    {
+        "id":  "brimhaven_voucher",
+        "name":  "Brimhaven voucher",
+        "source":  "ITEM",
+        "wikiItem":  "Brimhaven voucher",
+        "itemId":  29482
+    },
+    {
+        "id":  "molch_pearl",
+        "name":  "Molch pearl",
+        "source":  "ITEM",
+        "wikiItem":  "Molch pearl",
+        "itemId":  22820
+    },
+    {
+        "id":  "abyssal_pearls",
+        "name":  "Abyssal pearls",
+        "source":  "ITEM",
+        "wikiItem":  "Abyssal pearls",
+        "itemId":  26792
+    },
+    {
+        "id":  "hallowed_mark",
+        "name":  "Hallowed mark",
+        "source":  "ITEM",
+        "wikiItem":  "Hallowed mark",
+        "itemId":  24711
+    },
+    {
+        "id":  "pieces_of_eight",
+        "name":  "Pieces of eight",
+        "source":  "VARP",
+        "gameval":  "BREW_PIECES",
+        "varId":  4218
+    },
+    {
+        "id":  "spirit_flakes",
+        "name":  "Spirit flakes",
+        "source":  "ITEM",
+        "wikiItem":  "Spirit flakes",
+        "itemId":  25588
+    },
+    {
+        "id":  "termites",
+        "name":  "Termites",
+        "source":  "ITEM",
+        "wikiItem":  "Termites",
+        "itemId":  30038
+    },
+    {
+        "id":  "golden_nugget",
+        "name":  "Golden nugget",
+        "source":  "ITEM",
+        "wikiItem":  "Golden nugget",
+        "itemId":  12012
+    },
+    {
+        "id":  "mark_of_grace",
+        "name":  "Mark of grace",
+        "source":  "ITEM",
+        "wikiItem":  "Mark of grace",
+        "itemId":  11849
+    },
+    {
+        "id":  "stardust",
+        "name":  "Stardust",
+        "source":  "ITEM",
+        "wikiItem":  "Stardust",
+        "itemId":  25527
+    },
+    {
+        "id":  "tokkul",
+        "name":  "Tokkul",
+        "source":  "ITEM",
+        "wikiItem":  "Tokkul",
+        "itemId":  6529
+    },
+    {
+        "id":  "unid_minerals",
+        "name":  "Unidentified minerals",
+        "source":  "ITEM",
+        "wikiItem":  "Unidentified minerals",
+        "itemId":  21341
+    },
+    {
+        "id":  "mermaids_tear",
+        "name":  "Mermaid\u0027s tear",
+        "source":  "ITEM",
+        "wikiItem":  "Mermaid\u0027s tear",
+        "itemId":  21656
+    },
+    {
+        "id":  "pheasant_feather",
+        "name":  "Pheasant tail feathers",
+        "source":  "ITEM",
+        "wikiItem":  "Pheasant tail feathers",
+        "itemId":  28624
+    },
+    {
+        "id":  "coins",
+        "name":  "Coins",
+        "source":  "ITEM",
+        "wikiItem":  "Coins",
+        "itemId":  995
+    },
+    {
+        "id":  "chompy_kills",
+        "name":  "Chompy kills",
+        "source":  "COUNTER",
+        "notes":  "Use Check kills on an ogre bow once; new kills are then counted automatically."
+    },
+    {
+        "id":  "lms_wins",
+        "name":  "LMS competitive wins",
+        "source":  "COUNTER",
+        "notes":  "Open Justine\u0027s reward shop at Last Man Standing to update this."
+    },
+    {
+        "id":  "foundry_rep",
+        "name":  "Foundry reputation",
+        "source":  "VARP",
+        "gameval":  "GIANTS_FOUNDRY_REWARD_SHOP_POINTS",
+        "varId":  3436
+    },
+    {
+        "id":  "mox_resin",
+        "name":  "Mox resin",
+        "source":  "VARP",
+        "gameval":  "MIXOLOGY_MOX_POINTS",
+        "varId":  4416
+    },
+    {
+        "id":  "aga_resin",
+        "name":  "Aga resin",
+        "source":  "VARP",
+        "gameval":  "MIXOLOGY_AGA_POINTS",
+        "varId":  4415
+    },
+    {
+        "id":  "lye_resin",
+        "name":  "Lye resin",
+        "source":  "VARP",
+        "gameval":  "MIXOLOGY_LYE_POINTS",
+        "varId":  4414
+    },
+    {
+        "id":  "zeal",
+        "name":  "Zeal tokens",
+        "source":  "VARP",
+        "gameval":  "SOUL_WARS_ZEAL_TOKENS",
+        "varId":  2876,
+        "notes":  "Confirmar no jogo: existe também SOUL_WARS_ZEAL (2871)."
+    },
+    {
+        "id":  "vale_research",
+        "name":  "Vale research points",
+        "source":  "VARP",
+        "gameval":  "ENT_TOTEMS_RESEARCH_POINTS",
+        "varId":  4764
+    },
+    {
+        "id":  "tithe_points",
+        "name":  "Tithe Farm points",
+        "source":  "VARBIT",
+        "gameval":  "HOSIDIUS_TITHE_REWARDPOINTS",
+        "varId":  4893
+    },
+    {
+        "id":  "slayer_points",
+        "name":  "Slayer points",
+        "source":  "VARBIT",
+        "gameval":  "SLAYER_POINTS",
+        "varId":  4068
+    },
+    {
+        "id":  "ba_attacker",
+        "name":  "Honour points (Attacker)",
+        "source":  "VARBIT_COMPOSITE",
+        "gameval":  "BARBASSAULT_POINTS_ATTACKER_BASE + _EXTRA",
+        "varIds":  [
+                       4759,
+                       4763
+                   ],
+        "compositeFactor":  512,
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+    },
+    {
+        "id":  "ba_collector",
+        "name":  "Honour points (Collector)",
+        "source":  "VARBIT_COMPOSITE",
+        "gameval":  "BARBASSAULT_POINTS_COLLECTOR_BASE + _EXTRA",
+        "varIds":  [
+                       4760,
+                       4764
+                   ],
+        "compositeFactor":  512,
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+    },
+    {
+        "id":  "ba_healer",
+        "name":  "Honour points (Healer)",
+        "source":  "VARBIT_COMPOSITE",
+        "gameval":  "BARBASSAULT_POINTS_HEALER_BASE + _EXTRA",
+        "varIds":  [
+                       4761,
+                       4765
+                   ],
+        "compositeFactor":  512,
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+    },
+    {
+        "id":  "ba_defender",
+        "name":  "Honour points (Defender)",
+        "source":  "VARBIT_COMPOSITE",
+        "gameval":  "BARBASSAULT_POINTS_DEFENDER_BASE + _EXTRA",
+        "varIds":  [
+                       4762,
+                       4766
+                   ],
+        "compositeFactor":  512,
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+    },
+    {
+        "id":  "pc_points",
+        "name":  "Commendation points",
+        "source":  "INTERFACE",
+        "notes":  "Open the Void Knights\u0027 reward shop or board a Pest Control lander to update this."
+    },
+    {
+        "id":  "mta_tele",
+        "name":  "Pizazz (Telekinetic)",
+        "source":  "INTERFACE",
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+    },
+    {
+        "id":  "mta_alch",
+        "name":  "Pizazz (Alchemist)",
+        "source":  "INTERFACE",
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+    },
+    {
+        "id":  "mta_ench",
+        "name":  "Pizazz (Enchantment)",
+        "source":  "INTERFACE",
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+    },
+    {
+        "id":  "mta_grave",
+        "name":  "Pizazz (Graveyard)",
+        "source":  "INTERFACE",
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+    },
+    {
+        "id":  "lms_points",
+        "name":  "LMS points",
+        "source":  "INTERFACE",
+        "notes":  "Open Justine\u0027s reward shop at Last Man Standing to update this."
+    },
+    {
+        "id":  "carpenter_points",
+        "name":  "Carpenter points",
+        "source":  "INTERFACE",
+        "notes":  "Open Amy\u0027s reward shop or finish a contract to update this."
+    },
+    {
+        "id":  "vm_points",
+        "name":  "Volcanic Mine points",
+        "source":  "INTERFACE",
+        "notes":  "Open Petrified Pete\u0027s ore shop to update this."
+    }
+]
