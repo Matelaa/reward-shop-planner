@@ -65,9 +65,10 @@ public class MarketingRenderer
 	private final Set<String> wanted = new LinkedHashSet<>();
 	private final Set<String> sellBack = new LinkedHashSet<>();
 	private final Map<String, String> preferred = new HashMap<>();
+	private boolean gloves;
 	private final Map<String, Long> balances = Map.of(
 		"anima_bark", 5_320L, "pheasant_feather", 9L, "golden_nugget", 150L, "pc_points", 135L, "cw_ticket", 74L,
-		"termites", 410L);
+		"termites", 410L, "tokkul", 120_000L);
 
 	@Test
 	public void render() throws Exception
@@ -207,6 +208,20 @@ public class MarketingRenderer
 		BufferedImage goalsStill = snapshot(panel, null);
 		add(frames, delays, goalsStill, 2600);
 
+		// 6. TzHaar: the obsidian armour and cape, sold back, without and with Karamja gloves (the tooltip sits below the grid)
+		List<String> obsidian = List.of("Obsidian cape", "Obsidian helmet", "Obsidian platebody", "Obsidian platelegs");
+		wanted.addAll(obsidian);
+		sellBack.addAll(obsidian);
+		panel.open("tzhaar");
+		panel.update(model());
+		BufferedImage bare = withTooltip(snapshot(panel, null, 372), panel, "Obsidian platebody");
+		gloves = true;
+		panel.update(model());
+		BufferedImage withGloves = withTooltip(snapshot(panel, null, 372), panel, "Obsidian platebody");
+		gloves = false;
+		ImageIO.write(sideBySide(bare, "Without gloves", withGloves, "With Karamja gloves"), "png",
+			new File(OUT, "feature-karamja-gloves.png"));
+
 		writeGif(frames, delays, new File(OUT, "demo.gif"));
 		ImageIO.write(forestryStill, "png", new File(OUT, "feature-grid.png"));
 		ImageIO.write(shopStill, "png", new File(OUT, "feature-shops.png"));
@@ -221,10 +236,10 @@ public class MarketingRenderer
 	{
 		Plan plan = new PlannerCalculator(data).plan(PlannerInput.builder()
 			.owned(owned).wanted(wanted).balances(balances).preferredActivity(preferred)
-			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).build());
+			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).karamjaGloves(gloves).build());
 		return new PanelModel(data, plan, balances, owned, Set.of(),
-			Set.of("Forestry", "Motherlode Mine", "Castle Wars", "Pest Control", "Temple Trekking", "Colossal Wyrm Agility"),
-			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, false, false);
+			Set.of("Forestry", "Motherlode Mine", "Castle Wars", "Pest Control", "Temple Trekking", "Colossal Wyrm Agility", "TzHaar"),
+			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, gloves, !gloves, false, false);
 	}
 
 	private static BufferedImage icon(int itemId, Runnable onLoaded)
@@ -438,6 +453,29 @@ public class MarketingRenderer
 	// ------------------------------------------------------------------
 	// Hero image
 	// ------------------------------------------------------------------
+
+	/** Two panel snapshots next to each other, each with a caption above. */
+	private static BufferedImage sideBySide(BufferedImage left, String leftTitle, BufferedImage right, String rightTitle)
+	{
+		int gap = 24;
+		int top = 52;
+		int w = left.getWidth() + right.getWidth() + gap * 3;
+		int h = Math.max(left.getHeight(), right.getHeight()) + top + gap;
+		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = image.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setPaint(new GradientPaint(0, 0, new Color(0x1b1b1b), w, h, new Color(0x2b2118)));
+		g.fillRect(0, 0, w, h);
+		g.setFont(FontManager.getRunescapeBoldFont().deriveFont(26f));
+		g.setColor(new Color(0xb5b5b5));
+		g.drawString(leftTitle, gap, 38);
+		g.setColor(ColorScheme.BRAND_ORANGE);
+		g.drawString(rightTitle, gap * 2 + left.getWidth(), 38);
+		g.drawImage(left, gap, top, null);
+		g.drawImage(right, gap * 2 + left.getWidth(), top, null);
+		g.dispose();
+		return image;
+	}
 
 	private static BufferedImage hero(BufferedImage home, BufferedImage page)
 	{

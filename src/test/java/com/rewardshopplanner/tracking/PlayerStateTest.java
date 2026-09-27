@@ -82,4 +82,22 @@ public class PlayerStateTest
 		assertTrue(state.effectiveOwned().contains("Cape pouch"));
 		assertTrue(state.getOwnedOverrides().isEmpty());
 	}
+
+	@Test
+	public void karamjaGlovesFollowTheDiaryUntilThePlayerChooses()
+	{
+		PlayerState state = new PlayerState();
+		assertFalse(state.wearsKaramjaGloves());
+		state.setKaramjaGlovesClaimed(true);
+		assertTrue(state.wearsKaramjaGloves());
+
+		// the player's choice wins either way, and "auto" goes back to the diary
+		state.setKaramjaGlovesChoice(false);
+		assertFalse(state.wearsKaramjaGloves());
+		state.setKaramjaGlovesClaimed(false);
+		state.setKaramjaGlovesChoice(true);
+		assertTrue(state.wearsKaramjaGloves());
+		state.setKaramjaGlovesChoice(null);
+		assertFalse(state.wearsKaramjaGloves());
+	}
 }

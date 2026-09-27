@@ -31,9 +31,18 @@ from the game.
 
 Nothing is sold back unless you choose it. Right-click an item and pick **Sell back after logging it**, or use
 **sell back all** on a page (handy for Castle Wars). The goal then counts what you really spend, and never less
-than what you must hold to buy the items one at a time. What can be sold back depends on your account type,
-and TzHaar prices follow your Karamja gloves. Recoloured outfits
+than what you must hold to buy the items one at a time. Your account type is read from the game, so
+ultimate ironmen never count the Forestry sell-backs they can't make. TzHaar prices follow your Karamja gloves. Recoloured outfits
 like the Varlamore graceful are one purchase for the whole set, and the planner adds the base set they trade in.
+
+### Tokkul and Karamja gloves
+
+![Karamja gloves](docs/marketing/feature-karamja-gloves.png)
+
+Wearing Karamja gloves makes the TzHaar shops about 13% cheaper and more than doubles what they pay back.
+Tick **I wear Karamja gloves** on the TzHaar page. It starts ticked once you've claimed the gloves from the
+Karamja easy diary, is saved per character, and **auto** goes back to following the diary. Buying the obsidian
+armour and cape to sell them back needs about 274K tokkul instead of 369K.
 
 ## How to use
 
@@ -48,8 +57,6 @@ Balances update as you play: open your bank once, and visit a minigame's reward 
 
 | Setting | What it does |
 |---|---|
-| Account type | Auto-detected. Decides which items can be sold back to their shop. |
-| Karamja gloves at TzHaar | Auto uses glove prices once you've claimed the Karamja easy diary gloves (13% cheaper, better sell-backs). |
 | Hide completed pages | Hide pages where you own everything that can be bought. |
 
 ## Development

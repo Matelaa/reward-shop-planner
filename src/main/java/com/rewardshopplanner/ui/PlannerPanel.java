@@ -33,6 +33,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBox;
 import javax.swing.JCheckBoxMenuItem;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
@@ -181,9 +182,9 @@ public class PlannerPanel extends PluginPanel
 			.count();
 		JLabel mode = label(modeName() + (selling > 0 ? " · selling back " + selling : "") + (model.isKaramjaGloves() ? " · Karamja gloves" : ""),
 			FontManager.getRunescapeSmallFont(), MUTED);
-		mode.setToolTipText("<html>Your account type decides which items can be sold back to their shop.<br>"
+		mode.setToolTipText("<html>Your account type is read from the game; a few items can't be sold back by every type.<br>"
 			+ "Nothing is sold back unless you choose it: right-click an item, \"Sell back after logging it\".<br>"
-			+ "Account type and Karamja gloves (TzHaar prices) are in the plugin settings.</html>");
+			+ "Karamja gloves (TzHaar prices) are ticked on the TzHaar page.</html>");
 		content.add(mode);
 		content.add(Box.createVerticalStrut(8));
 
@@ -444,6 +445,12 @@ public class PlannerPanel extends PluginPanel
 			}
 		}
 
+		if (hasGlovePrices(activity))
+		{
+			content.add(Box.createVerticalStrut(6));
+			content.add(glovesRow());
+		}
+
 		content.add(Box.createVerticalStrut(12));
 		List<String> items = activity.getClogItems().stream()
 			.filter(i -> model.getData().getReward(i) != null)
@@ -481,6 +488,45 @@ public class PlannerPanel extends PluginPanel
 
 		content.add(Box.createVerticalStrut(8));
 		content.add(wrapped("Click to add or remove from your goal. Right-click for more.", MUTED));
+	}
+
+	private boolean hasGlovePrices(Activity activity)
+	{
+		return activity.getClogItems().stream()
+			.map(i -> model.getData().getReward(i))
+			.anyMatch(r -> r != null && r.getOffers().stream().anyMatch(o -> o.getKaramjaGlovesCost() != null));
+	}
+
+	/** "I wear Karamja gloves" checkbox; starts from the diary, with an "auto" link once changed. */
+	private JComponent glovesRow()
+	{
+		JPanel row = row();
+		JCheckBox box = new JCheckBox("I wear Karamja gloves", model.isKaramjaGloves());
+		box.setFont(FontManager.getRunescapeSmallFont());
+		box.setForeground(Color.WHITE);
+		box.setOpaque(false);
+		box.setFocusPainted(false);
+		box.setBorder(new EmptyBorder(0, 0, 0, 0));
+		box.setToolTipText("<html>Karamja gloves make TzHaar items about 13% cheaper<br>and more than double what the shops pay back.</html>");
+		box.addActionListener(e -> plugin.setKaramjaGloves(box.isSelected()));
+		row.add(box, BorderLayout.WEST);
+		if (model.isKaramjaGlovesAuto())
+		{
+			JLabel auto = label("from diary", FontManager.getRunescapeSmallFont(), MUTED);
+			auto.setToolTipText(model.isKaramjaGlovesClaimed()
+				? "You claimed the gloves from the Karamja easy diary"
+				: "You haven't claimed the gloves from the Karamja easy diary");
+			row.add(auto, BorderLayout.EAST);
+		}
+		else
+		{
+			JLabel auto = link("auto", () -> plugin.setKaramjaGloves(null));
+			auto.setToolTipText("Go back to following the Karamja easy diary ("
+				+ (model.isKaramjaGlovesClaimed() ? "gloves claimed" : "gloves not claimed") + ")");
+			row.add(auto, BorderLayout.EAST);
+		}
+		row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
+		return row;
 	}
 
 	private JComponent itemSlot(String item, Reward reward)

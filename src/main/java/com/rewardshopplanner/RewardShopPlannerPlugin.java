@@ -179,7 +179,6 @@ public class RewardShopPlannerPlugin extends Plugin
 	private NavigationButton navButton;
 
 	private PlayerState state = new PlayerState();
-	private AccountMode detectedMode = AccountMode.MAIN;
 
 	private final Map<Integer, Currency> itemCurrencies = new HashMap<>();
 	private final Map<Integer, Currency> varpCurrencies = new HashMap<>();
@@ -306,7 +305,10 @@ public class RewardShopPlannerPlugin extends Plugin
 	{
 		if (event.getVarbitId() == VarbitID.IRONMAN)
 		{
-			detectAccountMode();
+			if (detectAccountMode())
+			{
+				saveState();
+			}
 			refresh();
 			return;
 		}
@@ -658,8 +660,8 @@ public class RewardShopPlannerPlugin extends Plugin
 
 	private void readGameValues()
 	{
-		detectAccountMode();
-		boolean changed = readKaramjaGloves();
+		boolean changed = detectAccountMode();
+		changed |= readKaramjaGloves();
 		for (Currency currency : varpCurrencies.values())
 		{
 			changed |= updateVarBalance(currency, client.getVarpValue(currency.getVarId()));
@@ -679,19 +681,18 @@ public class RewardShopPlannerPlugin extends Plugin
 		refresh();
 	}
 
-	private void detectAccountMode()
+	/** Reads the account type from the game and remembers it; true when it changed. */
+	private synchronized boolean detectAccountMode()
 	{
 		// 0 normal, 1 ironman, 2 ultimate, 3 hardcore, 4 group, 5 hardcore group, 6 unranked group
 		switch (client.getVarbitValue(VarbitID.IRONMAN))
 		{
 			case 0:
-				detectedMode = AccountMode.MAIN;
-				break;
+				return state.setAccountMode(AccountMode.MAIN);
 			case 2:
-				detectedMode = AccountMode.ULTIMATE_IRONMAN;
-				break;
+				return state.setAccountMode(AccountMode.ULTIMATE_IRONMAN);
 			default:
-				detectedMode = AccountMode.IRONMAN;
+				return state.setAccountMode(AccountMode.IRONMAN);
 		}
 	}
 
@@ -905,6 +906,17 @@ public class RewardShopPlannerPlugin extends Plugin
 		refresh();
 	}
 
+	/** Whether the player wears Karamja gloves at TzHaar; null goes back to the diary. */
+	public void setKaramjaGloves(Boolean wears)
+	{
+		synchronized (this)
+		{
+			state.setKaramjaGlovesChoice(wears);
+		}
+		savePlayerChange();
+		refresh();
+	}
+
 	public void setExtraGoal(String currencyId, Long amount)
 	{
 		synchronized (this)
@@ -942,34 +954,6 @@ public class RewardShopPlannerPlugin extends Plugin
 	// ------------------------------------------------------------------
 	// State and refresh
 	// ------------------------------------------------------------------
-
-	private AccountMode accountMode()
-	{
-		switch (config.accountType())
-		{
-			case MAIN:
-				return AccountMode.MAIN;
-			case IRONMAN:
-				return AccountMode.IRONMAN;
-			case ULTIMATE_IRONMAN:
-				return AccountMode.ULTIMATE_IRONMAN;
-			default:
-				return detectedMode;
-		}
-	}
-
-	private boolean karamjaGloves()
-	{
-		switch (config.karamjaGloves())
-		{
-			case YES:
-				return true;
-			case NO:
-				return false;
-			default:
-				return state.isKaramjaGlovesClaimed();
-		}
-	}
 
 	private synchronized void loadState()
 	{
@@ -1041,8 +1025,8 @@ public class RewardShopPlannerPlugin extends Plugin
 			}
 
 			Set<String> owned = state.effectiveOwned();
-			AccountMode mode = accountMode();
-			boolean gloves = karamjaGloves();
+			AccountMode mode = state.getAccountMode();
+			boolean gloves = state.wearsKaramjaGloves();
 			Set<String> sellBack = new HashSet<>(state.getSellBack());
 			PlannerInput input = PlannerInput.builder()
 				.owned(owned)
@@ -1067,6 +1051,8 @@ public class RewardShopPlannerPlugin extends Plugin
 				mode,
 				sellBack,
 				gloves,
+				state.getKaramjaGlovesChoice() == null,
+				state.isKaramjaGlovesClaimed(),
 				config.hideCompleted());
 		}
 		SwingUtilities.invokeLater(() -> target.update(model));

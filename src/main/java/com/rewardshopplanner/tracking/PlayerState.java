@@ -1,5 +1,6 @@
 package com.rewardshopplanner.tracking;
 
+import com.rewardshopplanner.calc.AccountMode;
 import com.rewardshopplanner.data.Currency;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -42,6 +43,10 @@ public class PlayerState
 	private Set<String> sellBack = new LinkedHashSet<>();
 	/** Whether the Karamja gloves reward was claimed, as last read from the game. */
 	private boolean karamjaGlovesClaimed;
+	/** The player's own answer to "do you wear Karamja gloves at TzHaar"; null follows the diary. */
+	private Boolean karamjaGlovesChoice;
+	/** Account type as last read from the game, so it stays right while logged out. */
+	private AccountMode accountMode = AccountMode.MAIN;
 
 	public PlayerState()
 	{
@@ -57,9 +62,37 @@ public class PlayerState
 		return sellBack;
 	}
 
+	public AccountMode getAccountMode()
+	{
+		// older saved states have no account type
+		return accountMode == null ? AccountMode.MAIN : accountMode;
+	}
+
+	/** Records the account type read from the game; true when it changed. */
+	public boolean setAccountMode(AccountMode mode)
+	{
+		if (getAccountMode() == mode)
+		{
+			return false;
+		}
+		accountMode = mode;
+		return true;
+	}
+
 	public void setKaramjaGlovesClaimed(boolean claimed)
 	{
 		karamjaGlovesClaimed = claimed;
+	}
+
+	public void setKaramjaGlovesChoice(Boolean choice)
+	{
+		karamjaGlovesChoice = choice;
+	}
+
+	/** TzHaar prices use Karamja gloves: the player's choice, else whether the diary gloves were claimed. */
+	public boolean wearsKaramjaGloves()
+	{
+		return karamjaGlovesChoice != null ? karamjaGlovesChoice : karamjaGlovesClaimed;
 	}
 
 	/** Owned slots after applying the player's corrections. */
