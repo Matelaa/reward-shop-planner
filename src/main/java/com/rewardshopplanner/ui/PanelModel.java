@@ -17,6 +17,8 @@ public class PanelModel
 	Plan plan;
 	/** Known balance per currency id; missing when unknown. */
 	Map<String, Long> balances;
+	/** Materials held in the bank and inventory, by name; missing before the bank was opened. */
+	Map<String, Long> materials;
 	/** Owned slots, with the player's corrections applied. */
 	Set<String> owned;
 	/** Slots whose owned state was set by the player rather than read from the log. */

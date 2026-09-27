@@ -2,6 +2,7 @@ package com.rewardshopplanner.tracking;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -81,6 +82,19 @@ public class PlayerStateTest
 		state.setOwnedByPlayer("Cape pouch", true);
 		assertTrue(state.effectiveOwned().contains("Cape pouch"));
 		assertTrue(state.getOwnedOverrides().isEmpty());
+	}
+
+	@Test
+	public void materialsAddBankAndInventory()
+	{
+		PlayerState state = new PlayerState();
+		assertNull(state.materialOf("Oak logs"));
+		state.getInventoryMaterials().put("Oak logs", 28L);
+		assertEquals(Long.valueOf(28), state.materialOf("Oak logs"));
+		state.getBankMaterials().put("Oak logs", 700L);
+		assertEquals(Long.valueOf(728), state.materialOf("Oak logs"));
+		state.getLogBasketMaterials().put("Oak logs", 28L);
+		assertEquals(Long.valueOf(756), state.materialOf("Oak logs"));
 	}
 
 	@Test

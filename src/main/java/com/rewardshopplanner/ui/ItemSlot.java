@@ -63,6 +63,12 @@ class ItemSlot extends JComponent
 	}
 
 	@Override
+	public javax.swing.JToolTip createToolTip()
+	{
+		return Tooltips.create(this);
+	}
+
+	@Override
 	protected void paintComponent(Graphics graphics)
 	{
 		Graphics2D g = (Graphics2D) graphics.create();

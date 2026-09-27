@@ -59,9 +59,10 @@ public class PlannerCalculatorTest
 		// Funky shaped log and cape pouch sell back for 80%: 15,000 -> 3,000 and 2,500 -> 500
 		assertEquals(36_500, forestry.getCost().getNet(BARK));
 		assertEquals(60, forestry.getCost().getGross("pheasant_feather"));
-		// 4 x 60 for the Forestry outfit + 500 for the funky shaped log, 400 of which come back
+		// 4 x 60 for the Forestry outfit + 500 for the funky shaped log, 400 of which come back:
+		// only 340 are spent, but the log takes all 500 at once (buy it first, then the outfit)
 		assertEquals(740, forestry.getCost().getMaterialGross("Mahogany logs"));
-		assertEquals(340, forestry.getCost().getMaterialNet("Mahogany logs"));
+		assertEquals(500, forestry.getCost().getMaterialNet("Mahogany logs"));
 
 		assertEquals(122_100, plan.getRemainingGross(BARK));
 		assertEquals(108_100, plan.getRemainingNet(BARK));
@@ -188,7 +189,7 @@ public class PlannerCalculatorTest
 		assertEquals(Set.of("Prospector helmet", "Prospector jacket", "Prospector legs", "Prospector boots"), undecided.getUndecided());
 		assertEquals(4, undecided.getActivity("motherlode_mine").getUndecided().size());
 		assertEquals(4, undecided.getActivity("volcanic_mine").getUndecided().size());
-		assertEquals(40_000 + 200, undecided.getTotal().getGross("vm_points"));
+		assertEquals(40_000 + 10_000 + 200, undecided.getTotal().getGross("vm_points"));
 		assertEquals(200, undecided.getTotal().getGross("golden_nugget"));
 
 		Plan withNuggets = calculator.plan(PlannerInput.builder()
@@ -199,7 +200,7 @@ public class PlannerCalculatorTest
 				"Prospector boots", "motherlode_mine"))
 			.build());
 		assertTrue(withNuggets.getUndecided().isEmpty());
-		assertEquals(40_000 + 200, withNuggets.getTotal().getGross("vm_points"));
+		assertEquals(40_000 + 10_000 + 200, withNuggets.getTotal().getGross("vm_points"));
 		assertEquals(200 + 40 + 60 + 50 + 30, withNuggets.getTotal().getGross("golden_nugget"));
 		// the pick applies on both pages: finishing the Volcanic Mine page now costs nuggets for the kit
 		assertEquals(40 + 60 + 50 + 30, withNuggets.getActivity("volcanic_mine").getCost().getGross("golden_nugget"));

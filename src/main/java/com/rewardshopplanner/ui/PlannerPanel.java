@@ -47,6 +47,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
+import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
 import net.runelite.client.ui.ColorScheme;
 import net.runelite.client.ui.FontManager;
@@ -196,6 +197,13 @@ public class PlannerPanel extends PluginPanel
 		else
 		{
 			addCurrencyBars(needed, true);
+			// logs, bars... for the whole goal, in one line with the details in its tooltip
+			JComponent materials = detailsLine(plan.getTotal().getMaterialsNet(), List.of());
+			if (materials != null)
+			{
+				content.add(materials);
+				content.add(Box.createVerticalStrut(6));
+			}
 			if (!plan.getUndecided().isEmpty())
 			{
 				content.add(wrapped(plan.getUndecided().size() + " item(s) need a shop: right-click the ones marked ?", ACCENT));
@@ -299,7 +307,14 @@ public class PlannerPanel extends PluginPanel
 		boolean complete = activityPlan.isComplete();
 		boolean synced = model.getSyncedPages().contains(activity.getClogPage());
 
-		JPanel card = new JPanel();
+		JPanel card = new JPanel()
+		{
+			@Override
+			public JToolTip createToolTip()
+			{
+				return Tooltips.create(this);
+			}
+		};
 		card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 		card.setBackground(ColorScheme.DARKER_GRAY_COLOR);
 		card.setBorder(new EmptyBorder(6, 8, 6, 8));
@@ -373,7 +388,14 @@ public class PlannerPanel extends PluginPanel
 		});
 		currencyBox.setAlignmentX(Component.LEFT_ALIGNMENT);
 		currencyBox.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
-		JTextField amount = new JTextField();
+		JTextField amount = new JTextField()
+		{
+			@Override
+			public JToolTip createToolTip()
+			{
+				return Tooltips.create(this);
+			}
+		};
 		amount.setToolTipText("Amount, e.g. 5000 or 5k");
 		JButton add = new JButton("Add");
 		add.setFont(FontManager.getRunescapeSmallFont());
@@ -438,7 +460,7 @@ public class PlannerPanel extends PluginPanel
 			{
 				content.add(sellBacks);
 			}
-			JComponent details = detailsLine(activityPlan);
+			JComponent details = detailsLine(activityPlan.getCost().getMaterialsNet(), activityPlan.getPrerequisites());
 			if (details != null)
 			{
 				content.add(details);
@@ -501,7 +523,14 @@ public class PlannerPanel extends PluginPanel
 	private JComponent glovesRow()
 	{
 		JPanel row = row();
-		JCheckBox box = new JCheckBox("I wear Karamja gloves", model.isKaramjaGloves());
+		JCheckBox box = new JCheckBox("I wear Karamja gloves", model.isKaramjaGloves())
+		{
+			@Override
+			public JToolTip createToolTip()
+			{
+				return Tooltips.create(this);
+			}
+		};
 		box.setFont(FontManager.getRunescapeSmallFont());
 		box.setForeground(Color.WHITE);
 		box.setOpaque(false);
@@ -615,26 +644,73 @@ public class PlannerPanel extends PluginPanel
 	}
 
 	/** One muted line whose tooltip lists materials and traded-in items, when there are any. */
-	private JComponent detailsLine(ActivityPlan activityPlan)
+	private JComponent detailsLine(Map<String, Long> materialsNeeded, List<String> prerequisites)
 	{
 		List<String> lines = new ArrayList<>();
-		Map<String, Long> materials = activityPlan.getCost().getMaterialsNet();
-		materials.forEach((name, amount) ->
+		int needed = 0;
+		int ready = 0;
+		boolean unknown = false;
+		for (Map.Entry<String, Long> material : materialsNeeded.entrySet())
 		{
-			if (amount > 0)
+			long need = material.getValue();
+			if (need <= 0)
 			{
-				lines.add(fmt(amount) + " " + name);
+				continue;
 			}
-		});
-		if (!activityPlan.getPrerequisites().isEmpty())
+			needed++;
+			Long have = model.getMaterials().get(material.getKey());
+			if (have == null)
+			{
+				unknown = true;
+				lines.add("? / " + fmt(need) + " " + escape(material.getKey()));
+			}
+			else if (have >= need)
+			{
+				ready++;
+				lines.add(colored(fmt(have) + " / " + fmt(need) + " " + escape(material.getKey()), GOOD));
+			}
+			else
+			{
+				lines.add(fmt(have) + " / " + fmt(need) + " " + escape(material.getKey())
+					+ "&nbsp;&nbsp;" + colored("(" + fmt(need - have) + " left)", ACCENT));
+			}
+		}
+		if (unknown)
 		{
-			lines.add("Buys first: " + String.join(", ", activityPlan.getPrerequisites()));
+			lines.add("<i>Open your bank to count your materials</i>");
+		}
+		if (!prerequisites.isEmpty())
+		{
+			lines.add("Buys first: " + escape(String.join(", ", prerequisites)));
 		}
 		if (lines.isEmpty())
 		{
 			return null;
 		}
-		JLabel details = label("ⓘ Also needs materials", FontManager.getRunescapeSmallFont(), MUTED);
+
+		String text;
+		Color color;
+		if (needed == 0)
+		{
+			text = "ⓘ Buys other items first";
+			color = MUTED;
+		}
+		else if (unknown)
+		{
+			text = "ⓘ Also needs materials";
+			color = MUTED;
+		}
+		else if (ready == needed)
+		{
+			text = "✓ Materials ready";
+			color = GOOD;
+		}
+		else
+		{
+			text = "ⓘ Materials: " + ready + " of " + needed + " ready";
+			color = ACCENT;
+		}
+		JLabel details = label(text, FontManager.getRunescapeSmallFont(), color);
 		details.setToolTipText("<html>" + String.join("<br>", lines) + "</html>");
 		details.setBorder(new EmptyBorder(4, 0, 0, 0));
 		return details;
@@ -662,7 +738,14 @@ public class PlannerPanel extends PluginPanel
 			boolean done = have != null && current >= need;
 			Color color = !accountWide ? NEUTRAL_BAR : done ? GOOD : ACCENT;
 
-			JPanel box = new JPanel();
+			JPanel box = new JPanel()
+			{
+				@Override
+				public JToolTip createToolTip()
+				{
+					return Tooltips.create(this);
+				}
+			};
 			box.setLayout(new BoxLayout(box, BoxLayout.Y_AXIS));
 			box.setOpaque(false);
 			box.setAlignmentX(Component.LEFT_ALIGNMENT);
@@ -1011,6 +1094,12 @@ public class PlannerPanel extends PluginPanel
 		}
 	}
 
+	/** Tooltip text in a colour. */
+	private static String colored(String html, Color color)
+	{
+		return String.format("<font color='#%06x'>%s</font>", color.getRGB() & 0xffffff, html);
+	}
+
 	private static String escape(String text)
 	{
 		return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;");
@@ -1030,7 +1119,14 @@ public class PlannerPanel extends PluginPanel
 
 	private static JLabel label(String text, Font font, Color color)
 	{
-		JLabel label = new JLabel(text);
+		JLabel label = new JLabel(text)
+		{
+			@Override
+			public JToolTip createToolTip()
+			{
+				return Tooltips.create(this);
+			}
+		};
 		label.setFont(font);
 		label.setForeground(color);
 		label.setAlignmentX(Component.LEFT_ALIGNMENT);

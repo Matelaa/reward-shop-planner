@@ -1,0 +1,58 @@
+[
+    {
+        "name":  "Adamantite bar",
+        "itemId":  2361
+    },
+    {
+        "name":  "Arctic pine logs",
+        "itemId":  10810
+    },
+    {
+        "name":  "Leather",
+        "itemId":  1741
+    },
+    {
+        "name":  "Magic logs",
+        "itemId":  1513
+    },
+    {
+        "name":  "Mahogany logs",
+        "itemId":  6332
+    },
+    {
+        "name":  "Maple logs",
+        "itemId":  1517
+    },
+    {
+        "name":  "Oak logs",
+        "itemId":  1521
+    },
+    {
+        "name":  "Redwood logs",
+        "itemId":  19669
+    },
+    {
+        "name":  "Rope",
+        "itemId":  954
+    },
+    {
+        "name":  "Steel nails",
+        "itemId":  1539
+    },
+    {
+        "name":  "Teak logs",
+        "itemId":  6333
+    },
+    {
+        "name":  "Thread",
+        "itemId":  1734
+    },
+    {
+        "name":  "Willow logs",
+        "itemId":  1519
+    },
+    {
+        "name":  "Yew logs",
+        "itemId":  1515
+    }
+]

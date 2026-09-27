@@ -134,6 +134,10 @@ function Single-Cost([string]$currency, $amount) {
     $m = [ordered]@{}; $m[$currency] = $amount; return $m
 }
 
+# wiki item name -> log slot name, for slots the wiki sells under another name
+$aliasByWikiItem = @{}
+foreach ($al in @($sources.clogAliases)) { if ($al) { $aliasByWikiItem[$al.wikiItem] = $al.clogName } }
+
 foreach ($a in $sources.activities) {
     $pageItems = $clogItems[$a.clogPage]
     if (-not $pageItems) { continue }
@@ -147,6 +151,7 @@ foreach ($a in $sources.activities) {
         if (-not $rows) { Warn "No wiki data for shop: $($st.name)"; continue }
         foreach ($r in $rows) {
             $n = Normalize-Name $r.sold_item
+            if ($aliasByWikiItem.ContainsKey($n) -and $pageItems.Contains($aliasByWikiItem[$n])) { $n = $aliasByWikiItem[$n] }
             $p = To-Int $r.store_sell_price
             if (-not $pageItems.Contains($n)) { continue }
             if ($null -eq $p -or $p -le 0) { continue }
@@ -254,7 +259,10 @@ function Resolve-ItemIds([string[]]$names) {
 
 # Every slot on the covered pages gets an id, so the plugin can match the in-game log to the data.
 $allClogNames = @($clogItems.Values | ForEach-Object { $_ })
-$ids = Resolve-ItemIds (@($rewards.Keys) + $allClogNames + @($sources.currencies | Where-Object { $_.wikiItem } | ForEach-Object { $_.wikiItem }))
+# Materials (logs, bars...) are counted in the bank and inventory, so they need ids too.
+$materialNames = @($rewards.Values | Where-Object { $_.materials } | ForEach-Object { $_.materials.Keys } | Sort-Object -Unique)
+$ids = Resolve-ItemIds (@($rewards.Keys) + $allClogNames + $materialNames + @($sources.currencies | Where-Object { $_.wikiItem } | ForEach-Object { $_.wikiItem }))
+foreach ($al in @($sources.clogAliases)) { if ($al) { $ids[$al.clogName] = [int]$al.itemId } }
 foreach ($rw in $rewards.Values) {
     if ($ids.ContainsKey($rw.name)) { $rw.itemId = $ids[$rw.name] }
     elseif ($rw.name -ne 'Bones to peaches' -and $rw.name -ne 'Animation overrides') { Warn "No item id: $($rw.name)" }
@@ -270,6 +278,12 @@ foreach ($c in $sources.currencies) {
         if ($ids.ContainsKey($c.wikiItem)) { $o.itemId = $ids[$c.wikiItem] } else { Warn "No item id for currency: $($c.wikiItem)" }
     }
     [void]$currencyOut.Add($o)
+}
+
+$materialOut = New-Object System.Collections.ArrayList
+foreach ($n in $materialNames) {
+    if ($ids.ContainsKey($n)) { [void]$materialOut.Add([ordered]@{ name = $n; itemId = $ids[$n] }) }
+    else { Warn "No item id for material: $n" }
 }
 
 $activityOut = New-Object System.Collections.ArrayList
@@ -333,5 +347,6 @@ function Write-Json($obj, [string]$file) {
 Write-Json @($currencyOut) 'currencies.json'
 Write-Json @($activityOut) 'activities.json'
 Write-Json @($rewardOut)   'rewards.json'
+Write-Json @($materialOut) 'materials.json'
 
-Write-Host ("Done: {0} activities, {1} rewards, {2} currencies, {3} warnings." -f $activityOut.Count, $rewardOut.Count, $currencyOut.Count, $warnings.Count)
+Write-Host ("Done: {0} activities, {1} rewards, {2} currencies, {3} materials, {4} warnings." -f $activityOut.Count, $rewardOut.Count, $currencyOut.Count, $materialOut.Count, $warnings.Count)

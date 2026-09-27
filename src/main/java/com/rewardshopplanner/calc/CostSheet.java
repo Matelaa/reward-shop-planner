@@ -33,6 +33,12 @@ public class CostSheet
 		net.merge(currency, atLeast, Math::max);
 	}
 
+	/** Same as {@link #raiseNet} for a material handed in with the purchase. */
+	void raiseMaterialNet(String material, long atLeast)
+	{
+		materialsNet.merge(material, atLeast, Math::max);
+	}
+
 	void addMaterial(String material, long grossAmount, long netAmount)
 	{
 		materialsGross.merge(material, grossAmount, Long::sum);

@@ -8,6 +8,7 @@ import com.rewardshopplanner.calc.PlannerCalculator;
 import com.rewardshopplanner.calc.PlannerInput;
 import com.rewardshopplanner.data.Activity;
 import com.rewardshopplanner.data.Currency;
+import com.rewardshopplanner.data.Material;
 import com.rewardshopplanner.data.RewardData;
 import com.rewardshopplanner.tracking.ChompyKillParser;
 import com.rewardshopplanner.tracking.CollectionLogMatcher;
@@ -35,6 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.ChatMessageType;
 import net.runelite.api.Client;
 import net.runelite.api.GameState;
+import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
 import net.runelite.api.ScriptID;
 import net.runelite.api.events.ChatMessage;
@@ -182,6 +184,8 @@ public class RewardShopPlannerPlugin extends Plugin
 
 	private final Map<Integer, Currency> itemCurrencies = new HashMap<>();
 	private final Map<Integer, Currency> varpCurrencies = new HashMap<>();
+	/** Material names by (unnoted) item id. */
+	private final Map<Integer, String> materialsById = new HashMap<>();
 	private final Map<Integer, Currency> varbitCurrencies = new HashMap<>();
 	/** Either varbit of a two-varbit currency -> that currency (Barbarian Assault honour points). */
 	private final Map<Integer, Currency> compositeCurrencies = new HashMap<>();
@@ -222,6 +226,10 @@ public class RewardShopPlannerPlugin extends Plugin
 					break;
 				default:
 			}
+		}
+		for (Material material : data.getMaterials().values())
+		{
+			materialsById.put(material.getItemId(), material.getName());
 		}
 		for (Activity activity : data.getActivities().values())
 		{
@@ -265,6 +273,7 @@ public class RewardShopPlannerPlugin extends Plugin
 		navButton = null;
 		panel = null;
 		itemCurrencies.clear();
+		materialsById.clear();
 		varpCurrencies.clear();
 		varbitCurrencies.clear();
 		compositeCurrencies.clear();
@@ -347,13 +356,27 @@ public class RewardShopPlannerPlugin extends Plugin
 		Map<String, Long> target;
 		synchronized (this)
 		{
-			if (event.getContainerId() == InventoryID.BANK)
+			boolean materialsChanged = false;
+			if (event.getContainerId() == InventoryID.FORESTRY_SHOP_LOG_STORAGE)
+			{
+				// the log basket (and Forestry basket) share this storage; it only holds logs
+				if (!countMaterials(event.getItemContainer(), state.getLogBasketMaterials()))
+				{
+					return;
+				}
+				saveState();
+				refresh();
+				return;
+			}
+			else if (event.getContainerId() == InventoryID.BANK)
 			{
 				target = state.getBankItems();
+				materialsChanged = countMaterials(event.getItemContainer(), state.getBankMaterials());
 			}
 			else if (event.getContainerId() == InventoryID.INV)
 			{
 				target = state.getInventoryItems();
+				materialsChanged = countMaterials(event.getItemContainer(), state.getInventoryMaterials());
 			}
 			else if (event.getContainerId() == InventoryID.FORESTRY_KIT)
 			{
@@ -365,7 +388,7 @@ public class RewardShopPlannerPlugin extends Plugin
 			}
 
 			ItemContainer container = event.getItemContainer();
-			boolean changed = false;
+			boolean changed = materialsChanged;
 			for (Map.Entry<Integer, Currency> entry : itemCurrencies.entrySet())
 			{
 				long count = container.count(entry.getKey());
@@ -384,6 +407,35 @@ public class RewardShopPlannerPlugin extends Plugin
 		}
 		saveState();
 		refresh();
+	}
+
+	/** Counts every material in a container, noted ones included; true when a count changed. */
+	private boolean countMaterials(ItemContainer container, Map<String, Long> target)
+	{
+		Map<String, Long> counts = new HashMap<>();
+		for (String name : materialsById.values())
+		{
+			counts.put(name, 0L);
+		}
+		for (Item item : container.getItems())
+		{
+			if (item.getId() <= 0 || item.getQuantity() <= 0)
+			{
+				continue;
+			}
+			String name = materialsById.get(itemManager.canonicalize(item.getId()));
+			if (name != null)
+			{
+				counts.merge(name, (long) item.getQuantity(), Long::sum);
+			}
+		}
+		if (counts.equals(target))
+		{
+			return false;
+		}
+		target.clear();
+		target.putAll(counts);
+		return true;
 	}
 
 	@Subscribe
@@ -1040,7 +1092,17 @@ public class RewardShopPlannerPlugin extends Plugin
 				.build();
 			Plan plan = calculator.plan(input);
 
-			model = new PanelModel(data, plan, balances,
+			Map<String, Long> materials = new HashMap<>();
+			for (String name : data.getMaterials().keySet())
+			{
+				Long have = state.materialOf(name);
+				if (have != null)
+				{
+					materials.put(name, have);
+				}
+			}
+
+			model = new PanelModel(data, plan, balances, materials,
 				owned,
 				new HashSet<>(state.getOwnedOverrides().keySet()),
 				new LinkedHashSet<>(state.getSyncedPages()),

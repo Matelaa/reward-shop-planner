@@ -66,6 +66,10 @@ public class MarketingRenderer
 	private final Set<String> sellBack = new LinkedHashSet<>();
 	private final Map<String, String> preferred = new HashMap<>();
 	private boolean gloves;
+	// simulated bank: some logs ready, some still to cut
+	private final Map<String, Long> materials = Map.of(
+		"Oak logs", 1_200L, "Willow logs", 900L, "Teak logs", 740L, "Maple logs", 1_340L, "Mahogany logs", 510L,
+		"Arctic pine logs", 120L, "Yew logs", 1_100L, "Magic logs", 260L, "Redwood logs", 0L, "Thread", 12L);
 	private final Map<String, Long> balances = Map.of(
 		"anima_bark", 5_320L, "pheasant_feather", 9L, "golden_nugget", 150L, "pc_points", 135L, "cw_ticket", 74L,
 		"termites", 410L, "tokkul", 120_000L);
@@ -121,6 +125,7 @@ public class MarketingRenderer
 		}
 		add(frames, delays, snapshot(panel, null), 1400);
 		BufferedImage forestryStill = snapshot(panel, null);
+		BufferedImage materialsStill = withLabelTooltip(snapshot(panel, null, 470), panel, "Materials");
 
 		// 4. an item sold in two shops
 		panel.open("motherlode_mine");
@@ -166,6 +171,8 @@ public class MarketingRenderer
 		add(frames, delays, snapshot(panel, null), 1500);
 		sellBack.add("Cape pouch");
 		panel.update(model());
+		// the sell-back line moved the grid down
+		funky = slotCenter(panel, "Funky shaped log");
 		add(frames, delays, withTooltip(snapshot(panel, funky), panel, "Funky shaped log"), 2800);
 		// taller still so the tooltip fits below the item and the "back from sell-backs" line stays visible
 		BufferedImage sellBackStill = withTooltip(snapshot(panel, funky, 540), panel, "Funky shaped log");
@@ -203,6 +210,7 @@ public class MarketingRenderer
 		panel.open(null);
 		panel.update(model());
 		BufferedImage home = snapshot(panel, null);
+		BufferedImage homeMaterials = withLabelTooltip(snapshot(panel, null, 470), panel, "Materials");
 		add(frames, delays, home, 2200);
 		panel.setGoalListOpen(true);
 		BufferedImage goalsStill = snapshot(panel, null);
@@ -224,6 +232,8 @@ public class MarketingRenderer
 
 		writeGif(frames, delays, new File(OUT, "demo.gif"));
 		ImageIO.write(forestryStill, "png", new File(OUT, "feature-grid.png"));
+		ImageIO.write(materialsStill, "png", new File(OUT, "feature-materials.png"));
+		ImageIO.write(homeMaterials, "png", new File(OUT, "feature-materials-home.png"));
 		ImageIO.write(shopStill, "png", new File(OUT, "feature-shops.png"));
 		ImageIO.write(goalsStill, "png", new File(OUT, "feature-goals.png"));
 		ImageIO.write(setStill, "png", new File(OUT, "feature-sets.png"));
@@ -237,7 +247,7 @@ public class MarketingRenderer
 		Plan plan = new PlannerCalculator(data).plan(PlannerInput.builder()
 			.owned(owned).wanted(wanted).balances(balances).preferredActivity(preferred)
 			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).karamjaGloves(gloves).build());
-		return new PanelModel(data, plan, balances, owned, Set.of(),
+		return new PanelModel(data, plan, balances, materials, owned, Set.of(),
 			Set.of("Forestry", "Motherlode Mine", "Castle Wars", "Pest Control", "Temple Trekking", "Colossal Wyrm Agility", "TzHaar"),
 			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, gloves, !gloves, false, false);
 	}
@@ -311,6 +321,55 @@ public class MarketingRenderer
 			{
 				Point p = SwingUtilities.convertPoint(slot, slot.getWidth() / 2, slot.getHeight() / 2, content);
 				return p;
+			}
+		}
+		return null;
+	}
+
+	/** Paints the tooltip of the first label whose text contains {@code part}, just below it. */
+	private static BufferedImage withLabelTooltip(BufferedImage frame, PlannerPanel panel, String part)
+	{
+		JComponent content = content(panel);
+		javax.swing.JLabel target = findLabelContaining(content, part);
+		if (target == null || target.getToolTipText() == null)
+		{
+			return frame;
+		}
+		javax.swing.JToolTip tip = target.createToolTip();
+		tip.setTipText(target.getToolTipText());
+		java.awt.Dimension size = tip.getPreferredSize();
+		tip.setSize(size);
+		layout(tip);
+		Point at = SwingUtilities.convertPoint(target, 12, target.getHeight() + 2, content);
+		int x = Math.max(0, Math.min(at.x, CONTENT_WIDTH - size.width));
+		Graphics2D g = frame.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		g.scale(SCALE, SCALE);
+		g.translate(8, 10);
+		g.setColor(new Color(0, 0, 0, 110));
+		g.fillRect(x + 3, at.y + 3, size.width, size.height);
+		g.translate(x, at.y);
+		tip.paint(g);
+		g.dispose();
+		return frame;
+	}
+
+	private static javax.swing.JLabel findLabelContaining(Container c, String part)
+	{
+		for (Component child : c.getComponents())
+		{
+			if (child instanceof javax.swing.JLabel && ((javax.swing.JLabel) child).getText() != null
+				&& ((javax.swing.JLabel) child).getText().contains(part))
+			{
+				return (javax.swing.JLabel) child;
+			}
+			if (child instanceof Container)
+			{
+				javax.swing.JLabel found = findLabelContaining((Container) child, part);
+				if (found != null)
+				{
+					return found;
+				}
 			}
 		}
 		return null;

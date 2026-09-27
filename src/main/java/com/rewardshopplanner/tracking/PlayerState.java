@@ -29,6 +29,12 @@ public class PlayerState
 	private Map<String, Long> inventoryItems = new HashMap<>();
 	/** Item currencies stored in the Forestry kit (e.g. anima-infused bark), by currency id. */
 	private Map<String, Long> forestryKitItems = new HashMap<>();
+	/** Materials (logs, bars...) in the bank the last time it was open, by name; noted ones included. */
+	private Map<String, Long> bankMaterials = new HashMap<>();
+	/** Materials in the inventory, by name; noted ones included. */
+	private Map<String, Long> inventoryMaterials = new HashMap<>();
+	/** Logs in the log basket (shared with the Forestry basket), by name. */
+	private Map<String, Long> logBasketMaterials = new HashMap<>();
 	/** Currencies read from game vars, by currency id. */
 	private Map<String, Long> varBalances = new HashMap<>();
 	/**
@@ -172,6 +178,47 @@ public class PlayerState
 			default:
 				return null;
 		}
+	}
+
+	public Map<String, Long> getBankMaterials()
+	{
+		// older saved states have no material maps
+		if (bankMaterials == null)
+		{
+			bankMaterials = new HashMap<>();
+		}
+		return bankMaterials;
+	}
+
+	public Map<String, Long> getInventoryMaterials()
+	{
+		if (inventoryMaterials == null)
+		{
+			inventoryMaterials = new HashMap<>();
+		}
+		return inventoryMaterials;
+	}
+
+	public Map<String, Long> getLogBasketMaterials()
+	{
+		if (logBasketMaterials == null)
+		{
+			logBasketMaterials = new HashMap<>();
+		}
+		return logBasketMaterials;
+	}
+
+	/** Amount of a material in the bank, inventory and log basket, or null before any was seen. */
+	public Long materialOf(String name)
+	{
+		Long bank = getBankMaterials().get(name);
+		Long inventory = getInventoryMaterials().get(name);
+		Long basket = getLogBasketMaterials().get(name);
+		if (bank == null && inventory == null && basket == null)
+		{
+			return null;
+		}
+		return (bank == null ? 0 : bank) + (inventory == null ? 0 : inventory) + (basket == null ? 0 : basket);
 	}
 
 	/** Value of a {@link Currency.Source#VARBIT_COMPOSITE} currency from its two varbits. */

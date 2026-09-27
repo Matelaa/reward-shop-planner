@@ -103,4 +103,31 @@ public class RewardDataTest
 			}
 		}
 	}
+
+	@Test
+	public void largeWaterContainerIsSoldAtVolcanicMine()
+	{
+		// the wiki sells it as "Heat-proof vessel"; the log slot has its own id
+		Reward container = data.getReward("Large water container");
+		assertNotNull(container);
+		assertEquals(Integer.valueOf(25615), container.getItemId());
+		assertEquals(Integer.valueOf(10_000), container.getOffers().get(0).getCost().get("vm_points"));
+		assertEquals(7, data.getActivities().get("volcanic_mine").getClogItems().stream()
+			.filter(i -> data.getReward(i) != null).count());
+	}
+
+	@Test
+	public void everyMaterialHasAnItemId()
+	{
+		for (Reward reward : data.getRewards().values())
+		{
+			for (String material : reward.getMaterials().keySet())
+			{
+				Material known = data.getMaterials().get(material);
+				assertNotNull(reward.getName() + " uses unknown material " + material, known);
+				assertTrue(material + " has no item id", known.getItemId() > 0);
+			}
+		}
+		assertEquals(1521, data.getMaterials().get("Oak logs").getItemId());
+	}
 }

@@ -5222,11 +5222,10 @@
         "notes":  null
     },
     {
-        "name":  "Prospector legs",
-        "itemId":  12015,
+        "name":  "Ash covered tome",
+        "itemId":  21697,
         "clogPages":  [
-                          "Volcanic Mine",
-                          "Motherlode Mine"
+                          "Volcanic Mine"
                       ],
         "type":  "SHOP",
         "offers":  [
@@ -5236,20 +5235,8 @@
                                           ],
                            "store":  "Petrified Pete\u0027s Ore Shop",
                            "cost":  {
-                                        "vm_points":  34000
+                                        "vm_points":  40000
                                     }
-                       },
-                       {
-                           "activities":  [
-                                              "motherlode_mine"
-                                          ],
-                           "store":  "Prospector Percy\u0027s Nugget Shop",
-                           "cost":  {
-                                        "golden_nugget":  50
-                                    },
-                           "buyBack":  {
-                                           "golden_nugget":  40
-                                       }
                        }
                    ],
         "consumes":  [
@@ -5312,10 +5299,11 @@
         "notes":  null
     },
     {
-        "name":  "Ash covered tome",
-        "itemId":  21697,
+        "name":  "Prospector legs",
+        "itemId":  12015,
         "clogPages":  [
-                          "Volcanic Mine"
+                          "Volcanic Mine",
+                          "Motherlode Mine"
                       ],
         "type":  "SHOP",
         "offers":  [
@@ -5325,8 +5313,20 @@
                                           ],
                            "store":  "Petrified Pete\u0027s Ore Shop",
                            "cost":  {
-                                        "vm_points":  40000
+                                        "vm_points":  34000
                                     }
+                       },
+                       {
+                           "activities":  [
+                                              "motherlode_mine"
+                                          ],
+                           "store":  "Prospector Percy\u0027s Nugget Shop",
+                           "cost":  {
+                                        "golden_nugget":  50
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5372,6 +5372,38 @@
                            "buyBack":  {
                                            "golden_nugget":  48
                                        }
+                       }
+                   ],
+        "consumes":  [
+
+                     ],
+        "materials":  {
+
+                      },
+        "requirements":  [
+
+                         ],
+        "refund":  null,
+        "set":  null,
+        "milestone":  null,
+        "notes":  null
+    },
+    {
+        "name":  "Large water container",
+        "itemId":  25615,
+        "clogPages":  [
+                          "Volcanic Mine"
+                      ],
+        "type":  "SHOP",
+        "offers":  [
+                       {
+                           "activities":  [
+                                              "volcanic_mine"
+                                          ],
+                           "store":  "Petrified Pete\u0027s Ore Shop",
+                           "cost":  {
+                                        "vm_points":  10000
+                                    }
                        }
                    ],
         "consumes":  [

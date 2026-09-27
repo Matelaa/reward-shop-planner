@@ -874,7 +874,7 @@
                       ],
         "clogItemIds":  [
                             21697,
-                            0,
+                            25615,
                             21541,
                             27695,
                             12013,
@@ -884,13 +884,13 @@
                         ],
         "counts":  {
                        "total":  8,
-                       "purchasable":  6,
+                       "purchasable":  7,
                        "random":  0,
                        "milestone":  0,
-                       "notPurchasable":  2
+                       "notPurchasable":  1
                    },
         "totalCost":  {
-                          "vm_points":  160200
+                          "vm_points":  170200
                       },
         "notes":  null
     },

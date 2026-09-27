@@ -172,5 +172,10 @@
     { "activity": "chompy", "item": "Chompy bird hat (expert dragon archer)",     "type": "MILESTONE", "milestone": { "counter": "chompy_kills", "amount": 4000 } }
   ],
 
-  "all9Logs": ["Oak logs", "Willow logs", "Teak logs", "Maple logs", "Mahogany logs", "Arctic pine logs", "Yew logs", "Magic logs", "Redwood logs"]
+  "all9Logs": ["Oak logs", "Willow logs", "Teak logs", "Maple logs", "Mahogany logs", "Arctic pine logs", "Yew logs", "Magic logs", "Redwood logs"],
+
+  "_clogAliasesComment": "Log slots the wiki sells and describes under another item name. itemId is the log slot's own id.",
+  "clogAliases": [
+    { "clogName": "Large water container", "wikiItem": "Heat-proof vessel", "itemId": 25615, "notes": "The upgrade from Petrified Pete's Ore Shop; the wiki lists it as Heat-proof vessel." }
+  ]
 }

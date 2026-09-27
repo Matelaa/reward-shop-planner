@@ -23,12 +23,15 @@ public class RewardData
 	private final Map<String, Currency> currencies;
 	private final Map<String, Activity> activities;
 	private final Map<String, Reward> rewards;
+	/** Materials by name. */
+	private final Map<String, Material> materials;
 
-	public RewardData(List<Currency> currencies, List<Activity> activities, List<Reward> rewards)
+	public RewardData(List<Currency> currencies, List<Activity> activities, List<Reward> rewards, List<Material> materials)
 	{
 		this.currencies = index(currencies, Currency::getId);
 		this.activities = index(activities, Activity::getId);
 		this.rewards = index(rewards, Reward::getName);
+		this.materials = index(materials, Material::getName);
 	}
 
 	public static RewardData load(Gson gson) throws IOException
@@ -36,7 +39,8 @@ public class RewardData
 		return new RewardData(
 			Arrays.asList(read(gson, "currencies.json", Currency[].class)),
 			Arrays.asList(read(gson, "activities.json", Activity[].class)),
-			Arrays.asList(read(gson, "rewards.json", Reward[].class)));
+			Arrays.asList(read(gson, "rewards.json", Reward[].class)),
+			Arrays.asList(read(gson, "materials.json", Material[].class)));
 	}
 
 	public Reward getReward(String name)

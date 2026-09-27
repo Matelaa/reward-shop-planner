@@ -169,6 +169,7 @@ public class PlannerCalculator
 		Set<String> setsPaid = new HashSet<>();
 		// per currency: {price, sold back for} of each item that will be resold
 		Map<String, List<long[]>> resold = new HashMap<>();
+		Map<String, List<long[]>> resoldMaterials = new HashMap<>();
 		// items traded in for an upgrade are gone, so they can't be sold back
 		Set<String> tradedIn = new HashSet<>();
 		for (String item : items)
@@ -204,6 +205,10 @@ public class PlannerCalculator
 				long amount = material.getValue();
 				long returned = refund != null && refund.getRate() != null ? (long) Math.floor(amount * refund.getRate()) : 0;
 				sheet.addMaterial(material.getKey(), amount, amount - returned);
+				if (returned > 0)
+				{
+					resoldMaterials.computeIfAbsent(material.getKey(), k -> new ArrayList<>()).add(new long[]{amount, returned});
+				}
 			}
 		}
 
@@ -211,20 +216,24 @@ public class PlannerCalculator
 		// first, biggest refund first, the balance needed is the highest point reached, never less
 		// than the total really spent. (Castle Wars: every item refunds in full, so you only need
 		// the price of the most expensive one.)
-		for (Map.Entry<String, List<long[]>> entry : resold.entrySet())
-		{
-			List<long[]> purchases = entry.getValue();
-			purchases.sort((a, b) -> Long.compare(b[1], a[1]));
-			long spent = 0;
-			long peak = 0;
-			for (long[] purchase : purchases)
-			{
-				peak = Math.max(peak, spent + purchase[0]);
-				spent += purchase[0] - purchase[1];
-			}
-			sheet.raiseNet(entry.getKey(), peak);
-		}
+		// Materials work the same way: the funky shaped log takes 500 of each log up front.
+		resold.forEach((currency, purchases) -> sheet.raiseNet(currency, peakHeld(purchases)));
+		resoldMaterials.forEach((material, purchases) -> sheet.raiseMaterialNet(material, peakHeld(purchases)));
 		return sheet;
+	}
+
+	/** Highest amount held while buying {price, sold back for} purchases in the best order. */
+	private static long peakHeld(List<long[]> purchases)
+	{
+		purchases.sort((a, b) -> Long.compare(b[1], a[1]));
+		long spent = 0;
+		long peak = 0;
+		for (long[] purchase : purchases)
+		{
+			peak = Math.max(peak, spent + purchase[0]);
+			spent += purchase[0] - purchase[1];
+		}
+		return peak;
 	}
 
 	/**

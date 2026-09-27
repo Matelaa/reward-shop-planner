@@ -15,6 +15,8 @@ from the game.
 - **Your log, synced**: open a page in the collection log and the planner knows what you already have.
 - **Balances read from the game**: bank and inventory items, the Forestry kit, reward shop screens and
   game messages. No typing numbers in.
+- **Materials counted too**: the logs, bars and thread some rewards need show "have / need", from your
+  bank, inventory (noted ones included) and log basket.
 - **One goal for everything**: every item you pick adds up into one bar per currency, with extra goals
   for things outside the log (sawmill vouchers, anyone?).
 - **Knows the rules**: upgrades that trade items in (Lumberjack into Forestry, Void into Elite Void),
@@ -34,6 +36,16 @@ Nothing is sold back unless you choose it. Right-click an item and pick **Sell b
 than what you must hold to buy the items one at a time. Your account type is read from the game, so
 ultimate ironmen never count the Forestry sell-backs they can't make. TzHaar prices follow your Karamja gloves. Recoloured outfits
 like the Varlamore graceful are one purchase for the whole set, and the planner adds the base set they trade in.
+
+### Materials
+
+| On each page | For your whole goal |
+|---|---|
+| ![Materials on a page](docs/marketing/feature-materials.png) | ![Materials on the home screen](docs/marketing/feature-materials-home.png) |
+
+Some rewards also take logs, bars or thread (the Forestry outfit, the funky shaped log, the log brace...).
+Hover **Materials** to see what you have against what you need. The count adds your bank (as of the last
+time you opened it), your inventory and your log basket, and updates as you go.
 
 ### Tokkul and Karamja gloves
 
