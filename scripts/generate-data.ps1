@@ -1,4 +1,4 @@
-<#
+﻿<#
   Reward Shop Planner - data generator.
 
   Reads scripts/sources.json, pulls the collection log pages and store prices from the
@@ -316,7 +316,8 @@ Write-Json @($rewardOut)   'rewards.json'
 # ---------------------------------------------------------------------------
 $curName = @{}; foreach ($c in $sources.currencies) { $curName[$c.id] = $c.name }
 function Format-Cost($cost) {
-    (@($cost.Keys) | ForEach-Object { '{0:N0} {1}' -f $cost[$_], $curName[$_] }) -join ' + '
+    # invariant culture: the same text on every machine (the weekly job runs on an English server)
+    (@($cost.Keys) | ForEach-Object { [string]::Format([Globalization.CultureInfo]::InvariantCulture, '{0:N0} {1}', $cost[$_], $curName[$_]) }) -join ' + '
 }
 
 $md = New-Object System.Text.StringBuilder
