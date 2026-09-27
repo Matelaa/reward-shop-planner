@@ -63,6 +63,7 @@ public class MarketingRenderer
 		"Coal bag", "Decorative helm (red)", "Decorative sword (red)", "Decorative shield (red)",
 		"Void knight top", "Void knight robe", "Void knight gloves"));
 	private final Set<String> wanted = new LinkedHashSet<>();
+	private final Set<String> sellBack = new LinkedHashSet<>();
 	private final Map<String, String> preferred = new HashMap<>();
 	private final Map<String, Long> balances = Map.of(
 		"anima_bark", 5_320L, "pheasant_feather", 9L, "golden_nugget", 150L, "pc_points", 135L, "cw_ticket", 74L,
@@ -127,7 +128,8 @@ public class MarketingRenderer
 		panel.update(model());
 		Point helmet = slotCenter(panel, "Prospector helmet");
 		add(frames, delays, snapshot(panel, helmet), 1200);
-		BufferedImage menu = withShopMenu(snapshot(panel, helmet), helmet);
+		BufferedImage menu = withMenu(snapshot(panel, helmet), helmet, new String[]{"Remove from goal", "I already have this", "Buy from:",
+			"◉ Motherlode Mine (40 Golden nugget)", "○ Volcanic Mine (26,000 VM points)"}, 3, 2);
 		add(frames, delays, menu, 1600);
 		preferred.put("Prospector helmet", "motherlode_mine");
 		panel.update(model());
@@ -150,14 +152,48 @@ public class MarketingRenderer
 		BufferedImage setStill = withTooltip(snapshot(panel, hood), panel, "Graceful hood (Varlamore)");
 		add(frames, delays, setStill, 2600);
 
-		// 4c. sell-backs: the funky shaped log goes back to the shop for 80%
+		// 4c. sell-backs are opt-in: right-click the funky shaped log, sell it back (80%), the goal drops
 		panel.open("forestry");
 		wanted.add("Cape pouch");
 		panel.update(model());
 		Point funky = slotCenter(panel, "Funky shaped log");
+		add(frames, delays, snapshot(panel, funky), 1000);
+		add(frames, delays, withMenu(snapshot(panel, funky), funky,
+			new String[]{"Remove from goal", "I already have this", "☐ Sell back after logging it"}, 2, -1), 1700);
+		sellBack.add("Funky shaped log");
+		panel.update(model());
+		add(frames, delays, snapshot(panel, null), 1500);
+		sellBack.add("Cape pouch");
+		panel.update(model());
 		add(frames, delays, withTooltip(snapshot(panel, funky), panel, "Funky shaped log"), 2800);
 		// taller still so the tooltip fits below the item and the "back from sell-backs" line stays visible
 		BufferedImage sellBackStill = withTooltip(snapshot(panel, funky, 540), panel, "Funky shaped log");
+
+		// 4d. Castle Wars refunds in full: "sell back all" leaves only the dearest item's price
+		panel.open("castle_wars");
+		for (String item : data.getActivities().get("castle_wars").getClogItems())
+		{
+			if (!owned.contains(item) && data.getReward(item) != null)
+			{
+				wanted.add(item);
+			}
+		}
+		panel.update(model());
+		Point sellAll = linkCenter(panel, "sell back all");
+		add(frames, delays, snapshot(panel, null), 1400);
+		add(frames, delays, snapshot(panel, sellAll), 900);
+		for (String item : data.getActivities().get("castle_wars").getClogItems())
+		{
+			if (wanted.contains(item))
+			{
+				sellBack.add(item);
+			}
+		}
+		panel.update(model());
+		add(frames, delays, snapshot(panel, null), 2600);
+		BufferedImage castleWarsStill = snapshot(panel, null);
+		// keep the home screen readable: only a couple of Castle Wars items stay in the goal
+		wanted.removeAll(data.getActivities().get("castle_wars").getClogItems());
 
 		// 5. back home: the combined goal
 		wanted.add("Decorative helm (white)");
@@ -177,6 +213,7 @@ public class MarketingRenderer
 		ImageIO.write(goalsStill, "png", new File(OUT, "feature-goals.png"));
 		ImageIO.write(setStill, "png", new File(OUT, "feature-sets.png"));
 		ImageIO.write(sellBackStill, "png", new File(OUT, "feature-sellbacks.png"));
+		ImageIO.write(castleWarsStill, "png", new File(OUT, "feature-sellall.png"));
 		ImageIO.write(hero(home, forestryStill), "png", new File(OUT, "hero.png"));
 	}
 
@@ -184,10 +221,10 @@ public class MarketingRenderer
 	{
 		Plan plan = new PlannerCalculator(data).plan(PlannerInput.builder()
 			.owned(owned).wanted(wanted).balances(balances).preferredActivity(preferred)
-			.accountMode(AccountMode.IRONMAN).build());
+			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).build());
 		return new PanelModel(data, plan, balances, owned, Set.of(),
 			Set.of("Forestry", "Motherlode Mine", "Castle Wars", "Pest Control", "Temple Trekking", "Colossal Wyrm Agility"),
-			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, true, false);
+			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, false, false);
 	}
 
 	private static BufferedImage icon(int itemId, Runnable onLoaded)
@@ -264,6 +301,34 @@ public class MarketingRenderer
 		return null;
 	}
 
+	/** Centre of a text link (e.g. "sell back all"), in content coordinates. */
+	private static Point linkCenter(PlannerPanel panel, String text)
+	{
+		JComponent content = content(panel);
+		javax.swing.JLabel label = findLabel(content, text);
+		return label == null ? null : SwingUtilities.convertPoint(label, label.getWidth() / 2, label.getHeight() / 2, content);
+	}
+
+	private static javax.swing.JLabel findLabel(Container c, String text)
+	{
+		for (Component child : c.getComponents())
+		{
+			if (child instanceof javax.swing.JLabel && text.equals(((javax.swing.JLabel) child).getText()))
+			{
+				return (javax.swing.JLabel) child;
+			}
+			if (child instanceof Container)
+			{
+				javax.swing.JLabel found = findLabel((Container) child, text);
+				if (found != null)
+				{
+					return found;
+				}
+			}
+		}
+		return null;
+	}
+
 	private static List<ItemSlot> slots(Container c)
 	{
 		List<ItemSlot> out = new ArrayList<>();
@@ -325,10 +390,9 @@ public class MarketingRenderer
 		return frame;
 	}
 
-	/** Draws the right-click "Buy from" menu next to a slot, as the client shows it. */
-	private BufferedImage withShopMenu(BufferedImage frame, Point at)
+	/** Draws a right-click menu next to a slot, as the client shows it: one highlighted line, one greyed title. */
+	private static BufferedImage withMenu(BufferedImage frame, Point at, String[] lines, int highlighted, int title)
 	{
-		String[] lines = {"Remove from goal", "I already have this", "Buy from:", "◉ Motherlode Mine (40 Golden nugget)", "○ Volcanic Mine (26,000 VM points)"};
 		Graphics2D g = frame.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.scale(SCALE, SCALE);
@@ -354,17 +418,17 @@ public class MarketingRenderer
 		for (int i = 0; i < lines.length; i++)
 		{
 			int ly = y + 4 + (i + 1) * lineHeight - 4;
-			if (i == 3)
+			if (i == highlighted)
 			{
 				g.setColor(new Color(0x4b6eaf));
 				g.fillRect(x + 2, ly - 12, width - 4, lineHeight);
 			}
-			if (i == 2)
+			if (i == title)
 			{
 				g.setColor(new Color(0x5a5d60));
 				g.drawLine(x + 6, ly - 14, x + width - 6, ly - 14);
 			}
-			g.setColor(i == 2 ? new Color(0x9a9a9a) : Color.WHITE);
+			g.setColor(i == title ? new Color(0x9a9a9a) : Color.WHITE);
 			g.drawString(lines[i], x + 8, ly);
 		}
 		g.dispose();
@@ -389,14 +453,23 @@ public class MarketingRenderer
 		g.setColor(new Color(255, 152, 31, 28));
 		g.fillOval(-200, 380, 700, 500);
 
+		try
+		{
+			BufferedImage logo = ImageIO.read(new File(OUT, "logo.png"));
+			g.drawImage(logo, 54, 58, 132, 132, null);
+		}
+		catch (Exception e)
+		{
+			// the logo is optional
+		}
 		g.setColor(ColorScheme.BRAND_ORANGE);
-		g.setFont(FontManager.getRunescapeBoldFont().deriveFont(58f));
-		g.drawString("Reward Shop", 64, 170);
-		g.drawString("Planner", 64, 232);
+		g.setFont(FontManager.getRunescapeBoldFont().deriveFont(54f));
+		g.drawString("Reward Shop", 204, 118);
+		g.drawString("Planner", 204, 176);
 		g.setColor(new Color(0xdddddd));
 		g.setFont(new Font("SansSerif", Font.PLAIN, 24));
-		g.drawString("Plan the reward-shop slots", 66, 292);
-		g.drawString("of your collection log.", 66, 324);
+		g.drawString("Plan the reward-shop slots", 66, 262);
+		g.drawString("of your collection log.", 66, 294);
 		g.setFont(new Font("SansSerif", Font.PLAIN, 19));
 		g.setColor(new Color(0xb5b5b5));
 		String[] points = {
@@ -408,9 +481,9 @@ public class MarketingRenderer
 		for (int i = 0; i < points.length; i++)
 		{
 			g.setColor(ColorScheme.BRAND_ORANGE);
-			g.fillOval(68, 372 + i * 38, 9, 9);
+			g.fillOval(68, 352 + i * 40, 9, 9);
 			g.setColor(new Color(0xc8c8c8));
-			g.drawString(points[i], 90, 382 + i * 38);
+			g.drawString(points[i], 90, 362 + i * 40);
 		}
 
 		drawPanel(g, page, 540, 48, 0.62);

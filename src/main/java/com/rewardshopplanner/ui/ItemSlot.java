@@ -24,21 +24,24 @@ class ItemSlot extends JComponent
 	static final int HEIGHT = 36;
 	private static final Color GOAL = ColorScheme.BRAND_ORANGE;
 	private static final Color HOVER = ColorScheme.DARKER_GRAY_HOVER_COLOR;
+	private static final Color SELL_BACK = new Color(0x2a9d3a);
 
 	private final BufferedImage icon;
 	private final String fallbackText;
 	private final boolean owned;
 	private final boolean wanted;
 	private final boolean needsChoice;
+	private final boolean sellBack;
 	private boolean hover;
 
-	ItemSlot(BufferedImage icon, String name, boolean owned, boolean wanted, boolean needsChoice)
+	ItemSlot(BufferedImage icon, String name, boolean owned, boolean wanted, boolean needsChoice, boolean sellBack)
 	{
 		this.icon = icon;
 		this.fallbackText = initials(name);
 		this.owned = owned;
 		this.wanted = wanted;
 		this.needsChoice = needsChoice;
+		this.sellBack = sellBack;
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setCursor(Cursor.getPredefinedCursor(owned ? Cursor.DEFAULT_CURSOR : Cursor.HAND_CURSOR));
 		addMouseListener(new java.awt.event.MouseAdapter()
@@ -100,6 +103,19 @@ class ItemSlot extends JComponent
 			g.setColor(ColorScheme.DARKER_GRAY_COLOR);
 			g.setFont(FontManager.getRunescapeSmallFont());
 			g.drawString("?", w - 10, 11);
+		}
+		if (sellBack && !owned)
+		{
+			// green badge with a return arrow: sold back to the shop once logged
+			int x = 3;
+			int y = h - 13;
+			g.setColor(SELL_BACK);
+			g.fillOval(x, y, 10, 10);
+			g.setColor(Color.WHITE);
+			g.setStroke(new BasicStroke(1.2f));
+			g.drawArc(x + 3, y + 2, 5, 5, 270, 270);
+			g.drawLine(x + 5, y + 7, x + 3, y + 7);
+			g.drawLine(x + 3, y + 7, x + 4, y + 5);
 		}
 		g.dispose();
 	}

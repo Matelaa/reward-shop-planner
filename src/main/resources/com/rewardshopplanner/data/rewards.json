@@ -46,7 +46,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  80
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  80
+                                       }
                        }
                    ],
         "consumes":  [
@@ -78,7 +81,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  6
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  6
+                                       }
                        }
                    ],
         "consumes":  [
@@ -110,7 +116,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  60
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  60
+                                       }
                        }
                    ],
         "consumes":  [
@@ -142,7 +151,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  75
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  75
+                                       }
                        }
                    ],
         "consumes":  [
@@ -174,7 +186,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  60
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  60
+                                       }
                        }
                    ],
         "consumes":  [
@@ -206,7 +221,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -238,7 +256,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  800
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  800
+                                       }
                        }
                    ],
         "consumes":  [
@@ -270,7 +291,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -302,7 +326,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  75
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  75
+                                       }
                        }
                    ],
         "consumes":  [
@@ -334,7 +361,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  10
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  10
+                                       }
                        }
                    ],
         "consumes":  [
@@ -366,7 +396,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -398,7 +431,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  20
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  20
+                                       }
                        }
                    ],
         "consumes":  [
@@ -430,7 +466,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  4
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  4
+                                       }
                        }
                    ],
         "consumes":  [
@@ -462,7 +501,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  400
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  400
+                                       }
                        }
                    ],
         "consumes":  [
@@ -494,7 +536,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  6
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  6
+                                       }
                        }
                    ],
         "consumes":  [
@@ -526,7 +571,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  400
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  400
+                                       }
                        }
                    ],
         "consumes":  [
@@ -558,7 +606,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  5
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  5
+                                       }
                        }
                    ],
         "consumes":  [
@@ -590,7 +641,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  6
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  6
+                                       }
                        }
                    ],
         "consumes":  [
@@ -622,7 +676,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -654,7 +711,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  600
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  600
+                                       }
                        }
                    ],
         "consumes":  [
@@ -686,7 +746,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  500
+                                       }
                        }
                    ],
         "consumes":  [
@@ -718,7 +781,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  30
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  30
+                                       }
                        }
                    ],
         "consumes":  [
@@ -750,7 +816,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  100
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  100
+                                       }
                        }
                    ],
         "consumes":  [
@@ -782,7 +851,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  600
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  600
+                                       }
                        }
                    ],
         "consumes":  [
@@ -814,7 +886,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  8
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  8
+                                       }
                        }
                    ],
         "consumes":  [
@@ -846,7 +921,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -878,7 +956,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  50
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  50
+                                       }
                        }
                    ],
         "consumes":  [
@@ -910,7 +991,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -942,7 +1026,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  4
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  4
+                                       }
                        }
                    ],
         "consumes":  [
@@ -974,7 +1061,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  75
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  75
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1006,7 +1096,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  500
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1038,7 +1131,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  30
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  30
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1070,7 +1166,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  10
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  10
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1102,7 +1201,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  10
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  10
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1134,7 +1236,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  5
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  5
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1166,7 +1271,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  60
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  60
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1198,7 +1306,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  600
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  600
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1230,7 +1341,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  100
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  100
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1262,7 +1376,10 @@
                            "store":  "Castle Wars Ticket Exchange",
                            "cost":  {
                                         "cw_ticket":  10
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "cw_ticket":  10
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1430,7 +1547,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  4000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  3200
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1462,7 +1582,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  200
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  160
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1494,7 +1617,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  2000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  1600
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1526,7 +1652,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  3500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  2800
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1558,7 +1687,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  15
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  12
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1590,7 +1722,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  3500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  2800
+                                       }
                        }
                    ],
         "consumes":  [
@@ -1686,7 +1821,10 @@
                            "store":  "Giants\u0027 Foundry Reward Shop",
                            "cost":  {
                                         "foundry_rep":  4000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "foundry_rep":  3200
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2294,7 +2432,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  400
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2326,7 +2467,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  160
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  128
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2550,7 +2694,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  160
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  128
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2582,7 +2729,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  450
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  360
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2614,7 +2764,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  160
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  128
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2678,7 +2831,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  450
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  360
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2710,7 +2866,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  450
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  360
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2838,7 +2997,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  450
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  360
+                                       }
                        }
                    ],
         "consumes":  [
@@ -2870,7 +3032,10 @@
                            "store":  "Justine\u0027s stuff for the Last Shopper Standing",
                            "cost":  {
                                         "lms_points":  450
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "lms_points":  360
+                                       }
                        }
                    ],
         "consumes":  [
@@ -3651,7 +3816,10 @@
                            "store":  "Farmer Gricoller\u0027s Rewards",
                            "cost":  {
                                         "tithe_points":  150
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tithe_points":  120
+                                       }
                        }
                    ],
         "consumes":  [
@@ -3715,7 +3883,10 @@
                            "store":  "Farmer Gricoller\u0027s Rewards",
                            "cost":  {
                                         "tithe_points":  125
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tithe_points":  100
+                                       }
                        }
                    ],
         "consumes":  [
@@ -3747,7 +3918,10 @@
                            "store":  "Farmer Gricoller\u0027s Rewards",
                            "cost":  {
                                         "tithe_points":  50
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tithe_points":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -3779,7 +3953,10 @@
                            "store":  "Farmer Gricoller\u0027s Rewards",
                            "cost":  {
                                         "tithe_points":  75
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tithe_points":  60
+                                       }
                        }
                    ],
         "consumes":  [
@@ -3858,7 +4035,7 @@
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "Também vendido por 750 Slayer points; não confirmado se essa compra marca o slot."
+        "notes":  "Also sold for 750 Slayer points; not confirmed whether that purchase fills the log slot."
     },
     {
         "name":  "Purple navy slacks",
@@ -4835,7 +5012,10 @@
                            "store":  "Vale Research Exchange",
                            "cost":  {
                                         "vale_research":  350
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "vale_research":  175
+                                       }
                        }
                    ],
         "consumes":  [
@@ -4908,7 +5088,10 @@
                            "store":  "Vale Research Exchange",
                            "cost":  {
                                         "vale_research":  250
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "vale_research":  125
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5018,7 +5201,10 @@
                            "store":  "Prospector Percy\u0027s Nugget Shop",
                            "cost":  {
                                         "golden_nugget":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  32
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5060,7 +5246,10 @@
                            "store":  "Prospector Percy\u0027s Nugget Shop",
                            "cost":  {
                                         "golden_nugget":  50
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  40
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5102,7 +5291,10 @@
                            "store":  "Prospector Percy\u0027s Nugget Shop",
                            "cost":  {
                                         "golden_nugget":  30
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  24
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5176,7 +5368,10 @@
                            "store":  "Prospector Percy\u0027s Nugget Shop",
                            "cost":  {
                                         "golden_nugget":  60
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  48
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5536,7 +5731,10 @@
                            "store":  "Forestry Shop",
                            "cost":  {
                                         "anima_bark":  5000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "anima_bark":  4000
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5652,7 +5850,10 @@
                            "store":  "Forestry Shop",
                            "cost":  {
                                         "anima_bark":  2500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "anima_bark":  2000
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5687,7 +5888,10 @@
                            "store":  "Forestry Shop",
                            "cost":  {
                                         "anima_bark":  15000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "anima_bark":  12000
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5939,7 +6143,10 @@
                            "store":  "Prospector Percy\u0027s Nugget Shop",
                            "cost":  {
                                         "golden_nugget":  100
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  80
+                                       }
                        }
                    ],
         "consumes":  [
@@ -5971,7 +6178,10 @@
                            "store":  "Prospector Percy\u0027s Nugget Shop",
                            "cost":  {
                                         "golden_nugget":  100
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "golden_nugget":  80
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6003,7 +6213,10 @@
                            "store":  "Grace\u0027s Graceful Clothing",
                            "cost":  {
                                         "mark_of_grace":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "mark_of_grace":  32
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6035,7 +6248,10 @@
                            "store":  "Grace\u0027s Graceful Clothing",
                            "cost":  {
                                         "mark_of_grace":  35
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "mark_of_grace":  28
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6067,7 +6283,10 @@
                            "store":  "Grace\u0027s Graceful Clothing",
                            "cost":  {
                                         "mark_of_grace":  60
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "mark_of_grace":  48
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6099,7 +6318,10 @@
                            "store":  "Grace\u0027s Graceful Clothing",
                            "cost":  {
                                         "mark_of_grace":  30
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "mark_of_grace":  24
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6131,7 +6353,10 @@
                            "store":  "Grace\u0027s Graceful Clothing",
                            "cost":  {
                                         "mark_of_grace":  55
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "mark_of_grace":  44
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6163,7 +6388,10 @@
                            "store":  "Grace\u0027s Graceful Clothing",
                            "cost":  {
                                         "mark_of_grace":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "mark_of_grace":  32
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6195,7 +6423,10 @@
                            "store":  "Dusuri\u0027s Star Shop",
                            "cost":  {
                                         "stardust":  2000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "stardust":  1600
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6227,7 +6458,10 @@
                            "store":  "Dusuri\u0027s Star Shop",
                            "cost":  {
                                         "stardust":  3000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "stardust":  2400
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6259,7 +6493,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  60000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  6000
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  52000
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  14000
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6291,7 +6534,16 @@
                            "store":  "TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  84480
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  8448
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  73216
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  19712
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6323,7 +6575,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  67500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  6750
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  58500
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  15750
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6355,7 +6616,16 @@
                            "store":  "TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  100500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  10050
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  87100
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  23450
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6387,7 +6657,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  75001
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  7500
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  65001
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  17500
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6419,7 +6698,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  90000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  9000
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  78000
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  21000
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6451,7 +6739,16 @@
                            "store":  "TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  126000
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  12600
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  109200
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  29400
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6483,7 +6780,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  52500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  5250
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  45500
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  12250
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6515,7 +6821,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  37500
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  3750
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  32500
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  8750
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6547,7 +6862,16 @@
                            "store":  "TzHaar-Hur-Tel\u0027s Equipment Store / TzHaar-Hur-Zal\u0027s Equipment Store",
                            "cost":  {
                                         "tokkul":  375
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "tokkul":  37
+                                       },
+                           "karamjaGlovesCost":  {
+                                                     "tokkul":  325
+                                                 },
+                           "karamjaGlovesBuyBack":  {
+                                                        "tokkul":  87
+                                                    }
                        }
                    ],
         "consumes":  [
@@ -6579,7 +6903,10 @@
                            "store":  "Mining Guild Mineral Exchange",
                            "cost":  {
                                         "unid_minerals":  40
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "unid_minerals":  32
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6643,7 +6970,10 @@
                            "store":  "Mining Guild Mineral Exchange",
                            "cost":  {
                                         "unid_minerals":  100
-                                    }
+                                    },
+                           "buyBack":  {
+                                           "unid_minerals":  80
+                                       }
                        }
                    ],
         "consumes":  [
@@ -6688,12 +7018,12 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "220 de cada função se já tiver matado a Queen antes de comprar."
+        "notes":  "220 of each role once you have killed the Penance Queen."
     },
     {
         "name":  "Ranger hat",
@@ -6723,12 +7053,12 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "220 de cada função com desconto da Queen."
+        "notes":  "220 of each role after killing the Penance Queen."
     },
     {
         "name":  "Healer hat",
@@ -6758,12 +7088,12 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "220 de cada função com desconto da Queen."
+        "notes":  "220 of each role after killing the Penance Queen."
     },
     {
         "name":  "Runner hat",
@@ -6793,12 +7123,12 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "220 de cada função com desconto da Queen."
+        "notes":  "220 of each role after killing the Penance Queen."
     },
     {
         "name":  "Fighter torso",
@@ -6828,12 +7158,12 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "300 de cada função com desconto da Queen."
+        "notes":  "300 of each role after killing the Penance Queen."
     },
     {
         "name":  "Penance skirt",
@@ -6863,12 +7193,12 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "300 de cada função com desconto da Queen."
+        "notes":  "300 of each role after killing the Penance Queen."
     },
     {
         "name":  "Runner boots",
@@ -6903,7 +7233,7 @@
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "80 de cada função com desconto da Queen."
+        "notes":  "80 of each role after killing the Penance Queen."
     },
     {
         "name":  "Penance gloves",
@@ -6938,7 +7268,7 @@
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "120 de cada função com desconto da Queen."
+        "notes":  "120 of each role after killing the Penance Queen."
     },
     {
         "name":  "Granite body",
@@ -6965,7 +7295,7 @@
 
                       },
         "requirements":  [
-                             "Matar a Penance Queen"
+                             "Kill the Penance Queen"
                          ],
         "refund":  null,
         "set":  null,
@@ -7355,7 +7685,7 @@
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "Desbloqueio de feitiço (não é item)."
+        "notes":  "Spell unlock, not an item."
     },
     {
         "name":  "Prescription goggles",
@@ -7639,7 +7969,7 @@
         "refund":  null,
         "set":  null,
         "milestone":  null,
-        "notes":  "A loja chama o item de \u0027Void seal\u0027."
+        "notes":  "The shop lists it as \u0027Void seal\u0027."
     },
     {
         "name":  "Elite void top",
@@ -7740,7 +8070,7 @@
         "refund":  null,
         "set":  "Graceful (Agility Arena)",
         "milestone":  null,
-        "notes":  "Custo por set completo; recolore o Graceful padrão."
+        "notes":  "One price for the whole set; recolours the regular graceful outfit."
     },
     {
         "name":  "Graceful top (Agility Arena)",
@@ -7777,7 +8107,7 @@
         "refund":  null,
         "set":  "Graceful (Agility Arena)",
         "milestone":  null,
-        "notes":  "Custo por set completo; recolore o Graceful padrão."
+        "notes":  "One price for the whole set; recolours the regular graceful outfit."
     },
     {
         "name":  "Graceful legs (Agility Arena)",
@@ -7814,7 +8144,7 @@
         "refund":  null,
         "set":  "Graceful (Agility Arena)",
         "milestone":  null,
-        "notes":  "Custo por set completo; recolore o Graceful padrão."
+        "notes":  "One price for the whole set; recolours the regular graceful outfit."
     },
     {
         "name":  "Graceful gloves (Agility Arena)",
@@ -7851,7 +8181,7 @@
         "refund":  null,
         "set":  "Graceful (Agility Arena)",
         "milestone":  null,
-        "notes":  "Custo por set completo; recolore o Graceful padrão."
+        "notes":  "One price for the whole set; recolours the regular graceful outfit."
     },
     {
         "name":  "Graceful boots (Agility Arena)",
@@ -7888,7 +8218,7 @@
         "refund":  null,
         "set":  "Graceful (Agility Arena)",
         "milestone":  null,
-        "notes":  "Custo por set completo; recolore o Graceful padrão."
+        "notes":  "One price for the whole set; recolours the regular graceful outfit."
     },
     {
         "name":  "Graceful cape (Agility Arena)",
@@ -7925,7 +8255,7 @@
         "refund":  null,
         "set":  "Graceful (Agility Arena)",
         "milestone":  null,
-        "notes":  "Custo por set completo; recolore o Graceful padrão."
+        "notes":  "One price for the whole set; recolours the regular graceful outfit."
     },
     {
         "name":  "Graceful hood (Varlamore)",
@@ -7962,7 +8292,7 @@
         "refund":  null,
         "set":  "Graceful (Varlamore)",
         "milestone":  null,
-        "notes":  "Graceful crafting kit: custo por set completo."
+        "notes":  "Graceful crafting kit: one price for the whole set."
     },
     {
         "name":  "Graceful top (Varlamore)",
@@ -7999,7 +8329,7 @@
         "refund":  null,
         "set":  "Graceful (Varlamore)",
         "milestone":  null,
-        "notes":  "Graceful crafting kit: custo por set completo."
+        "notes":  "Graceful crafting kit: one price for the whole set."
     },
     {
         "name":  "Graceful legs (Varlamore)",
@@ -8036,7 +8366,7 @@
         "refund":  null,
         "set":  "Graceful (Varlamore)",
         "milestone":  null,
-        "notes":  "Graceful crafting kit: custo por set completo."
+        "notes":  "Graceful crafting kit: one price for the whole set."
     },
     {
         "name":  "Graceful gloves (Varlamore)",
@@ -8073,7 +8403,7 @@
         "refund":  null,
         "set":  "Graceful (Varlamore)",
         "milestone":  null,
-        "notes":  "Graceful crafting kit: custo por set completo."
+        "notes":  "Graceful crafting kit: one price for the whole set."
     },
     {
         "name":  "Graceful boots (Varlamore)",
@@ -8110,7 +8440,7 @@
         "refund":  null,
         "set":  "Graceful (Varlamore)",
         "milestone":  null,
-        "notes":  "Graceful crafting kit: custo por set completo."
+        "notes":  "Graceful crafting kit: one price for the whole set."
     },
     {
         "name":  "Graceful cape (Varlamore)",
@@ -8147,7 +8477,7 @@
         "refund":  null,
         "set":  "Graceful (Varlamore)",
         "milestone":  null,
-        "notes":  "Graceful crafting kit: custo por set completo."
+        "notes":  "Graceful crafting kit: one price for the whole set."
     },
     {
         "name":  "Expert mining gloves",

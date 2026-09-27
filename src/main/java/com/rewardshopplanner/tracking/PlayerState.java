@@ -30,14 +30,36 @@ public class PlayerState
 	private Map<String, Long> forestryKitItems = new HashMap<>();
 	/** Currencies read from game vars, by currency id. */
 	private Map<String, Long> varBalances = new HashMap<>();
-	/** Balances typed by the player; take priority over tracked values. */
+	/**
+	 * Balances typed by the player, or read from game text that no var holds (shop screens, chat).
+	 * They take priority, until a tracked reading (item, var) for the same currency changes.
+	 */
 	private Map<String, Long> manualBalances = new HashMap<>();
 	/** Shop picked for items sold in more than one place (item name -> activity id). */
 	private Map<String, String> preferredActivity = new HashMap<>();
 	private Map<String, Long> extraGoals = new LinkedHashMap<>();
+	/** Items the player will sell back to their shop once logged; nothing is sold back by default. */
+	private Set<String> sellBack = new LinkedHashSet<>();
+	/** Whether the Karamja gloves reward was claimed, as last read from the game. */
+	private boolean karamjaGlovesClaimed;
 
 	public PlayerState()
 	{
+	}
+
+	public Set<String> getSellBack()
+	{
+		// older saved states have no sell-back set
+		if (sellBack == null)
+		{
+			sellBack = new LinkedHashSet<>();
+		}
+		return sellBack;
+	}
+
+	public void setKaramjaGlovesClaimed(boolean claimed)
+	{
+		karamjaGlovesClaimed = claimed;
 	}
 
 	/** Owned slots after applying the player's corrections. */

@@ -32,6 +32,24 @@ public class Reward
 		private List<String> activities;
 		private String store;
 		private Map<String, Integer> cost;
+		/** What this store pays when the item is sold back to it, by currency; absent when it doesn't buy it. */
+		private Map<String, Integer> buyBack;
+		/** TzHaar stores: the price while wearing Karamja gloves (about 13% cheaper). */
+		private Map<String, Integer> karamjaGlovesCost;
+		/** TzHaar stores: what they pay back while wearing Karamja gloves (about 2.3x more). */
+		private Map<String, Integer> karamjaGlovesBuyBack;
+
+		/** The price the player pays, with or without Karamja gloves. */
+		public Map<String, Integer> costFor(boolean karamjaGloves)
+		{
+			return karamjaGloves && karamjaGlovesCost != null ? karamjaGlovesCost : cost;
+		}
+
+		/** What the store pays back, with or without Karamja gloves; null when it doesn't buy it. */
+		public Map<String, Integer> buyBackFor(boolean karamjaGloves)
+		{
+			return karamjaGloves && karamjaGlovesBuyBack != null ? karamjaGlovesBuyBack : buyBack;
+		}
 	}
 
 	@Getter

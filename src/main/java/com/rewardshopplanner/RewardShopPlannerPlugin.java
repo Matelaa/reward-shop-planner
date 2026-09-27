@@ -310,6 +310,15 @@ public class RewardShopPlannerPlugin extends Plugin
 			refresh();
 			return;
 		}
+		if (event.getVarbitId() == VarbitID.ATJUN_EASY_REWARD)
+		{
+			if (readKaramjaGloves())
+			{
+				saveState();
+			}
+			refresh();
+			return;
+		}
 		Currency composite = event.getVarbitId() != -1 ? compositeCurrencies.get(event.getVarbitId()) : null;
 		if (composite != null)
 		{
@@ -359,7 +368,12 @@ public class RewardShopPlannerPlugin extends Plugin
 			{
 				long count = container.count(entry.getKey());
 				Long previous = target.put(entry.getValue().getId(), count);
-				changed |= !Objects.equals(previous, count);
+				if (!Objects.equals(previous, count))
+				{
+					changed = true;
+					// a fresh reading from the game replaces an amount the player typed
+					state.getManualBalances().remove(entry.getValue().getId());
+				}
 			}
 			if (!changed)
 			{
@@ -373,7 +387,7 @@ public class RewardShopPlannerPlugin extends Plugin
 	@Subscribe
 	public void onScriptPostFired(ScriptPostFired event)
 	{
-		if (event.getScriptId() == ScriptID.COLLECTION_DRAW_LIST)
+		if (event.getScriptId() == ScriptID.COLLECTION_DRAW_LIST && !viewingAnotherPlayersLog())
 		{
 			// the page's widgets are finished on the next client cycle
 			clientThread.invokeLater(this::syncCollectionLogPage);
@@ -383,7 +397,7 @@ public class RewardShopPlannerPlugin extends Plugin
 	@Subscribe
 	public void onScriptPreFired(ScriptPreFired event)
 	{
-		if (event.getScriptId() != COLLECTION_ITEM_TRANSMIT || event.getScriptEvent() == null)
+		if (event.getScriptId() != COLLECTION_ITEM_TRANSMIT || event.getScriptEvent() == null || viewingAnotherPlayersLog())
 		{
 			return;
 		}
@@ -475,6 +489,15 @@ public class RewardShopPlannerPlugin extends Plugin
 		refresh();
 	}
 
+	/**
+	 * True while the collection log shown is another player's (the log book in someone else's
+	 * house); nothing from it may be recorded as the player's own.
+	 */
+	private boolean viewingAnotherPlayersLog()
+	{
+		return client.getVarbitValue(VarbitID.COLLECTION_POH_HOST_BOOK_OPEN) == 1;
+	}
+
 	/** Balances stated in chat (see {@link #CHAT_BALANCES}). */
 	private boolean trackChatBalance(String message)
 	{
@@ -483,11 +506,28 @@ public class RewardShopPlannerPlugin extends Plugin
 			Long value = BalanceTextParser.read(message, (Pattern) entry[0]);
 			if (value != null)
 			{
-				setManualBalance((String) entry[1], value);
+				setGameBalance((String) entry[1], value);
 				return true;
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Stores a balance the game showed as text or in chat (kept with typed balances, since no var
+	 * holds it). Saved in the normal config batch: it can change every few seconds while playing.
+	 */
+	private void setGameBalance(String currencyId, long value)
+	{
+		synchronized (this)
+		{
+			if (Long.valueOf(value).equals(state.getManualBalances().put(currencyId, value)))
+			{
+				return;
+			}
+		}
+		saveState();
+		refresh();
 	}
 
 	/**
@@ -513,7 +553,7 @@ public class RewardShopPlannerPlugin extends Plugin
 		{
 			return false;
 		}
-		setManualBalance(CHOMPY_COUNTER, total);
+		setGameBalance(CHOMPY_COUNTER, total);
 		return true;
 	}
 
@@ -619,7 +659,7 @@ public class RewardShopPlannerPlugin extends Plugin
 	private void readGameValues()
 	{
 		detectAccountMode();
-		boolean changed = false;
+		boolean changed = readKaramjaGloves();
 		for (Currency currency : varpCurrencies.values())
 		{
 			changed |= updateVarBalance(currency, client.getVarpValue(currency.getVarId()));
@@ -655,10 +695,28 @@ public class RewardShopPlannerPlugin extends Plugin
 		}
 	}
 
+	/** Remembers whether the Karamja gloves were claimed; true when that changed. */
+	private synchronized boolean readKaramjaGloves()
+	{
+		boolean claimed = client.getVarbitValue(VarbitID.ATJUN_EASY_REWARD) == 1;
+		if (state.isKaramjaGlovesClaimed() == claimed)
+		{
+			return false;
+		}
+		state.setKaramjaGlovesClaimed(claimed);
+		return true;
+	}
+
 	private synchronized boolean updateVarBalance(Currency currency, long value)
 	{
 		Long previous = state.getVarBalances().put(currency.getId(), value);
-		return !Objects.equals(previous, value);
+		if (Objects.equals(previous, value))
+		{
+			return false;
+		}
+		// a fresh reading from the game replaces an amount the player typed
+		state.getManualBalances().remove(currency.getId());
+		return true;
 	}
 
 	private long readComposite(Currency currency)
@@ -829,6 +887,24 @@ public class RewardShopPlannerPlugin extends Plugin
 		refresh();
 	}
 
+	/** Marks items to sell back to their shop once logged, or to keep. */
+	public void setSellBack(Collection<String> items, boolean sellBack)
+	{
+		synchronized (this)
+		{
+			if (sellBack)
+			{
+				state.getSellBack().addAll(items);
+			}
+			else
+			{
+				state.getSellBack().removeAll(items);
+			}
+		}
+		savePlayerChange();
+		refresh();
+	}
+
 	public void setExtraGoal(String currencyId, Long amount)
 	{
 		synchronized (this)
@@ -879,6 +955,19 @@ public class RewardShopPlannerPlugin extends Plugin
 				return AccountMode.ULTIMATE_IRONMAN;
 			default:
 				return detectedMode;
+		}
+	}
+
+	private boolean karamjaGloves()
+	{
+		switch (config.karamjaGloves())
+		{
+			case YES:
+				return true;
+			case NO:
+				return false;
+			default:
+				return state.isKaramjaGlovesClaimed();
 		}
 	}
 
@@ -953,6 +1042,8 @@ public class RewardShopPlannerPlugin extends Plugin
 
 			Set<String> owned = state.effectiveOwned();
 			AccountMode mode = accountMode();
+			boolean gloves = karamjaGloves();
+			Set<String> sellBack = new HashSet<>(state.getSellBack());
 			PlannerInput input = PlannerInput.builder()
 				.owned(owned)
 				.wanted(new HashSet<>(state.getWanted()))
@@ -960,7 +1051,8 @@ public class RewardShopPlannerPlugin extends Plugin
 				.extraGoals(new LinkedHashMap<>(state.getExtraGoals()))
 				.preferredActivity(new HashMap<>(state.getPreferredActivity()))
 				.accountMode(mode)
-				.applyRefunds(config.countSellBacks())
+				.sellBack(sellBack)
+				.karamjaGloves(gloves)
 				.build();
 			Plan plan = calculator.plan(input);
 
@@ -973,7 +1065,8 @@ public class RewardShopPlannerPlugin extends Plugin
 				new LinkedHashMap<>(state.getExtraGoals()),
 				new HashMap<>(state.getManualBalances()),
 				mode,
-				config.countSellBacks(),
+				sellBack,
+				gloves,
 				config.hideCompleted());
 		}
 		SwingUtilities.invokeLater(() -> target.update(model));

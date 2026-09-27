@@ -41,9 +41,18 @@ public class PlannerInput
 	@Builder.Default
 	private final AccountMode accountMode = AccountMode.MAIN;
 
-	/** Count items that can be sold back to their shop at their net cost. */
+	/** Items the player will sell back to their shop once the slot is logged. */
 	@Builder.Default
-	private final boolean applyRefunds = true;
+	private final Set<String> sellBack = Collections.emptySet();
+
+	/** The player wears Karamja gloves at TzHaar: cheaper prices and better sell-backs. */
+	@Builder.Default
+	private final boolean karamjaGloves = false;
+
+	public boolean isSellBack(String item)
+	{
+		return sellBack.contains(item);
+	}
 
 	public boolean isOwned(String item)
 	{

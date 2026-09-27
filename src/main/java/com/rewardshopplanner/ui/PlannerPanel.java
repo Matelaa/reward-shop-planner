@@ -4,6 +4,7 @@ import com.rewardshopplanner.RewardShopPlannerPlugin;
 import com.rewardshopplanner.calc.AccountMode;
 import com.rewardshopplanner.calc.ActivityPlan;
 import com.rewardshopplanner.calc.Plan;
+import com.rewardshopplanner.calc.PlannerCalculator;
 import com.rewardshopplanner.data.Activity;
 import com.rewardshopplanner.data.Currency;
 import com.rewardshopplanner.data.Reward;
@@ -32,6 +33,7 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
+import javax.swing.JCheckBoxMenuItem;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -174,15 +176,18 @@ public class PlannerPanel extends PluginPanel
 		extra.setToolTipText("Add a currency target outside the log, e.g. sawmill vouchers");
 		header.add(extra, BorderLayout.EAST);
 		content.add(header);
-		JLabel mode = label(modeName() + (model.isNet() ? " · after sell-backs" : " · sell-backs off"),
+		int selling = (int) model.getSellBack().stream()
+			.filter(i -> model.getWanted().contains(i) && !model.getOwned().contains(i))
+			.count();
+		JLabel mode = label(modeName() + (selling > 0 ? " · selling back " + selling : "") + (model.isKaramjaGloves() ? " · Karamja gloves" : ""),
 			FontManager.getRunescapeSmallFont(), MUTED);
 		mode.setToolTipText("<html>Your account type decides which items can be sold back to their shop.<br>"
-			+ "With sell-backs on, goals count what you really spend after selling items back<br>"
-			+ "once their slot is logged. Change both in the plugin settings.</html>");
+			+ "Nothing is sold back unless you choose it: right-click an item, \"Sell back after logging it\".<br>"
+			+ "Account type and Karamja gloves (TzHaar prices) are in the plugin settings.</html>");
 		content.add(mode);
 		content.add(Box.createVerticalStrut(8));
 
-		Map<String, Long> needed = model.isNet() ? plan.getTotal().getNet() : plan.getTotal().getGross();
+		Map<String, Long> needed = plan.getTotal().getNet();
 		if (needed.values().stream().noneMatch(v -> v > 0))
 		{
 			content.add(wrapped("Open a page below and click the items you want.", MUTED));
@@ -415,7 +420,7 @@ public class PlannerPanel extends PluginPanel
 		}
 		content.add(Box.createVerticalStrut(12));
 
-		Map<String, Long> cost = model.isNet() ? activityPlan.getCost().getNet() : activityPlan.getCost().getGross();
+		Map<String, Long> cost = activityPlan.getCost().getNet();
 		if (wantedMissing(activity).isEmpty())
 		{
 			content.add(wrapped("Click the items you want to see what they cost.", MUTED));
@@ -449,6 +454,15 @@ public class PlannerPanel extends PluginPanel
 		actions.setOpaque(false);
 		actions.setAlignmentX(Component.LEFT_ALIGNMENT);
 		actions.setMaximumSize(new Dimension(Integer.MAX_VALUE, 18));
+		List<String> resellable = missing.stream().filter(i -> canSellBack(i, model.getData().getReward(i))).collect(Collectors.toList());
+		if (!resellable.isEmpty())
+		{
+			boolean allSold = model.getSellBack().containsAll(resellable);
+			JLabel sell = link(allSold ? "keep all" : "sell back all", () -> plugin.setSellBack(resellable, !allSold));
+			sell.setToolTipText(allSold ? "Keep every item on this page instead of selling it back"
+				: "Sell every item this shop buys back once its slot is logged (" + resellable.size() + " items)");
+			actions.add(sell);
+		}
 		actions.add(link("all", () -> plugin.setWanted(missing, true)));
 		actions.add(link("none", () -> plugin.setWanted(items, false)));
 		content.add(actions);
@@ -484,7 +498,7 @@ public class PlannerPanel extends PluginPanel
 					holder[0].repaint();
 				}
 			}),
-			item, owned, wanted, needsChoice);
+			item, owned, wanted, needsChoice, model.getSellBack().contains(item) && canSellBack(item, reward));
 		holder[0] = slot;
 		slot.setToolTipText(itemTooltip(item, reward, owned, wanted));
 		slot.addMouseListener(new MouseAdapter()
@@ -526,6 +540,12 @@ public class PlannerPanel extends PluginPanel
 		JMenuItem own = new JMenuItem(owned ? "I don't have this" : "I already have this");
 		own.addActionListener(e -> plugin.setOwned(item, !owned));
 		menu.add(own);
+		if (!owned && canSellBack(item, reward))
+		{
+			JCheckBoxMenuItem sell = new JCheckBoxMenuItem("Sell back after logging it", model.getSellBack().contains(item));
+			sell.addActionListener(e -> plugin.setSellBack(List.of(item), sell.isSelected()));
+			menu.add(sell);
+		}
 
 		if (!owned && reward.getOffers().size() > 1)
 		{
@@ -538,7 +558,7 @@ public class PlannerPanel extends PluginPanel
 			for (Reward.Offer offer : reward.getOffers())
 			{
 				String activityId = offer.getActivities().get(0);
-				JRadioButtonMenuItem choice = new JRadioButtonMenuItem(activityName(activityId) + " (" + formatCost(offer.getCost()) + ")",
+				JRadioButtonMenuItem choice = new JRadioButtonMenuItem(activityName(activityId) + " (" + formatCost(price(offer)) + ")",
 					offer.getActivities().contains(preferred));
 				choice.addActionListener(e -> plugin.setPreferredActivity(item, activityId));
 				group.add(choice);
@@ -552,7 +572,7 @@ public class PlannerPanel extends PluginPanel
 	private JComponent detailsLine(ActivityPlan activityPlan)
 	{
 		List<String> lines = new ArrayList<>();
-		Map<String, Long> materials = model.isNet() ? activityPlan.getCost().getMaterialsNet() : activityPlan.getCost().getMaterialsGross();
+		Map<String, Long> materials = activityPlan.getCost().getMaterialsNet();
 		materials.forEach((name, amount) ->
 		{
 			if (amount > 0)
@@ -760,42 +780,51 @@ public class PlannerPanel extends PluginPanel
 	private String sellBackText(String item, Reward reward)
 	{
 		Reward.Refund refund = reward.getRefund();
-		if (refund == null)
-		{
-			return null;
-		}
-		boolean allowed = !(refund.isNotForUim() && model.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
-			&& !(refund.isOnlyIron() && !model.getAccountMode().isIron());
-		if (!allowed)
+		if (refund != null && ((refund.isNotForUim() && model.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
+			|| (refund.isOnlyIron() && !model.getAccountMode().isIron())))
 		{
 			return "Can be sold back to the shop, but not by " + modeName().toLowerCase(Locale.ROOT) + " accounts.";
+		}
+		if (!canSellBack(item, reward))
+		{
+			return null;
 		}
 		Reward.Offer offer = chosenOffer(item, reward);
 		if (offer == null)
 		{
 			return "Can be sold back to the shop after you log it.";
 		}
-		Map<String, Long> back = new LinkedHashMap<>();
+		Map<String, Long> back = PlannerCalculator.sellBackValue(reward, offer, model.getAccountMode(), model.isKaramjaGloves());
 		Map<String, Long> spent = new LinkedHashMap<>();
-		offer.getCost().forEach((currency, amount) ->
+		price(offer).forEach((currency, amount) -> spent.put(currency, amount - back.getOrDefault(currency, 0L)));
+		if (model.getSellBack().contains(item))
 		{
-			long returned = refund.getRate() != null
-				? (long) Math.floor(amount * refund.getRate())
-				: Math.min(amount, refund.getFixed() == null ? 0 : refund.getFixed().getOrDefault(currency, 0));
-			back.put(currency, returned);
-			spent.put(currency, amount - returned);
-		});
-		String text = "Sells back for " + formatAmounts(back) + " after you log it, so you really spend " + formatAmounts(spent) + ".";
-		return model.isNet() ? text : text + " (sell-backs are off in the settings)";
+			return "↩ Selling back for " + formatAmounts(back) + " after you log it: you really spend " + formatAmounts(spent) + ".";
+		}
+		return "Shop buys it back for " + formatAmounts(back) + ". Right-click to sell it back after logging it.";
+	}
+
+	/** Whether the item can be sold back to its shop by this account (any shop, while none is picked). */
+	private boolean canSellBack(String item, Reward reward)
+	{
+		if (reward == null)
+		{
+			return false;
+		}
+		Reward.Offer chosen = chosenOffer(item, reward);
+		List<Reward.Offer> offers = chosen != null ? List.of(chosen) : reward.getOffers();
+		return offers.stream().anyMatch(o -> !PlannerCalculator.sellBackValue(reward, o, model.getAccountMode(), model.isKaramjaGloves()).isEmpty());
+	}
+
+	/** What the player pays at this shop, with Karamja gloves when they wear them. */
+	private Map<String, Integer> price(Reward.Offer offer)
+	{
+		return offer.costFor(model.isKaramjaGloves());
 	}
 
 	/** "↩ N currency back from sell-backs" for a page, when its goal includes any. */
 	private JComponent sellBackLine(ActivityPlan activityPlan)
 	{
-		if (!model.isNet())
-		{
-			return null;
-		}
 		Map<String, Long> back = new LinkedHashMap<>();
 		activityPlan.getCost().getGross().forEach((currency, gross) ->
 		{
@@ -810,8 +839,9 @@ public class PlannerPanel extends PluginPanel
 			return null;
 		}
 		JLabel label = wrapped("↩ " + formatAmounts(back) + " back from sell-backs", GOOD);
-		label.setToolTipText("<html>You pay the full price first, then sell these items back to the shop<br>"
-			+ "once their slot is logged. The bars above already count the money back.</html>");
+		label.setToolTipText("<html>You pay the full price first, then sell the items marked ↩ back to the shop<br>"
+			+ "once their slot is logged. The bars above already count the money back,<br>"
+			+ "and never go below what you must hold to buy them one at a time.</html>");
 		label.setBorder(new EmptyBorder(2, 0, 2, 0));
 		return label;
 	}
@@ -849,14 +879,16 @@ public class PlannerPanel extends PluginPanel
 				if (reward.getOffers().size() > 1)
 				{
 					return reward.getOffers().stream()
-						.map(o -> formatCost(o.getCost()) + " (" + activityName(o.getActivities().get(0)) + ")")
+						.map(o -> formatCost(price(o)) + " (" + activityName(o.getActivities().get(0)) + ")")
 						.collect(Collectors.joining(" or "));
 				}
 				if (reward.getOffers().isEmpty())
 				{
 					return "";
 				}
-				return formatCost(reward.getOffers().get(0).getCost()) + (reward.getSet() != null ? " for the whole set" : "");
+				Reward.Offer offer = reward.getOffers().get(0);
+				return formatCost(price(offer)) + (reward.getSet() != null ? " for the whole set" : "")
+					+ (model.isKaramjaGloves() && offer.getKaramjaGlovesCost() != null ? " (with Karamja gloves)" : "");
 		}
 	}
 

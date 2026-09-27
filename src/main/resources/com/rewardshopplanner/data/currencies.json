@@ -164,7 +164,7 @@
         "source":  "VARP",
         "gameval":  "SOUL_WARS_ZEAL_TOKENS",
         "varId":  2876,
-        "notes":  "Confirmar no jogo: existe também SOUL_WARS_ZEAL (2871)."
+        "notes":  "Zeal tokens spent in the reward shop (SOUL_WARS_ZEAL, 2871, is a different counter)."
     },
     {
         "id":  "vale_research",

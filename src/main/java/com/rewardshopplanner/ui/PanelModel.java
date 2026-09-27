@@ -28,7 +28,9 @@ public class PanelModel
 	Map<String, Long> extraGoals;
 	Map<String, Long> manualBalances;
 	AccountMode accountMode;
-	/** Show amounts after selling items back. */
-	boolean net;
+	/** Items the player will sell back once logged; the costs already account for them. */
+	Set<String> sellBack;
+	/** TzHaar prices are shown with Karamja gloves on. */
+	boolean karamjaGloves;
 	boolean hideCompleted;
 }

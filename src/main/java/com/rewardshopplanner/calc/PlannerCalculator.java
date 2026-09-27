@@ -4,12 +4,15 @@ import com.rewardshopplanner.data.Activity;
 import com.rewardshopplanner.data.Reward;
 import com.rewardshopplanner.data.RewardData;
 import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -164,6 +167,14 @@ public class PlannerCalculator
 	{
 		CostSheet sheet = new CostSheet();
 		Set<String> setsPaid = new HashSet<>();
+		// per currency: {price, sold back for} of each item that will be resold
+		Map<String, List<long[]>> resold = new HashMap<>();
+		// items traded in for an upgrade are gone, so they can't be sold back
+		Set<String> tradedIn = new HashSet<>();
+		for (String item : items)
+		{
+			tradedIn.addAll(data.getReward(item).getConsumes());
+		}
 		for (String item : items)
 		{
 			Reward reward = data.getReward(item);
@@ -173,20 +184,94 @@ public class PlannerCalculator
 			}
 
 			Reward.Offer offer = chooseOffer(reward, input);
-			Reward.Refund refund = refundFor(reward, input);
-			for (Map.Entry<String, Integer> cost : offer.getCost().entrySet())
+			boolean selling = input.isSellBack(item) && !tradedIn.contains(item);
+			Map<String, Long> back = selling
+				? sellBackValue(reward, offer, input.getAccountMode(), input.isKaramjaGloves())
+				: Collections.emptyMap();
+			for (Map.Entry<String, Integer> cost : offer.costFor(input.isKaramjaGloves()).entrySet())
 			{
 				long amount = cost.getValue();
-				sheet.addCurrency(cost.getKey(), amount, amount - refunded(refund, cost.getKey(), amount));
+				long returned = back.getOrDefault(cost.getKey(), 0L);
+				sheet.addCurrency(cost.getKey(), amount, amount - returned);
+				if (returned > 0)
+				{
+					resold.computeIfAbsent(cost.getKey(), k -> new ArrayList<>()).add(new long[]{amount, returned});
+				}
 			}
+			Reward.Refund refund = selling && !back.isEmpty() ? reward.getRefund() : null;
 			for (Map.Entry<String, Integer> material : reward.getMaterials().entrySet())
 			{
 				long amount = material.getValue();
-				long back = refund != null && refund.getRate() != null ? (long) Math.floor(amount * refund.getRate()) : 0;
-				sheet.addMaterial(material.getKey(), amount, amount - back);
+				long returned = refund != null && refund.getRate() != null ? (long) Math.floor(amount * refund.getRate()) : 0;
+				sheet.addMaterial(material.getKey(), amount, amount - returned);
 			}
 		}
+
+		// Selling back only helps if you can afford each purchase first. Buying the resold items
+		// first, biggest refund first, the balance needed is the highest point reached, never less
+		// than the total really spent. (Castle Wars: every item refunds in full, so you only need
+		// the price of the most expensive one.)
+		for (Map.Entry<String, List<long[]>> entry : resold.entrySet())
+		{
+			List<long[]> purchases = entry.getValue();
+			purchases.sort((a, b) -> Long.compare(b[1], a[1]));
+			long spent = 0;
+			long peak = 0;
+			for (long[] purchase : purchases)
+			{
+				peak = Math.max(peak, spent + purchase[0]);
+				spent += purchase[0] - purchase[1];
+			}
+			sheet.raiseNet(entry.getKey(), peak);
+		}
 		return sheet;
+	}
+
+	/**
+	 * What the player gets back by selling an item to the shop after logging it, per currency;
+	 * empty when it can't be sold back (or not by this account type).
+	 */
+	public static Map<String, Long> sellBackValue(Reward reward, Reward.Offer offer, AccountMode mode, boolean karamjaGloves)
+	{
+		Map<String, Long> back = new LinkedHashMap<>();
+		if (offer == null)
+		{
+			return back;
+		}
+		Map<String, Integer> cost = offer.costFor(karamjaGloves);
+		Reward.Refund refund = reward.getRefund();
+		if (refund != null)
+		{
+			// curated rules win: they carry account restrictions and refunds on materials
+			if ((refund.isNotForUim() && mode == AccountMode.ULTIMATE_IRONMAN) || (refund.isOnlyIron() && !mode.isIron()))
+			{
+				return back;
+			}
+			for (Map.Entry<String, Integer> entry : cost.entrySet())
+			{
+				long amount = refund.getRate() != null
+					? (long) Math.floor(entry.getValue() * refund.getRate())
+					: refund.getFixed() == null ? 0 : Math.min(entry.getValue(), refund.getFixed().getOrDefault(entry.getKey(), 0));
+				if (amount > 0)
+				{
+					back.put(entry.getKey(), amount);
+				}
+			}
+			return back;
+		}
+		Map<String, Integer> buyBack = offer.buyBackFor(karamjaGloves);
+		if (buyBack != null)
+		{
+			for (Map.Entry<String, Integer> entry : cost.entrySet())
+			{
+				long amount = Math.min(entry.getValue(), buyBack.getOrDefault(entry.getKey(), 0));
+				if (amount > 0)
+				{
+					back.put(entry.getKey(), amount);
+				}
+			}
+		}
+		return back;
 	}
 
 	/**
@@ -213,38 +298,4 @@ public class PlannerCalculator
 		return null;
 	}
 
-	private static Reward.Refund refundFor(Reward reward, PlannerInput input)
-	{
-		Reward.Refund refund = reward.getRefund();
-		if (refund == null || !input.isApplyRefunds())
-		{
-			return null;
-		}
-		if (refund.isNotForUim() && input.getAccountMode() == AccountMode.ULTIMATE_IRONMAN)
-		{
-			return null;
-		}
-		if (refund.isOnlyIron() && !input.getAccountMode().isIron())
-		{
-			return null;
-		}
-		return refund;
-	}
-
-	private static long refunded(Reward.Refund refund, String currency, long amount)
-	{
-		if (refund == null)
-		{
-			return 0;
-		}
-		if (refund.getRate() != null)
-		{
-			return (long) Math.floor(amount * refund.getRate());
-		}
-		if (refund.getFixed() != null)
-		{
-			return Math.min(amount, refund.getFixed().getOrDefault(currency, 0));
-		}
-		return 0;
-	}
 }

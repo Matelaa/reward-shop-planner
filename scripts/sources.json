@@ -27,7 +27,7 @@
     { "id": "mox_resin",        "name": "Mox resin",                 "source": "VARP",   "gameval": "MIXOLOGY_MOX_POINTS", "varId": 4416 },
     { "id": "aga_resin",        "name": "Aga resin",                 "source": "VARP",   "gameval": "MIXOLOGY_AGA_POINTS", "varId": 4415 },
     { "id": "lye_resin",        "name": "Lye resin",                 "source": "VARP",   "gameval": "MIXOLOGY_LYE_POINTS", "varId": 4414 },
-    { "id": "zeal",             "name": "Zeal tokens",               "source": "VARP",   "gameval": "SOUL_WARS_ZEAL_TOKENS", "varId": 2876, "notes": "Confirmar no jogo: existe também SOUL_WARS_ZEAL (2871)." },
+    { "id": "zeal",             "name": "Zeal tokens",               "source": "VARP",   "gameval": "SOUL_WARS_ZEAL_TOKENS", "varId": 2876, "notes": "Zeal tokens spent in the reward shop (SOUL_WARS_ZEAL, 2871, is a different counter)." },
     { "id": "vale_research",    "name": "Vale research points",      "source": "VARP",   "gameval": "ENT_TOTEMS_RESEARCH_POINTS", "varId": 4764 },
     { "id": "tithe_points",     "name": "Tithe Farm points",         "source": "VARBIT", "gameval": "HOSIDIUS_TITHE_REWARDPOINTS", "varId": 4893 },
     { "id": "slayer_points",    "name": "Slayer points",             "source": "VARBIT", "gameval": "SLAYER_POINTS", "varId": 4068 },
@@ -73,21 +73,21 @@
     { "id": "motherlode_mine",   "name": "Motherlode Mine",         "clogPage": "Motherlode Mine",         "stores": [ { "name": "Prospector Percy's Nugget Shop", "currency": "golden_nugget" } ] },
     { "id": "rooftop_agility",   "name": "Rooftop Agility",         "clogPage": "Rooftop Agility",         "stores": [ { "name": "Grace's Graceful Clothing", "currency": "mark_of_grace" } ] },
     { "id": "shooting_stars",    "name": "Shooting Stars",          "clogPage": "Shooting Stars",          "stores": [ { "name": "Dusuri's Star Shop", "currency": "stardust" } ] },
-    { "id": "tzhaar",            "name": "TzHaar",                  "clogPage": "TzHaar",                  "stores": [ { "name": "TzHaar-Hur-Tel's Equipment Store", "currency": "tokkul" }, { "name": "TzHaar-Hur-Zal's Equipment Store", "currency": "tokkul" } ], "notes": "Preço padrão; com Karamja gloves fica ~13% mais barato." },
+    { "id": "tzhaar",            "name": "TzHaar",                  "clogPage": "TzHaar",                  "stores": [ { "name": "TzHaar-Hur-Tel's Equipment Store", "currency": "tokkul" }, { "name": "TzHaar-Hur-Zal's Equipment Store", "currency": "tokkul" } ], "notes": "Standard price; about 13% cheaper while wearing Karamja gloves." },
     { "id": "miscellaneous",     "name": "Miscellaneous",           "clogPage": "Miscellaneous",           "stores": [ { "name": "Mining Guild Mineral Exchange", "currency": "unid_minerals" }, { "name": "Mairin's Market", "currency": "mermaids_tear" } ], "onlyPurchasableInSummary": true },
     { "id": "chompy",            "name": "Chompy Bird Hunting",     "clogPage": "Chompy Bird Hunting",     "stores": [] }
   ],
 
   "manualRewards": [
-    { "activity": "barbarian_assault", "item": "Fighter hat",    "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Matar a Penance Queen"], "notes": "220 de cada função se já tiver matado a Queen antes de comprar." },
-    { "activity": "barbarian_assault", "item": "Ranger hat",     "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Matar a Penance Queen"], "notes": "220 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Healer hat",     "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Matar a Penance Queen"], "notes": "220 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Runner hat",     "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Matar a Penance Queen"], "notes": "220 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Fighter torso",  "type": "SHOP", "cost": { "ba_attacker": 375, "ba_collector": 375, "ba_healer": 375, "ba_defender": 375 }, "requirements": ["Matar a Penance Queen"], "notes": "300 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Penance skirt",  "type": "SHOP", "cost": { "ba_attacker": 375, "ba_collector": 375, "ba_healer": 375, "ba_defender": 375 }, "requirements": ["Matar a Penance Queen"], "notes": "300 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Runner boots",   "type": "SHOP", "cost": { "ba_attacker": 100, "ba_collector": 100, "ba_healer": 100, "ba_defender": 100 }, "notes": "80 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Penance gloves", "type": "SHOP", "cost": { "ba_attacker": 150, "ba_collector": 150, "ba_healer": 150, "ba_defender": 150 }, "notes": "120 de cada função com desconto da Queen." },
-    { "activity": "barbarian_assault", "item": "Granite body",   "type": "SHOP", "cost": { "coins": 95000 }, "requirements": ["Matar a Penance Queen"] },
+    { "activity": "barbarian_assault", "item": "Fighter hat",    "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Kill the Penance Queen"], "notes": "220 of each role once you have killed the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Ranger hat",     "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Kill the Penance Queen"], "notes": "220 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Healer hat",     "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Kill the Penance Queen"], "notes": "220 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Runner hat",     "type": "SHOP", "cost": { "ba_attacker": 275, "ba_collector": 275, "ba_healer": 275, "ba_defender": 275 }, "requirements": ["Kill the Penance Queen"], "notes": "220 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Fighter torso",  "type": "SHOP", "cost": { "ba_attacker": 375, "ba_collector": 375, "ba_healer": 375, "ba_defender": 375 }, "requirements": ["Kill the Penance Queen"], "notes": "300 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Penance skirt",  "type": "SHOP", "cost": { "ba_attacker": 375, "ba_collector": 375, "ba_healer": 375, "ba_defender": 375 }, "requirements": ["Kill the Penance Queen"], "notes": "300 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Runner boots",   "type": "SHOP", "cost": { "ba_attacker": 100, "ba_collector": 100, "ba_healer": 100, "ba_defender": 100 }, "notes": "80 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Penance gloves", "type": "SHOP", "cost": { "ba_attacker": 150, "ba_collector": 150, "ba_healer": 150, "ba_defender": 150 }, "notes": "120 of each role after killing the Penance Queen." },
+    { "activity": "barbarian_assault", "item": "Granite body",   "type": "SHOP", "cost": { "coins": 95000 }, "requirements": ["Kill the Penance Queen"] },
 
     { "activity": "mta", "item": "Infinity gloves",  "type": "SHOP", "cost": { "mta_tele": 175, "mta_alch": 225, "mta_ench": 1500, "mta_grave": 175 } },
     { "activity": "mta", "item": "Infinity hat",     "type": "SHOP", "cost": { "mta_tele": 350, "mta_alch": 400, "mta_ench": 3000, "mta_grave": 350 } },
@@ -99,7 +99,7 @@
     { "activity": "mta", "item": "Teacher wand",     "type": "UPGRADE", "cost": { "mta_tele": 150, "mta_alch": 200, "mta_ench": 1500, "mta_grave": 150 }, "consumes": ["Apprentice wand"] },
     { "activity": "mta", "item": "Master wand",      "type": "UPGRADE", "cost": { "mta_tele": 240, "mta_alch": 240, "mta_ench": 2400, "mta_grave": 240 }, "consumes": ["Teacher wand"] },
     { "activity": "mta", "item": "Mage's book",      "type": "SHOP", "cost": { "mta_tele": 500, "mta_alch": 550, "mta_ench": 6000, "mta_grave": 500 } },
-    { "activity": "mta", "item": "Bones to peaches", "type": "SHOP", "cost": { "mta_tele": 200, "mta_alch": 300, "mta_ench": 2000, "mta_grave": 200 }, "notes": "Desbloqueio de feitiço (não é item)." },
+    { "activity": "mta", "item": "Bones to peaches", "type": "SHOP", "cost": { "mta_tele": 200, "mta_alch": 300, "mta_ench": 2000, "mta_grave": 200 }, "notes": "Spell unlock, not an item." },
 
     { "activity": "mixology", "item": "Prescription goggles",           "type": "SHOP", "cost": { "mox_resin": 8600,  "aga_resin": 7000,  "lye_resin": 9350 },  "refund": { "rate": 0.4 } },
     { "activity": "mixology", "item": "Alchemist labcoat",              "type": "SHOP", "cost": { "mox_resin": 2250,  "aga_resin": 2800,  "lye_resin": 3700 },  "refund": { "rate": 0.4 } },
@@ -109,16 +109,16 @@
     { "activity": "mixology", "item": "Reagent pouch",                  "type": "SHOP", "cost": { "mox_resin": 13800, "aga_resin": 11200, "lye_resin": 15100 }, "refund": { "rate": 0.4 } },
     { "activity": "mixology", "item": "Chugging barrel (disassembled)", "type": "SHOP", "cost": { "mox_resin": 17250, "aga_resin": 14000, "lye_resin": 18600 }, "refund": { "rate": 0.4 } },
 
-    { "activity": "pest_control", "item": "Void seal(8)", "type": "SHOP", "cost": { "pc_points": 10 }, "notes": "A loja chama o item de 'Void seal'." },
+    { "activity": "pest_control", "item": "Void seal(8)", "type": "SHOP", "cost": { "pc_points": 10 }, "notes": "The shop lists it as 'Void seal'." },
     { "activity": "pest_control", "item": "Elite void top",  "type": "UPGRADE", "cost": { "pc_points": 200 }, "consumes": ["Void knight top"],  "requirements": ["Hard Western Provinces Diary"] },
     { "activity": "pest_control", "item": "Elite void robe", "type": "UPGRADE", "cost": { "pc_points": 200 }, "consumes": ["Void knight robe"], "requirements": ["Hard Western Provinces Diary"] },
 
-    { "activity": "brimhaven_agility", "setName": "Graceful (Agility Arena)", "items": ["Graceful hood (Agility Arena)", "Graceful top (Agility Arena)", "Graceful legs (Agility Arena)", "Graceful gloves (Agility Arena)", "Graceful boots (Agility Arena)", "Graceful cape (Agility Arena)"], "type": "UPGRADE", "cost": { "brimhaven_voucher": 250 }, "consumes": ["Graceful hood", "Graceful top", "Graceful legs", "Graceful gloves", "Graceful boots", "Graceful cape"], "notes": "Custo por set completo; recolore o Graceful padrão." },
-    { "activity": "colossal_wyrm", "setName": "Graceful (Varlamore)", "items": ["Graceful hood (Varlamore)", "Graceful top (Varlamore)", "Graceful legs (Varlamore)", "Graceful gloves (Varlamore)", "Graceful boots (Varlamore)", "Graceful cape (Varlamore)"], "type": "UPGRADE", "cost": { "termites": 650 }, "consumes": ["Graceful hood", "Graceful top", "Graceful legs", "Graceful gloves", "Graceful boots", "Graceful cape"], "notes": "Graceful crafting kit: custo por set completo." },
+    { "activity": "brimhaven_agility", "setName": "Graceful (Agility Arena)", "items": ["Graceful hood (Agility Arena)", "Graceful top (Agility Arena)", "Graceful legs (Agility Arena)", "Graceful gloves (Agility Arena)", "Graceful boots (Agility Arena)", "Graceful cape (Agility Arena)"], "type": "UPGRADE", "cost": { "brimhaven_voucher": 250 }, "consumes": ["Graceful hood", "Graceful top", "Graceful legs", "Graceful gloves", "Graceful boots", "Graceful cape"], "notes": "One price for the whole set; recolours the regular graceful outfit." },
+    { "activity": "colossal_wyrm", "setName": "Graceful (Varlamore)", "items": ["Graceful hood (Varlamore)", "Graceful top (Varlamore)", "Graceful legs (Varlamore)", "Graceful gloves (Varlamore)", "Graceful boots (Varlamore)", "Graceful cape (Varlamore)"], "type": "UPGRADE", "cost": { "termites": 650 }, "consumes": ["Graceful hood", "Graceful top", "Graceful legs", "Graceful gloves", "Graceful boots", "Graceful cape"], "notes": "Graceful crafting kit: one price for the whole set." },
 
     { "activity": "miscellaneous", "item": "Expert mining gloves", "type": "UPGRADE", "cost": { "unid_minerals": 40 }, "consumes": ["Mining gloves", "Superior mining gloves"] },
 
-    { "activity": "tithe_farm", "item": "Herb sack", "type": "SHOP", "cost": { "tithe_points": 250 }, "notes": "Também vendido por 750 Slayer points; não confirmado se essa compra marca o slot." },
+    { "activity": "tithe_farm", "item": "Herb sack", "type": "SHOP", "cost": { "tithe_points": 250 }, "notes": "Also sold for 750 Slayer points; not confirmed whether that purchase fills the log slot." },
 
     { "activity": "forestry", "item": "Lumberjack hat",   "materials": { "Yew logs": 200, "Magic logs": 100 } },
     { "activity": "forestry", "item": "Lumberjack top",   "materials": { "Yew logs": 60, "Magic logs": 120, "Redwood logs": 120 } },

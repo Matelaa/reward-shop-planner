@@ -31,6 +31,11 @@ public class PlannerCalculatorTest
 	 */
 	private static PlannerInput forestryGoal(AccountMode mode)
 	{
+		return forestryGoal(mode, Set.of("Funky shaped log", "Cape pouch"));
+	}
+
+	private static PlannerInput forestryGoal(AccountMode mode, Set<String> sellBack)
+	{
 		return PlannerInput.builder()
 			.owned(Set.of("Lumberjack hat", "Lumberjack top", "Lumberjack legs", "Lumberjack boots", "Log basket"))
 			.wanted(Set.of("Forestry hat", "Forestry top", "Forestry legs", "Forestry boots", "Twitcher's gloves",
@@ -39,6 +44,7 @@ public class PlannerCalculatorTest
 			.balances(Map.of(BARK, 89_800L))
 			.extraGoals(Map.of(BARK, 161_400L))
 			.accountMode(mode)
+			.sellBack(sellBack)
 			.build();
 	}
 
@@ -59,6 +65,59 @@ public class PlannerCalculatorTest
 
 		assertEquals(122_100, plan.getRemainingGross(BARK));
 		assertEquals(108_100, plan.getRemainingNet(BARK));
+	}
+
+	@Test
+	public void nothingIsSoldBackUnlessChosen()
+	{
+		Plan plan = calculator.plan(forestryGoal(AccountMode.IRONMAN, Set.of()));
+		assertEquals(50_500, plan.getActivity("forestry").getCost().getNet(BARK));
+		assertEquals(740, plan.getActivity("forestry").getCost().getMaterialNet("Mahogany logs"));
+		assertEquals(122_100, plan.getRemainingNet(BARK));
+	}
+
+	@Test
+	public void sellingBackNeedsEnoughToBuyTheDearestFirst()
+	{
+		// every Castle Wars item sells back in full: you only ever hold the dearest one's price
+		Set<String> all = Set.copyOf(data.getActivities().get("castle_wars").getClogItems());
+		Plan plan = calculator.plan(PlannerInput.builder().sellBack(all).build());
+		assertEquals(800, plan.getActivity("castle_wars").getCost().getNet("cw_ticket"));
+		assertEquals(800, plan.getTotal().getNet("cw_ticket"));
+
+		// selling back only part of the page: the kept items are paid in full on top
+		Plan partial = calculator.plan(PlannerInput.builder()
+			.wanted(Set.of("Decorative armour (gold platebody)", "Decorative helm (gold)"))
+			.sellBack(Set.of("Decorative armour (gold platebody)"))
+			.build());
+		assertEquals(1_200, partial.getTotal().getGross("cw_ticket"));
+		assertEquals(800, partial.getTotal().getNet("cw_ticket"));
+	}
+
+	@Test
+	public void karamjaGlovesChangeTzhaarPrices()
+	{
+		PlannerInput.PlannerInputBuilder cape = PlannerInput.builder()
+			.wanted(Set.of("Obsidian cape"))
+			.sellBack(Set.of("Obsidian cape"));
+
+		Plan bare = calculator.plan(cape.build());
+		assertEquals(90_000, bare.getTotal().getGross("tokkul"));
+		// you must hold the full price once, even though 9,000 comes back
+		assertEquals(90_000, bare.getTotal().getNet("tokkul"));
+
+		Plan gloves = calculator.plan(cape.karamjaGloves(true).build());
+		assertEquals(78_000, gloves.getTotal().getGross("tokkul"));
+		assertEquals(78_000, gloves.getTotal().getNet("tokkul"));
+
+		// several items: the refunds pay for the next purchase
+		Plan set = calculator.plan(PlannerInput.builder()
+			.wanted(Set.of("Obsidian cape", "Obsidian helmet"))
+			.sellBack(Set.of("Obsidian cape", "Obsidian helmet"))
+			.karamjaGloves(true)
+			.build());
+		assertEquals(78_000 + 73_216, set.getTotal().getGross("tokkul"));
+		assertEquals(78_000 - 21_000 + 73_216, set.getTotal().getNet("tokkul"));
 	}
 
 	@Test
@@ -149,12 +208,16 @@ public class PlannerCalculatorTest
 	@Test
 	public void greenmanMaskRefundIsIronOnly()
 	{
-		Plan main = calculator.plan(PlannerInput.builder().build());
-		Plan iron = calculator.plan(PlannerInput.builder().accountMode(AccountMode.IRONMAN).build());
+		Set<String> sellBack = Set.of("Bow string spool", "Fletching knife", "Greenman mask");
+		Plan main = calculator.plan(PlannerInput.builder().sellBack(sellBack).build());
+		Plan iron = calculator.plan(PlannerInput.builder().sellBack(sellBack).accountMode(AccountMode.IRONMAN).build());
 
 		// spool 250 -> 125 back and knife 350 -> 175 back for everyone; mask 500 -> 125 back for irons only
 		assertEquals(1_120 - 125 - 175, main.getActivity("vale_totems").getCost().getNet("vale_research"));
-		assertEquals(1_120 - 125 - 175 - 125, iron.getActivity("vale_totems").getCost().getNet("vale_research"));
+		// irons spend only 695 in the end, but must hold 800 at some point: knife (350, 175 back),
+		// then mask (175 + 500, 125 back), then spool (550 + 250) - no order does better
+		assertEquals(800, iron.getActivity("vale_totems").getCost().getNet("vale_research"));
+		assertEquals(1_120 - 125 - 175 - 125, iron.getActivity("vale_totems").getCost().getGross("vale_research") - 425);
 	}
 
 	@Test

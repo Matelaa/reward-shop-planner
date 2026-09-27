@@ -27,6 +27,12 @@ public class CostSheet
 		net.merge(counter, amount, Math::max);
 	}
 
+	/** The net can't be below the balance needed to afford the purchases before reselling them. */
+	void raiseNet(String currency, long atLeast)
+	{
+		net.merge(currency, atLeast, Math::max);
+	}
+
 	void addMaterial(String material, long grossAmount, long netAmount)
 	{
 		materialsGross.merge(material, grossAmount, Long::sum);

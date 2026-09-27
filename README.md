@@ -25,12 +25,14 @@ from the game.
 |---|---|---|
 | ![Goals](docs/marketing/feature-goals.png) | ![Item grid](docs/marketing/feature-grid.png) | ![Shops](docs/marketing/feature-shops.png) |
 
-| Sell-backs counted for you | Sets bought as one |
-|---|---|
-| ![Sell-backs](docs/marketing/feature-sellbacks.png) | ![Sets](docs/marketing/feature-sets.png) |
+| Sell-backs, your choice | Sell back a whole page | Sets bought as one |
+|---|---|---|
+| ![Sell-backs](docs/marketing/feature-sellbacks.png) | ![Sell back all](docs/marketing/feature-sellall.png) | ![Sets](docs/marketing/feature-sets.png) |
 
-Items you can sell back to their shop once the slot is logged (the funky shaped log, cape pouch, log basket,
-Mixology gear...) are counted at what you really spend, depending on your account type. Recoloured outfits
+Nothing is sold back unless you choose it. Right-click an item and pick **Sell back after logging it**, or use
+**sell back all** on a page (handy for Castle Wars). The goal then counts what you really spend, and never less
+than what you must hold to buy the items one at a time. What can be sold back depends on your account type,
+and TzHaar prices follow your Karamja gloves. Recoloured outfits
 like the Varlamore graceful are one purchase for the whole set, and the planner adds the base set they trade in.
 
 ## How to use
@@ -47,7 +49,7 @@ Balances update as you play: open your bank once, and visit a minigame's reward 
 | Setting | What it does |
 |---|---|
 | Account type | Auto-detected. Decides which items can be sold back to their shop. |
-| Count sell-backs | Show what you need after selling items back once their slot is logged. |
+| Karamja gloves at TzHaar | Auto uses glove prices once you've claimed the Karamja easy diary gloves (13% cheaper, better sell-backs). |
 | Hide completed pages | Hide pages where you own everything that can be bought. |
 
 ## Development

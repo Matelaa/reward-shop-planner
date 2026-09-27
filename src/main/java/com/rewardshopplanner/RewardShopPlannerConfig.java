@@ -28,15 +28,23 @@ public interface RewardShopPlannerConfig extends Config
 		return AccountType.AUTO;
 	}
 
+	enum KaramjaGloves
+	{
+		AUTO,
+		YES,
+		NO
+	}
+
 	@ConfigItem(
-		keyName = "countSellBacks",
-		name = "Count sell-backs",
-		description = "Show what you still need after selling items back to their shop once the slot is logged",
+		keyName = "karamjaGloves",
+		name = "Karamja gloves at TzHaar",
+		description = "Wearing Karamja gloves makes TzHaar items cheaper and sell back for more."
+			+ " Auto assumes you wear them once you've claimed them from the Karamja easy diary.",
 		position = 1
 	)
-	default boolean countSellBacks()
+	default KaramjaGloves karamjaGloves()
 	{
-		return true;
+		return KaramjaGloves.AUTO;
 	}
 
 	@ConfigItem(

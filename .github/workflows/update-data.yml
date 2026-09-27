@@ -42,8 +42,7 @@ jobs:
           body: |
             Weekly regeneration of `src/main/resources/com/rewardshopplanner/data` with `scripts/generate-data.ps1`.
 
-            Review `docs/data-review.md` in the diff for price or item changes, then merge and publish a new plugin version.
+            Review the price and item changes in the JSON diff, then merge and publish a new plugin version.
           add-paths: |
             src/main/resources/com/rewardshopplanner/data/*.json
-            docs/data-review.md
           delete-branch: true
