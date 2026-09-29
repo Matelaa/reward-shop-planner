@@ -51,8 +51,9 @@ buy (one after another, counting what comes back from sell-backs), and each curr
   Activities without a fixed place (Forestry, Shooting Stars, Mahogany Homes) show up when you earn their
   currency, stay while you keep earning, and hide a few minutes after you stop.
 - **Only when it matters**: nothing shows for a page with nothing in your goal.
-- **Your style**: bars (the default), text only, or icons like buff timers. Each activity can be turned
-  off in the settings.
+- **Your style**: bars (the default), text only, or icons like buff timers.
+- **Your choice per activity**: show it only at the activity (the default), keep it on screen **always**
+  (handy to watch one grind while doing something else), or turn it off.
 
 ### For cloggers
 
@@ -104,7 +105,7 @@ Balances update as you play: open your bank once, and visit a minigame's reward 
 | Show on-screen progress | Show your goal's progress on the game screen at each activity. |
 | Style | Bars (default), Text, or Icons like buff timers. |
 | Hide after | For activities without a fixed place: minutes without earning before the progress hides (0 keeps it until you log out). |
-| On-screen progress: activities | Turn the progress off for any activity. |
+| On-screen progress: activities | For each activity: **At the activity** (default), **Always** on screen, or **Off**. |
 
 ## Development
 

@@ -11,7 +11,7 @@ import net.runelite.client.config.Units;
 public interface RewardShopPlannerConfig extends Config
 {
 	String GROUP = "rewardshopplanner";
-	/** Per-activity overlay switches are stored as this prefix plus the activity id. */
+	/** Per-activity overlay modes are stored as this prefix plus the activity id. */
 	String OVERLAY_KEY_PREFIX = "overlay_";
 
 	enum OverlayStyle
@@ -19,6 +19,27 @@ public interface RewardShopPlannerConfig extends Config
 		BARS,
 		ICONS,
 		TEXT
+	}
+
+	/** When an activity's progress shows on screen. */
+	enum OverlayMode
+	{
+		AT_THE_ACTIVITY("At the activity"),
+		ALWAYS("Always"),
+		OFF("Off");
+
+		private final String label;
+
+		OverlayMode(String label)
+		{
+			this.label = label;
+		}
+
+		@Override
+		public String toString()
+		{
+			return label;
+		}
 	}
 
 	@ConfigSection(
@@ -90,335 +111,335 @@ public interface RewardShopPlannerConfig extends Config
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "barbarian_assault",
 		name = "Barbarian Assault",
-		description = "Show Barbarian Assault progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 0
 	)
-	default boolean overlayBarbarianAssault()
+	default OverlayMode overlayBarbarianAssault()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "brimhaven_agility",
 		name = "Brimhaven Agility Arena",
-		description = "Show Brimhaven Agility Arena progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 1
 	)
-	default boolean overlayBrimhavenAgility()
+	default OverlayMode overlayBrimhavenAgility()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "castle_wars",
 		name = "Castle Wars",
-		description = "Show Castle Wars progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 2
 	)
-	default boolean overlayCastleWars()
+	default OverlayMode overlayCastleWars()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "fishing_trawler",
 		name = "Fishing Trawler",
-		description = "Show Fishing Trawler progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 3
 	)
-	default boolean overlayFishingTrawler()
+	default OverlayMode overlayFishingTrawler()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "giants_foundry",
 		name = "Giants' Foundry",
-		description = "Show Giants' Foundry progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 4
 	)
-	default boolean overlayGiantsFoundry()
+	default OverlayMode overlayGiantsFoundry()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "gotr",
 		name = "Guardians of the Rift",
-		description = "Show Guardians of the Rift progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 5
 	)
-	default boolean overlayGotr()
+	default OverlayMode overlayGotr()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "hallowed_sepulchre",
 		name = "Hallowed Sepulchre",
-		description = "Show Hallowed Sepulchre progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 6
 	)
-	default boolean overlayHallowedSepulchre()
+	default OverlayMode overlayHallowedSepulchre()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "lms",
 		name = "Last Man Standing",
-		description = "Show Last Man Standing progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 7
 	)
-	default boolean overlayLms()
+	default OverlayMode overlayLms()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "mta",
 		name = "Mage Training Arena",
-		description = "Show Mage Training Arena progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 8
 	)
-	default boolean overlayMta()
+	default OverlayMode overlayMta()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "mahogany_homes",
 		name = "Mahogany Homes",
-		description = "Show Mahogany Homes progress after you earn its currency",
+		description = "At the activity: shows after you earn its currency. Always: stays on screen. Off: never shows.",
 		position = 9
 	)
-	default boolean overlayMahoganyHomes()
+	default OverlayMode overlayMahoganyHomes()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "mixology",
 		name = "Mastering Mixology",
-		description = "Show Mastering Mixology progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 10
 	)
-	default boolean overlayMixology()
+	default OverlayMode overlayMixology()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "pest_control",
 		name = "Pest Control",
-		description = "Show Pest Control progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 11
 	)
-	default boolean overlayPestControl()
+	default OverlayMode overlayPestControl()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "soul_wars",
 		name = "Soul Wars",
-		description = "Show Soul Wars progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 12
 	)
-	default boolean overlaySoulWars()
+	default OverlayMode overlaySoulWars()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "temple_trekking",
 		name = "Temple Trekking",
-		description = "Show Temple Trekking progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 13
 	)
-	default boolean overlayTempleTrekking()
+	default OverlayMode overlayTempleTrekking()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "tithe_farm",
 		name = "Tithe Farm",
-		description = "Show Tithe Farm progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 14
 	)
-	default boolean overlayTitheFarm()
+	default OverlayMode overlayTitheFarm()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "trouble_brewing",
 		name = "Trouble Brewing",
-		description = "Show Trouble Brewing progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 15
 	)
-	default boolean overlayTroubleBrewing()
+	default OverlayMode overlayTroubleBrewing()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "vale_totems",
 		name = "Vale Totems",
-		description = "Show Vale Totems progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 16
 	)
-	default boolean overlayValeTotems()
+	default OverlayMode overlayValeTotems()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "volcanic_mine",
 		name = "Volcanic Mine",
-		description = "Show Volcanic Mine progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 17
 	)
-	default boolean overlayVolcanicMine()
+	default OverlayMode overlayVolcanicMine()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "tempoross",
 		name = "Tempoross",
-		description = "Show Tempoross progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 18
 	)
-	default boolean overlayTempoross()
+	default OverlayMode overlayTempoross()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "aerial_fishing",
 		name = "Aerial Fishing",
-		description = "Show Aerial Fishing progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 19
 	)
-	default boolean overlayAerialFishing()
+	default OverlayMode overlayAerialFishing()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "colossal_wyrm",
 		name = "Colossal Wyrm Agility",
-		description = "Show Colossal Wyrm Agility progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 20
 	)
-	default boolean overlayColossalWyrm()
+	default OverlayMode overlayColossalWyrm()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "forestry",
 		name = "Forestry",
-		description = "Show Forestry progress after you earn its currency",
+		description = "At the activity: shows after you earn its currency. Always: stays on screen. Off: never shows.",
 		position = 21
 	)
-	default boolean overlayForestry()
+	default OverlayMode overlayForestry()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "motherlode_mine",
 		name = "Motherlode Mine",
-		description = "Show Motherlode Mine progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 22
 	)
-	default boolean overlayMotherlodeMine()
+	default OverlayMode overlayMotherlodeMine()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "rooftop_agility",
 		name = "Rooftop Agility",
-		description = "Show Rooftop Agility progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 23
 	)
-	default boolean overlayRooftopAgility()
+	default OverlayMode overlayRooftopAgility()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "shooting_stars",
 		name = "Shooting Stars",
-		description = "Show Shooting Stars progress after you earn its currency",
+		description = "At the activity: shows after you earn its currency. Always: stays on screen. Off: never shows.",
 		position = 24
 	)
-	default boolean overlayShootingStars()
+	default OverlayMode overlayShootingStars()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "tzhaar",
 		name = "TzHaar",
-		description = "Show TzHaar progress while you're there",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 25
 	)
-	default boolean overlayTzhaar()
+	default OverlayMode overlayTzhaar()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "miscellaneous",
 		name = "Miscellaneous",
-		description = "Show Miscellaneous progress after you earn its currency",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 26
 	)
-	default boolean overlayMiscellaneous()
+	default OverlayMode overlayMiscellaneous()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "chompy",
 		name = "Chompy Bird Hunting",
-		description = "Show Chompy Bird Hunting progress after you earn its currency",
+		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
 		position = 27
 	)
-	default boolean overlayChompy()
+	default OverlayMode overlayChompy()
 	{
-		return true;
+		return OverlayMode.AT_THE_ACTIVITY;
 	}
 }

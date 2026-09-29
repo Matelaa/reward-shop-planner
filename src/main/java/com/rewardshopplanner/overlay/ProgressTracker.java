@@ -219,13 +219,16 @@ public class ProgressTracker
 		}
 		for (Activity activity : data.getActivities().values())
 		{
-			if (!enabled(activity))
+			RewardShopPlannerConfig.OverlayMode mode = mode(activity);
+			if (mode == RewardShopPlannerConfig.OverlayMode.OFF)
 			{
 				continue;
 			}
 			Set<String> currencies = here.get(activity.getId());
-			if (currencies == null && !activity.hasPlace() && earnedRecently(activity))
+			if (mode == RewardShopPlannerConfig.OverlayMode.ALWAYS
+				|| (currencies == null && !activity.hasPlace() && earnedRecently(activity)))
 			{
+				// always on screen, or earned recently somewhere: every currency of the page
 				currencies = Collections.emptySet();
 			}
 			if (currencies == null)
@@ -248,10 +251,34 @@ public class ProgressTracker
 		lastEarned.clear();
 	}
 
-	private boolean enabled(Activity activity)
+	private RewardShopPlannerConfig.OverlayMode mode(Activity activity)
 	{
-		String value = configManager.getConfiguration(RewardShopPlannerConfig.GROUP, RewardShopPlannerConfig.OVERLAY_KEY_PREFIX + activity.getId());
-		return value == null || Boolean.parseBoolean(value);
+		return modeOf(configManager.getConfiguration(RewardShopPlannerConfig.GROUP,
+			RewardShopPlannerConfig.OVERLAY_KEY_PREFIX + activity.getId()));
+	}
+
+	/**
+	 * The activity's setting as saved: an OverlayMode name, nothing (the default), or "true"/"false"
+	 * from before it was a choice of three.
+	 */
+	static RewardShopPlannerConfig.OverlayMode modeOf(String saved)
+	{
+		if (saved == null || saved.equals("true"))
+		{
+			return RewardShopPlannerConfig.OverlayMode.AT_THE_ACTIVITY;
+		}
+		if (saved.equals("false"))
+		{
+			return RewardShopPlannerConfig.OverlayMode.OFF;
+		}
+		try
+		{
+			return RewardShopPlannerConfig.OverlayMode.valueOf(saved);
+		}
+		catch (IllegalArgumentException e)
+		{
+			return RewardShopPlannerConfig.OverlayMode.AT_THE_ACTIVITY;
+		}
 	}
 
 	private boolean earnedRecently(Activity activity)

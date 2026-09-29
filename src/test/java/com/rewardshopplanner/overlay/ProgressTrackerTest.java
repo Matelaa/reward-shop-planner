@@ -1,9 +1,11 @@
 package com.rewardshopplanner.overlay;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.google.gson.Gson;
+import com.rewardshopplanner.RewardShopPlannerConfig;
 import com.rewardshopplanner.data.RewardData;
 import java.util.Map;
 import org.junit.Before;
@@ -81,6 +83,17 @@ public class ProgressTrackerTest
 		tick(0, 0);
 		tick(50, 0);
 		assertTrue(tracker.wasEarned(BARK));
+	}
+
+	@Test
+	public void activitySettingIsReadWithItsOlderForm()
+	{
+		assertEquals(RewardShopPlannerConfig.OverlayMode.AT_THE_ACTIVITY, ProgressTracker.modeOf(null));
+		assertEquals(RewardShopPlannerConfig.OverlayMode.ALWAYS, ProgressTracker.modeOf("ALWAYS"));
+		assertEquals(RewardShopPlannerConfig.OverlayMode.OFF, ProgressTracker.modeOf("OFF"));
+		// saved by the checkbox this setting used to be
+		assertEquals(RewardShopPlannerConfig.OverlayMode.AT_THE_ACTIVITY, ProgressTracker.modeOf("true"));
+		assertEquals(RewardShopPlannerConfig.OverlayMode.OFF, ProgressTracker.modeOf("false"));
 	}
 
 	@Test
