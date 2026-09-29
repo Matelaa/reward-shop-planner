@@ -6,7 +6,7 @@ Plan the reward-shop slots of your collection log. Pick the items you want, and 
 you how many points, tokens or items you still need to earn, using the balances it reads straight
 from the game.
 
-![Demo](docs/marketing/demo.gif)
+![Demo](docs/marketing/demo.webp)
 
 ## Features
 
@@ -119,7 +119,9 @@ Requires JDK 11. Item and price data come from the [OSRS Wiki](https://oldschool
 bundled with the plugin; see `scripts/sources.json` for the hand-curated parts.
 
 Screenshots in `docs/marketing` are rendered from the real panel with sample data
-(`MarketingRenderer`, run with `RENDER_MARKETING=1` after `scripts/fetch-preview-icons.ps1`).
+(`MarketingRenderer`, run with `RENDER_MARKETING=1` after `scripts/fetch-preview-icons.ps1`). The demo is
+then turned into an animated WebP with `scripts/demo-to-webp.js`, since the Plugin Hub page shows GIFs as
+plain links.
 
 ## License
 
