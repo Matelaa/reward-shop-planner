@@ -243,7 +243,7 @@
     },
     {
         "name":  "Decorative armour (gold platebody)",
-        "itemId":  20485,
+        "itemId":  4509,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -383,7 +383,7 @@
     },
     {
         "name":  "Decorative armour (ranged top)",
-        "itemId":  20501,
+        "itemId":  11899,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -418,7 +418,7 @@
     },
     {
         "name":  "Decorative armour (magic hat)",
-        "itemId":  20499,
+        "itemId":  11898,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -488,7 +488,7 @@
     },
     {
         "name":  "Decorative helm (gold)",
-        "itemId":  20489,
+        "itemId":  4511,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -558,7 +558,7 @@
     },
     {
         "name":  "Decorative boots (gold)",
-        "itemId":  25155,
+        "itemId":  25171,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -663,7 +663,7 @@
     },
     {
         "name":  "Decorative armour (magic top)",
-        "itemId":  20495,
+        "itemId":  11896,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -698,7 +698,7 @@
     },
     {
         "name":  "Decorative armour (gold platelegs)",
-        "itemId":  20487,
+        "itemId":  4510,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -733,7 +733,7 @@
     },
     {
         "name":  "Decorative sword (gold)",
-        "itemId":  20483,
+        "itemId":  4508,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -768,7 +768,7 @@
     },
     {
         "name":  "Decorative armour (ranged legs)",
-        "itemId":  20503,
+        "itemId":  11900,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -838,7 +838,7 @@
     },
     {
         "name":  "Decorative shield (gold)",
-        "itemId":  20491,
+        "itemId":  4512,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -908,7 +908,7 @@
     },
     {
         "name":  "Decorative armour (quiver)",
-        "itemId":  20505,
+        "itemId":  11901,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -1083,7 +1083,7 @@
     },
     {
         "name":  "Decorative full helm (gold)",
-        "itemId":  25157,
+        "itemId":  25174,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -1118,7 +1118,7 @@
     },
     {
         "name":  "Decorative armour (magic legs)",
-        "itemId":  20497,
+        "itemId":  11897,
         "clogPages":  [
                           "Castle Wars"
                       ],
@@ -1293,7 +1293,7 @@
     },
     {
         "name":  "Decorative armour (gold plateskirt)",
-        "itemId":  20493,
+        "itemId":  11895,
         "clogPages":  [
                           "Castle Wars"
                       ],

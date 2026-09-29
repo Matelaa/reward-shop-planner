@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.rewardshopplanner.calc.AccountMode;
 import com.rewardshopplanner.calc.Plan;
 import com.rewardshopplanner.calc.PlannerCalculator;
+import com.rewardshopplanner.RewardShopPlannerConfig;
 import com.rewardshopplanner.calc.PlannerInput;
 import com.rewardshopplanner.data.RewardData;
 import java.awt.BasicStroke;
@@ -25,6 +26,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 import javax.imageio.IIOImage;
 import javax.imageio.ImageIO;
 import javax.imageio.ImageTypeSpecifier;
@@ -55,6 +57,9 @@ public class MarketingRenderer
 	private static final int CONTENT_WIDTH = 209;
 	private static final int FRAME_HEIGHT = 400;
 	private static final int SCALE = 2;
+	/** Name of the page whose dropdown is open, and how far the view is scrolled to show it. */
+	private static String focused;
+	private static int viewTop;
 	private static final File OUT = new File("docs/marketing");
 
 	private RewardData data;
@@ -70,9 +75,11 @@ public class MarketingRenderer
 	private final Map<String, Long> materials = Map.of(
 		"Oak logs", 1_200L, "Willow logs", 900L, "Teak logs", 740L, "Maple logs", 1_340L, "Mahogany logs", 510L,
 		"Arctic pine logs", 120L, "Yew logs", 1_100L, "Magic logs", 260L, "Redwood logs", 0L, "Thread", 12L);
-	private final Map<String, Long> balances = Map.of(
-		"anima_bark", 5_320L, "pheasant_feather", 9L, "golden_nugget", 150L, "pc_points", 135L, "cw_ticket", 74L,
-		"termites", 410L, "tokkul", 120_000L);
+	private final Map<String, Long> balances = Map.ofEntries(
+		Map.entry("anima_bark", 5_320L), Map.entry("pheasant_feather", 9L), Map.entry("golden_nugget", 150L),
+		Map.entry("pc_points", 135L), Map.entry("cw_ticket", 74L), Map.entry("termites", 410L), Map.entry("tokkul", 120_000L),
+		Map.entry("coins", 48_500L), Map.entry("ba_attacker", 1_240L), Map.entry("ba_collector", 860L),
+		Map.entry("ba_healer", 1_510L), Map.entry("ba_defender", 420L));
 
 	@Test
 	public void render() throws Exception
@@ -96,7 +103,7 @@ public class MarketingRenderer
 
 	private void renderAll() throws Exception
 	{
-		PlannerPanel panel = new PlannerPanel(null, MarketingRenderer::icon);
+		PlannerPanel panel = new PlannerPanel(null, ICONS);
 		List<BufferedImage> frames = new ArrayList<>();
 		List<Integer> delays = new ArrayList<>();
 
@@ -112,9 +119,24 @@ public class MarketingRenderer
 		}
 		add(frames, delays, snapshot(panel, null), 700);
 
+		// 2b. a clogger ticks a whole page: all its missing slots join the goal and it moves up to Tracking
+		panel.setSearchText("");
+		scrollTo("EVERYTHING MISSING");
+		add(frames, delays, snapshot(panel, null), 1200);
+		add(frames, delays, snapshot(panel, trackBoxCenter(panel, "Barbarian Assault")), 900);
+		List<String> assault = data.getActivities().get("barbarian_assault").getClogItems().stream()
+			.filter(i -> data.getReward(i) != null && !owned.contains(i))
+			.collect(Collectors.toList());
+		wanted.addAll(assault);
+		panel.update(model());
+		scrollTo("TRACKING");
+		add(frames, delays, snapshot(panel, null), 2000);
+		// the rest of the tour keeps Barbarian Assault out of the goal
+		wanted.removeAll(assault);
+
 		// 3. open Forestry and pick items
 		panel.setSearchText("");
-		panel.open("forestry");
+		focus(panel, "forestry");
 		add(frames, delays, snapshot(panel, null), 1200);
 		for (String item : new String[]{"Forestry hat", "Forestry top", "Forestry legs", "Forestry boots", "Funky shaped log", "Pheasant hat"})
 		{
@@ -128,7 +150,7 @@ public class MarketingRenderer
 		BufferedImage materialsStill = withLabelTooltip(snapshot(panel, null, 470), panel, "Materials");
 
 		// 4. an item sold in two shops
-		panel.open("motherlode_mine");
+		focus(panel, "motherlode_mine");
 		wanted.add("Gem bag");
 		wanted.add("Prospector helmet");
 		panel.update(model());
@@ -144,7 +166,7 @@ public class MarketingRenderer
 
 		// 4b. a recoloured set: one click picks all six pieces
 		owned.addAll(List.of("Graceful hood", "Graceful top", "Graceful legs", "Graceful gloves", "Graceful boots", "Graceful cape"));
-		panel.open("colossal_wyrm");
+		focus(panel, "colossal_wyrm");
 		panel.update(model());
 		add(frames, delays, snapshot(panel, null), 1000);
 		for (String piece : List.of("Graceful hood (Varlamore)", "Graceful top (Varlamore)", "Graceful legs (Varlamore)",
@@ -159,7 +181,7 @@ public class MarketingRenderer
 		add(frames, delays, setStill, 2600);
 
 		// 4c. sell-backs are opt-in: right-click the funky shaped log, sell it back (80%), the goal drops
-		panel.open("forestry");
+		focus(panel, "forestry");
 		wanted.add("Cape pouch");
 		panel.update(model());
 		Point funky = slotCenter(panel, "Funky shaped log");
@@ -178,7 +200,7 @@ public class MarketingRenderer
 		BufferedImage sellBackStill = withTooltip(snapshot(panel, funky, 540), panel, "Funky shaped log");
 
 		// 4d. Castle Wars refunds in full: "sell back all" leaves only the dearest item's price
-		panel.open("castle_wars");
+		focus(panel, "castle_wars");
 		for (String item : data.getActivities().get("castle_wars").getClogItems())
 		{
 			if (!owned.contains(item) && data.getReward(item) != null)
@@ -207,7 +229,7 @@ public class MarketingRenderer
 		wanted.add("Decorative helm (white)");
 		wanted.add("Decorative armour (white platebody)");
 		wanted.add("Void mage helm");
-		panel.open(null);
+		focus(panel, null);
 		panel.update(model());
 		BufferedImage home = snapshot(panel, null);
 		BufferedImage homeMaterials = withLabelTooltip(snapshot(panel, null, 470), panel, "Materials");
@@ -215,12 +237,21 @@ public class MarketingRenderer
 		panel.setGoalListOpen(true);
 		BufferedImage goalsStill = snapshot(panel, null);
 		add(frames, delays, goalsStill, 2600);
+		panel.setGoalListOpen(false);
+		// the page list: tracked pages first, ticked when every missing slot is in the goal (Barbarian Assault)
+		// and half-ticked when only some are
+		wanted.addAll(assault);
+		panel.update(model());
+		scrollTo("TRACKING");
+		BufferedImage trackingStill = snapshot(panel, null);
+		add(frames, delays, trackingStill, 2400);
+		scrollTo(null);
 
 		// 6. TzHaar: the obsidian armour and cape, sold back, without and with Karamja gloves (the tooltip sits below the grid)
 		List<String> obsidian = List.of("Obsidian cape", "Obsidian helmet", "Obsidian platebody", "Obsidian platelegs");
 		wanted.addAll(obsidian);
 		sellBack.addAll(obsidian);
-		panel.open("tzhaar");
+		focus(panel, "tzhaar");
 		panel.update(model());
 		BufferedImage bare = withTooltip(snapshot(panel, null, 372), panel, "Obsidian platebody");
 		gloves = true;
@@ -230,8 +261,33 @@ public class MarketingRenderer
 		ImageIO.write(sideBySide(bare, "Without gloves", withGloves, "With Karamja gloves"), "png",
 			new File(OUT, "feature-karamja-gloves.png"));
 
+		// 7. for cloggers: tick a whole page, or track everything at once, and open pages right in the list
+		Set<String> tour = new LinkedHashSet<>(wanted);
+		wanted.clear();
+		focus(panel, null);
+		panel.update(model());
+		scrollTo("EVERYTHING MISSING");
+		BufferedImage tickPage = snapshot(panel, trackBoxCenter(panel, "Barbarian Assault"));
+		for (com.rewardshopplanner.data.Activity activity : data.getActivities().values())
+		{
+			activity.getClogItems().stream().filter(i -> data.getReward(i) != null && !owned.contains(i)).forEach(wanted::add);
+		}
+		panel.update(model());
+		scrollTo("TRACKING");
+		BufferedImage trackedAll = snapshot(panel, null);
+		focus(panel, "barbarian_assault");
+		panel.update(model());
+		BufferedImage dropdown = snapshot(panel, null);
+		ImageIO.write(steps(new String[]{"Tick a page", "...or Track all", "Open it right there"}, tickPage, trackedAll, dropdown),
+			"png", new File(OUT, "feature-for-cloggers.png"));
+		wanted.clear();
+		wanted.addAll(tour);
+		scrollTo(null);
+
 		writeGif(frames, delays, new File(OUT, "demo.gif"));
 		ImageIO.write(forestryStill, "png", new File(OUT, "feature-grid.png"));
+		ImageIO.write(trackingStill, "png", new File(OUT, "feature-tracking.png"));
+		ImageIO.write(overlayShowcase(), "png", new File(OUT, "feature-overlay.png"));
 		ImageIO.write(materialsStill, "png", new File(OUT, "feature-materials.png"));
 		ImageIO.write(homeMaterials, "png", new File(OUT, "feature-materials-home.png"));
 		ImageIO.write(shopStill, "png", new File(OUT, "feature-shops.png"));
@@ -248,15 +304,36 @@ public class MarketingRenderer
 			.owned(owned).wanted(wanted).balances(balances).preferredActivity(preferred)
 			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).karamjaGloves(gloves).build());
 		return new PanelModel(data, plan, balances, materials, owned, Set.of(),
-			Set.of("Forestry", "Motherlode Mine", "Castle Wars", "Pest Control", "Temple Trekking", "Colossal Wyrm Agility", "TzHaar"),
+			data.getActivities().values().stream().map(a -> a.getClogPage()).collect(java.util.stream.Collectors.toSet()),
 			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, gloves, !gloves, false, false);
 	}
 
 	private static BufferedImage icon(int itemId, Runnable onLoaded)
 	{
+		return cachedIcon(itemId + ".png");
+	}
+
+	/** Icons fetched by scripts/fetch-preview-icons.ps1: items by id, spell sprites as sprite-<id>.png. */
+	private static final ItemIcons ICONS = new ItemIcons()
+	{
+		@Override
+		public BufferedImage get(int itemId, Runnable onLoaded)
+		{
+			return icon(itemId, onLoaded);
+		}
+
+		@Override
+		public BufferedImage sprite(int spriteId, Runnable onLoaded)
+		{
+			return cachedIcon("sprite-" + spriteId + ".png");
+		}
+	};
+
+	private static BufferedImage cachedIcon(String name)
+	{
 		try
 		{
-			File file = new File(".cache/preview-icons/" + itemId + ".png");
+			File file = new File(".cache/preview-icons/" + name);
 			return file.exists() ? ImageIO.read(file) : null;
 		}
 		catch (Exception e)
@@ -275,7 +352,49 @@ public class MarketingRenderer
 		content.setSize(CONTENT_WIDTH, 10);
 		content.setSize(CONTENT_WIDTH, content.getPreferredSize().height);
 		layout(content);
+		// "scroll" so the open page's row is at the top, like a player who just opened it
+		viewTop = 0;
+		if (focused != null)
+		{
+			javax.swing.JLabel row = findLabelContaining(content, focused);
+			if (row != null)
+			{
+				viewTop = Math.max(0, SwingUtilities.convertPoint(row, 0, 0, content).y - 8);
+			}
+		}
 		return content;
+	}
+
+	/** Scrolls to a label, e.g. a section title, without opening anything. */
+	private static void scrollTo(String text)
+	{
+		focused = text;
+	}
+
+	/** Centre of the "track this page" checkbox on a page's row, in content coordinates. */
+	private static Point trackBoxCenter(PlannerPanel panel, String pageName)
+	{
+		JComponent content = content(panel);
+		javax.swing.JLabel name = findLabelContaining(content, "▸ " + pageName);
+		if (name == null)
+		{
+			return null;
+		}
+		for (Component sibling : name.getParent().getComponents())
+		{
+			if (sibling instanceof javax.swing.JCheckBox)
+			{
+				return SwingUtilities.convertPoint(sibling, sibling.getWidth() / 2 - 2, sibling.getHeight() / 2, content);
+			}
+		}
+		return null;
+	}
+
+	/** Opens one page's dropdown (null closes them) and keeps the view scrolled to it. */
+	private void focus(PlannerPanel panel, String activityId)
+	{
+		focused = activityId == null ? null : "▾ " + data.getActivities().get(activityId).getName();
+		panel.open(activityId);
 	}
 
 	/** The panel as it looks in the client (225 x FRAME_HEIGHT), scaled up, with an optional click marker. */
@@ -293,9 +412,9 @@ public class MarketingRenderer
 		g.scale(SCALE, SCALE);
 		g.setColor(ColorScheme.DARK_GRAY_COLOR);
 		g.fillRect(0, 0, PANEL_WIDTH, height);
-		g.translate(8, 10);
+		g.translate(8, 10 - viewTop);
 		Graphics2D panelG = (Graphics2D) g.create();
-		panelG.clipRect(0, 0, CONTENT_WIDTH, height - 10);
+		panelG.clipRect(0, viewTop, CONTENT_WIDTH, height - 10);
 		content.paint(panelG);
 		panelG.dispose();
 		if (click != null)
@@ -345,7 +464,7 @@ public class MarketingRenderer
 		Graphics2D g = frame.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.scale(SCALE, SCALE);
-		g.translate(8, 10);
+		g.translate(8, 10 - viewTop);
 		g.setColor(new Color(0, 0, 0, 110));
 		g.fillRect(x + 3, at.y + 3, size.width, size.height);
 		g.translate(x, at.y);
@@ -450,12 +569,12 @@ public class MarketingRenderer
 		layout(tip);
 		Point at = SwingUtilities.convertPoint(target, 0, target.getHeight() + 4, content);
 		int x = Math.max(0, Math.min(at.x, CONTENT_WIDTH - size.width));
-		int y = at.y + size.height > frame.getHeight() / SCALE - 20 ? at.y - target.getHeight() - 8 - size.height : at.y;
+		int y = at.y - viewTop + size.height > frame.getHeight() / SCALE - 20 ? at.y - target.getHeight() - 8 - size.height : at.y;
 
 		Graphics2D g = frame.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.scale(SCALE, SCALE);
-		g.translate(8, 10);
+		g.translate(8, 10 - viewTop);
 		g.setColor(new Color(0, 0, 0, 110));
 		g.fillRect(x + 3, y + 3, size.width, size.height);
 		g.translate(x, y);
@@ -470,7 +589,7 @@ public class MarketingRenderer
 		Graphics2D g = frame.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 		g.scale(SCALE, SCALE);
-		g.translate(8, 10);
+		g.translate(8, 10 - viewTop);
 		Font font = FontManager.getRunescapeSmallFont();
 		g.setFont(font);
 		int lineHeight = 16;
@@ -512,6 +631,131 @@ public class MarketingRenderer
 	// ------------------------------------------------------------------
 	// Hero image
 	// ------------------------------------------------------------------
+
+	/**
+	 * The on-screen progress in its three styles, drawn by the real overlay code: Trouble Brewing
+	 * (one currency) and the Mage Training Arena (four) with simulated balances.
+	 */
+	private BufferedImage overlayShowcase() throws Exception
+	{
+		Set<String> goal = new LinkedHashSet<>(List.of("Purple tricorn hat", "Lucky shot flag"));
+		data.getActivities().get("mta").getClogItems().stream().filter(i -> data.getReward(i) != null).forEach(goal::add);
+		Map<String, Long> points = Map.of("pieces_of_eight", 2_240L, "mta_tele", 1_900L, "mta_alch", 3_075L, "mta_ench", 12_400L, "mta_grave", 980L);
+		Plan plan = new PlannerCalculator(data).plan(PlannerInput.builder().wanted(goal).balances(points).build());
+		PanelModel sample = new PanelModel(data, plan, points, Map.of(), Set.of(), Set.of(), Set.of(), goal,
+			Map.of(), Map.of(), Map.of(), AccountMode.MAIN, Set.of(), false, true, false, false);
+		List<com.rewardshopplanner.overlay.PageProgress> brewing =
+			List.of(com.rewardshopplanner.overlay.PageProgress.of(sample, data.getActivities().get("trouble_brewing")));
+		List<com.rewardshopplanner.overlay.PageProgress> arena =
+			List.of(com.rewardshopplanner.overlay.PageProgress.of(sample, data.getActivities().get("mta")));
+
+		int w = 640;
+		int h = 230;
+		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = image.createGraphics();
+		g.setPaint(new GradientPaint(0, 0, new Color(0x4a5a3a), w, h, new Color(0x2e3a26)));
+		g.fillRect(0, 0, w, h);
+		g.setFont(FontManager.getRunescapeSmallFont());
+		g.setColor(Color.WHITE);
+		g.drawString("Bars (default)", 10, 14);
+		g.drawString("Text", 225, 14);
+		g.drawString("Icons (hover for the numbers)", 440, 14);
+		// each style stacks its two boxes by their real height (icons make the rows taller)
+		int below = drawOverlay(g, RewardShopPlannerConfig.OverlayStyle.BARS, brewing, 10, 22);
+		drawOverlay(g, RewardShopPlannerConfig.OverlayStyle.BARS, arena, 10, 22 + below + 8);
+		below = drawOverlay(g, RewardShopPlannerConfig.OverlayStyle.TEXT, brewing, 225, 22);
+		drawOverlay(g, RewardShopPlannerConfig.OverlayStyle.TEXT, arena, 225, 22 + below + 8);
+		int x = 440;
+		for (com.rewardshopplanner.overlay.PageProgress.Bar bar : arena.get(0).getBars())
+		{
+			drawInfoBox(g, arena.get(0), bar, x, 22);
+			x += 37;
+		}
+		drawInfoBox(g, brewing.get(0), brewing.get(0).getBars().get(0), 440, 62);
+		g.dispose();
+
+		BufferedImage big = new BufferedImage(w * SCALE, h * SCALE, BufferedImage.TYPE_INT_RGB);
+		Graphics2D bg = big.createGraphics();
+		bg.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		bg.drawImage(image, 0, 0, w * SCALE, h * SCALE, null);
+		bg.dispose();
+		return big;
+	}
+
+	/** Draws the overlay at (x, y) and returns its height. */
+	private int drawOverlay(Graphics2D g, RewardShopPlannerConfig.OverlayStyle style,
+		List<com.rewardshopplanner.overlay.PageProgress> pages, int x, int y)
+	{
+		RewardShopPlannerConfig config = new RewardShopPlannerConfig()
+		{
+			@Override
+			public OverlayStyle overlayStyle()
+			{
+				return style;
+			}
+		};
+		com.rewardshopplanner.overlay.ProgressOverlay overlay = new com.rewardshopplanner.overlay.ProgressOverlay(null, config, ICONS, data, () -> pages);
+		// RuneLite sizes the background from the previous frame, so draw once off screen first
+		BufferedImage scratch = new BufferedImage(300, 300, BufferedImage.TYPE_INT_ARGB);
+		Graphics2D sg = scratch.createGraphics();
+		sg.setFont(FontManager.getRunescapeSmallFont());
+		overlay.render(sg);
+		sg.dispose();
+		Graphics2D og = (Graphics2D) g.create();
+		og.translate(x, y);
+		og.setFont(FontManager.getRunescapeSmallFont());
+		java.awt.Dimension size = overlay.render(og);
+		og.dispose();
+		return size == null ? 0 : size.height;
+	}
+
+	private void drawInfoBox(Graphics2D g, com.rewardshopplanner.overlay.PageProgress page,
+		com.rewardshopplanner.overlay.PageProgress.Bar bar, int x, int y)
+	{
+		BufferedImage iconImage = ICONS.currency(data.getCurrencies().get(bar.getCurrencyId()), () -> { });
+		com.rewardshopplanner.overlay.ProgressInfoBox box = new com.rewardshopplanner.overlay.ProgressInfoBox(() -> iconImage, null, "preview");
+		box.setPage(page);
+		box.setBar(bar);
+		net.runelite.client.ui.overlay.components.InfoBoxComponent component = new net.runelite.client.ui.overlay.components.InfoBoxComponent();
+		component.setImage(box.getImage());
+		component.setText(box.getText());
+		component.setColor(box.getTextColor());
+		component.setPreferredSize(new java.awt.Dimension(35, 35));
+		component.setPreferredLocation(new Point(x, y));
+		g.setFont(FontManager.getRunescapeSmallFont());
+		component.render(g);
+	}
+
+	/** Panel snapshots in a row, each with a caption above, for a feature told in steps. */
+	private static BufferedImage steps(String[] titles, BufferedImage... panels)
+	{
+		int gap = 24;
+		int top = 52;
+		int w = gap;
+		int h = 0;
+		for (BufferedImage panel : panels)
+		{
+			w += panel.getWidth() + gap;
+			h = Math.max(h, panel.getHeight());
+		}
+		h += top + gap;
+		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		Graphics2D g = image.createGraphics();
+		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+		g.setPaint(new GradientPaint(0, 0, new Color(0x1b1b1b), w, h, new Color(0x2b2118)));
+		g.fillRect(0, 0, w, h);
+		g.setFont(FontManager.getRunescapeBoldFont().deriveFont(26f));
+		int x = gap;
+		for (int i = 0; i < panels.length; i++)
+		{
+			g.setColor(ColorScheme.BRAND_ORANGE);
+			g.drawString(titles[i], x, 38);
+			g.drawImage(panels[i], x, top, null);
+			x += panels[i].getWidth() + gap;
+		}
+		g.dispose();
+		return image;
+	}
 
 	/** Two panel snapshots next to each other, each with a caption above. */
 	private static BufferedImage sideBySide(BufferedImage left, String leftTitle, BufferedImage right, String rightTitle)
@@ -573,6 +817,7 @@ public class MarketingRenderer
 			"28 minigames and activities",
 			"Balances read straight from the game",
 			"Pick items, see what's left to earn",
+			"Progress on screen while you play",
 			"Ironman aware: sell-backs, shops, sets",
 		};
 		for (int i = 0; i < points.length; i++)

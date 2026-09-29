@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.gson.Gson;
+import java.util.HashMap;
+import java.util.Map;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -114,6 +116,34 @@ public class RewardDataTest
 		assertEquals(Integer.valueOf(10_000), container.getOffers().get(0).getCost().get("vm_points"));
 		assertEquals(7, data.getActivities().get("volcanic_mine").getClogItems().stream()
 			.filter(i -> data.getReward(i) != null).count());
+	}
+
+	@Test
+	public void logSlotsUseTheNormalVersionOfTheirItem() throws Exception
+	{
+		// The wiki lists broken and locked versions too (Castle Wars gold armour); the log shows
+		// the normal one, and its "Search" sends that id.
+		Map<Integer, String> names = new HashMap<>();
+		for (java.lang.reflect.Field field : net.runelite.api.gameval.ItemID.class.getFields())
+		{
+			if (field.getType() == int.class)
+			{
+				names.putIfAbsent(field.getInt(null), field.getName());
+			}
+		}
+		for (Activity activity : data.getActivities().values())
+		{
+			for (int i = 0; i < activity.getClogItems().size(); i++)
+			{
+				String slot = activity.getClogItems().get(i);
+				String constant = names.getOrDefault(activity.getClogItemIds()[i], "");
+				if (!slot.toLowerCase().contains("broken"))
+				{
+					assertFalse(slot + " uses " + constant, constant.endsWith("_BROKEN") || constant.contains("_LOCKED"));
+				}
+			}
+		}
+		assertEquals(4511, (int) data.getReward("Decorative helm (gold)").getItemId());
 	}
 
 	@Test

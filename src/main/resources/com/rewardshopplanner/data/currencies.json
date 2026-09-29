@@ -46,7 +46,8 @@
         "name":  "Pieces of eight",
         "source":  "VARP",
         "gameval":  "BREW_PIECES",
-        "varId":  4218
+        "varId":  4218,
+        "iconItemId":  8951
     },
     {
         "id":  "spirit_flakes",
@@ -122,41 +123,47 @@
         "id":  "chompy_kills",
         "name":  "Chompy kills",
         "source":  "COUNTER",
-        "notes":  "Use Check kills on an ogre bow once; new kills are then counted automatically."
+        "notes":  "Use Check kills on an ogre bow once; new kills are then counted automatically.",
+        "iconItemId":  2876
     },
     {
         "id":  "lms_wins",
         "name":  "LMS competitive wins",
         "source":  "COUNTER",
-        "notes":  "Open Justine\u0027s reward shop at Last Man Standing to update this."
+        "notes":  "Open Justine\u0027s reward shop at Last Man Standing to update this.",
+        "iconItemId":  24207
     },
     {
         "id":  "foundry_rep",
         "name":  "Foundry reputation",
         "source":  "VARP",
         "gameval":  "GIANTS_FOUNDRY_REWARD_SHOP_POINTS",
-        "varId":  3436
+        "varId":  3436,
+        "iconItemId":  27021
     },
     {
         "id":  "mox_resin",
         "name":  "Mox resin",
         "source":  "VARP",
         "gameval":  "MIXOLOGY_MOX_POINTS",
-        "varId":  4416
+        "varId":  4416,
+        "iconItemId":  30005
     },
     {
         "id":  "aga_resin",
         "name":  "Aga resin",
         "source":  "VARP",
         "gameval":  "MIXOLOGY_AGA_POINTS",
-        "varId":  4415
+        "varId":  4415,
+        "iconItemId":  30007
     },
     {
         "id":  "lye_resin",
         "name":  "Lye resin",
         "source":  "VARP",
         "gameval":  "MIXOLOGY_LYE_POINTS",
-        "varId":  4414
+        "varId":  4414,
+        "iconItemId":  30009
     },
     {
         "id":  "zeal",
@@ -164,21 +171,24 @@
         "source":  "VARP",
         "gameval":  "SOUL_WARS_ZEAL_TOKENS",
         "varId":  2876,
-        "notes":  "Zeal tokens spent in the reward shop (SOUL_WARS_ZEAL, 2871, is a different counter)."
+        "notes":  "Zeal tokens spent in the reward shop (SOUL_WARS_ZEAL, 2871, is a different counter).",
+        "iconItemId":  25346
     },
     {
         "id":  "vale_research",
         "name":  "Vale research points",
         "source":  "VARP",
         "gameval":  "ENT_TOTEMS_RESEARCH_POINTS",
-        "varId":  4764
+        "varId":  4764,
+        "iconItemId":  31032
     },
     {
         "id":  "tithe_points",
         "name":  "Tithe Farm points",
         "source":  "VARBIT",
         "gameval":  "HOSIDIUS_TITHE_REWARDPOINTS",
-        "varId":  4893
+        "varId":  4893,
+        "iconItemId":  13353
     },
     {
         "id":  "slayer_points",
@@ -197,7 +207,8 @@
                        4763
                    ],
         "compositeFactor":  512,
-        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin).",
+        "iconItemId":  22348
     },
     {
         "id":  "ba_collector",
@@ -209,7 +220,8 @@
                        4764
                    ],
         "compositeFactor":  512,
-        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin).",
+        "iconItemId":  23476
     },
     {
         "id":  "ba_healer",
@@ -221,7 +233,8 @@
                        4765
                    ],
         "compositeFactor":  512,
-        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin).",
+        "iconItemId":  20802
     },
     {
         "id":  "ba_defender",
@@ -233,54 +246,63 @@
                        4766
                    ],
         "compositeFactor":  512,
-        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin)."
+        "notes":  "Honour points = base + 512 x extra (same formula as the BA Minigame plugin).",
+        "iconItemId":  22341
     },
     {
         "id":  "pc_points",
         "name":  "Commendation points",
         "source":  "INTERFACE",
-        "notes":  "Open the Void Knights\u0027 reward shop or board a Pest Control lander to update this."
+        "notes":  "Open the Void Knights\u0027 reward shop or board a Pest Control lander to update this.",
+        "iconItemId":  11666
     },
     {
         "id":  "mta_tele",
         "name":  "Pizazz (Telekinetic)",
         "source":  "INTERFACE",
-        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this.",
+        "iconSpriteId":  31
     },
     {
         "id":  "mta_alch",
         "name":  "Pizazz (Alchemist)",
         "source":  "INTERFACE",
-        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this.",
+        "iconSpriteId":  41
     },
     {
         "id":  "mta_ench",
         "name":  "Pizazz (Enchantment)",
         "source":  "INTERFACE",
-        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this.",
+        "iconSpriteId":  361
     },
     {
         "id":  "mta_grave",
         "name":  "Pizazz (Graveyard)",
         "source":  "INTERFACE",
-        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this."
+        "notes":  "Enter the Mage Training Arena, open its shop or ask the Progress Hat to update this.",
+        "iconSpriteId":  354
     },
     {
         "id":  "lms_points",
         "name":  "LMS points",
         "source":  "INTERFACE",
-        "notes":  "Open Justine\u0027s reward shop at Last Man Standing to update this."
+        "notes":  "Open Justine\u0027s reward shop at Last Man Standing to update this.",
+        "iconItemId":  24219
     },
     {
         "id":  "carpenter_points",
         "name":  "Carpenter points",
         "source":  "INTERFACE",
-        "notes":  "Open Amy\u0027s reward shop or finish a contract to update this."
+        "notes":  "Open Amy\u0027s reward shop or finish a contract to update this.",
+        "iconItemId":  24872
     },
     {
         "id":  "vm_points",
         "name":  "Volcanic Mine points",
         "source":  "INTERFACE",
-        "notes":  "Open Petrified Pete\u0027s ore shop to update this."
+        "notes":  "Open Petrified Pete\u0027s ore shop to update this.",
+        "iconItemId":  21541
     }
 ]

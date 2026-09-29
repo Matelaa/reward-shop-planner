@@ -208,6 +208,18 @@ public class PlayerState
 		return logBasketMaterials;
 	}
 
+	/** Adds to the Forestry kit's count; bark earned with the kit in the inventory goes straight in. */
+	public void addToForestryKit(String currency, long amount)
+	{
+		if (forestryKitItems == null)
+		{
+			// older saved states have no kit map
+			forestryKitItems = new HashMap<>();
+		}
+		forestryKitItems.merge(currency, amount, Long::sum);
+		manualBalances.remove(currency);
+	}
+
 	/** Amount of a material in the bank, inventory and log basket, or null before any was seen. */
 	public Long materialOf(String name)
 	{

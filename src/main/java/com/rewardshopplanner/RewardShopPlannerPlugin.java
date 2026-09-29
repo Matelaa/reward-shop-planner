@@ -10,6 +10,8 @@ import com.rewardshopplanner.data.Activity;
 import com.rewardshopplanner.data.Currency;
 import com.rewardshopplanner.data.Material;
 import com.rewardshopplanner.data.RewardData;
+import com.rewardshopplanner.overlay.ProgressOverlay;
+import com.rewardshopplanner.overlay.ProgressTracker;
 import com.rewardshopplanner.tracking.ChompyKillParser;
 import com.rewardshopplanner.tracking.CollectionLogMatcher;
 import com.rewardshopplanner.tracking.BalanceTextParser;
@@ -38,11 +40,13 @@ import net.runelite.api.Client;
 import net.runelite.api.GameState;
 import net.runelite.api.Item;
 import net.runelite.api.ItemContainer;
+import net.runelite.api.Player;
 import net.runelite.api.ScriptID;
 import net.runelite.api.events.ChatMessage;
 import net.runelite.api.events.GameStateChanged;
 import net.runelite.api.events.GameTick;
 import net.runelite.api.events.ItemContainerChanged;
+import net.runelite.api.events.ItemDespawned;
 import net.runelite.api.events.ScriptPostFired;
 import net.runelite.api.events.ScriptPreFired;
 import net.runelite.api.events.VarbitChanged;
@@ -55,13 +59,15 @@ import net.runelite.client.callback.ClientThread;
 import net.runelite.client.config.ConfigManager;
 import net.runelite.client.eventbus.Subscribe;
 import net.runelite.client.game.ItemManager;
+import net.runelite.client.game.SpriteManager;
 import net.runelite.client.events.ConfigChanged;
 import net.runelite.client.events.RuneScapeProfileChanged;
 import net.runelite.client.plugins.Plugin;
 import net.runelite.client.plugins.PluginDescriptor;
 import net.runelite.client.ui.ClientToolbar;
 import net.runelite.client.ui.NavigationButton;
-import net.runelite.client.util.AsyncBufferedImage;
+import net.runelite.client.ui.overlay.OverlayManager;
+import net.runelite.client.ui.overlay.infobox.InfoBoxManager;
 import net.runelite.client.util.ImageUtil;
 import net.runelite.client.util.Text;
 
@@ -76,6 +82,14 @@ public class RewardShopPlannerPlugin extends Plugin
 	private static final String STATE_KEY = "state";
 	private static final Pattern NEW_LOG_ITEM = Pattern.compile("New item added to your collection log: (.+)");
 	private static final String CHOMPY_COUNTER = "chompy_kills";
+	private static final String ANIMA_BARK = "anima_bark";
+	private static final String PHEASANT_FEATHER = "pheasant_feather";
+	/** "You've been awarded 9 Anima-infused bark." Matched loosely: only the part that matters. */
+	private static final Pattern BARK_AWARD = Pattern.compile("been awarded ([\\d,]+) Anima-infused bark");
+	/** The game's inline chat formatting markers, e.g. "@mes_hl_blu@" (highlighted blue). */
+	private static final Pattern CHAT_MARKER = Pattern.compile("@[a-z_]+@");
+	/** "You collect a pheasant egg and find a feather too." */
+	private static final Pattern FEATHER_FOUND = Pattern.compile("find (?:a|\\d+) feathers? too");
 
 	/** Interface text showing a balance: component, currency id, and how to find the number in it. */
 	private static final class BalanceText
@@ -149,6 +163,11 @@ public class RewardShopPlannerPlugin extends Plugin
 	private static final int COLLECTION_ITEM_TRANSMIT = 4100;
 	/** The transmit streams over several ticks; apply the harvest this long after the last item. */
 	private static final int HARVEST_SETTLE_TICKS = 3;
+	/**
+	 * A transmit this big is the whole log rather than a stray call, so every page counts as synced.
+	 * Kept low: a new account may only have a handful of slots.
+	 */
+	private static final int FULL_LOG_MIN_ITEMS = 10;
 
 	@Inject
 	private Client client;
@@ -172,7 +191,16 @@ public class RewardShopPlannerPlugin extends Plugin
 	private ItemManager itemManager;
 
 	@Inject
+	private SpriteManager spriteManager;
+
+	@Inject
 	private ScheduledExecutorService executor;
+
+	@Inject
+	private OverlayManager overlayManager;
+
+	@Inject
+	private InfoBoxManager infoBoxManager;
 
 	private RewardData data;
 	private PlannerCalculator calculator;
@@ -194,6 +222,17 @@ public class RewardShopPlannerPlugin extends Plugin
 	/** Obtained item ids collected from {@link #COLLECTION_ITEM_TRANSMIT}; client thread only. */
 	private final Set<Integer> transmitHarvest = new HashSet<>();
 	private int harvestApplyTick = -1;
+	/** On-screen progress: which pages to show, and the overlay drawing them. */
+	private ProgressTracker progress;
+	private ProgressOverlay progressOverlay;
+	/** The inventory was read this session, so its item counts are real rather than last session's. */
+	private boolean inventorySeen;
+	/** Bark from "You've been awarded" messages not yet matched with the inventory (client thread). */
+	private long barkAwarded;
+	private long barkInInventoryBefore;
+	private int barkAwardTick;
+	/** Last tick the game sent the Forestry kit's contents (it does while the kit's window is open). */
+	private int kitReadTick = -1;
 
 	@Override
 	protected void startUp() throws Exception
@@ -243,12 +282,8 @@ public class RewardShopPlannerPlugin extends Plugin
 			}
 		}
 
-		panel = new PlannerPanel(this, (itemId, onLoaded) ->
-		{
-			AsyncBufferedImage image = itemManager.getImage(itemId);
-			image.onLoaded(onLoaded);
-			return image;
-		});
+		GameIcons icons = new GameIcons(itemManager, spriteManager);
+		panel = new PlannerPanel(this, icons);
 		BufferedImage icon = ImageUtil.loadImageResource(getClass(), "icon.png");
 		navButton = NavigationButton.builder()
 			.tooltip("Reward Shop Planner")
@@ -257,6 +292,10 @@ public class RewardShopPlannerPlugin extends Plugin
 			.panel(panel)
 			.build();
 		clientToolbar.addNavigation(navButton);
+
+		progress = new ProgressTracker(this, config, configManager, icons, infoBoxManager, data);
+		progressOverlay = new ProgressOverlay(this, config, icons, data, progress::shown);
+		overlayManager.add(progressOverlay);
 
 		loadState();
 		if (client.getGameState() == GameState.LOGGED_IN)
@@ -269,6 +308,10 @@ public class RewardShopPlannerPlugin extends Plugin
 	@Override
 	protected void shutDown()
 	{
+		overlayManager.remove(progressOverlay);
+		progressOverlay = null;
+		progress.shutDown();
+		progress = null;
 		clientToolbar.removeNavigation(navButton);
 		navButton = null;
 		panel = null;
@@ -306,6 +349,11 @@ public class RewardShopPlannerPlugin extends Plugin
 		if (event.getGameState() == GameState.LOGGED_IN)
 		{
 			clientThread.invokeLater(this::readGameValues);
+		}
+		else if (event.getGameState() == GameState.LOGIN_SCREEN || event.getGameState() == GameState.HOPPING)
+		{
+			progress.onLogout();
+			inventorySeen = false;
 		}
 	}
 
@@ -376,11 +424,13 @@ public class RewardShopPlannerPlugin extends Plugin
 			else if (event.getContainerId() == InventoryID.INV)
 			{
 				target = state.getInventoryItems();
+				inventorySeen = true;
 				materialsChanged = countMaterials(event.getItemContainer(), state.getInventoryMaterials());
 			}
 			else if (event.getContainerId() == InventoryID.FORESTRY_KIT)
 			{
 				target = state.getForestryKitItems();
+				kitReadTick = client.getTickCount();
 			}
 			else
 			{
@@ -407,6 +457,55 @@ public class RewardShopPlannerPlugin extends Plugin
 		}
 		saveState();
 		refresh();
+	}
+
+	/**
+	 * Hands the on-screen progress this tick's item currencies: the inventory, and the bank plus
+	 * Forestry kit, so it can tell a real gain from a withdrawal. Waits for the first inventory
+	 * reading of the session; before that the counts are last session's.
+	 */
+	private void feedItemCounts()
+	{
+		if (!inventorySeen)
+		{
+			return;
+		}
+		Map<String, Long> inventory = new HashMap<>();
+		Map<String, Long> stored = new HashMap<>();
+		synchronized (this)
+		{
+			for (Currency currency : itemCurrencies.values())
+			{
+				inventory.put(currency.getId(), state.getInventoryItems().getOrDefault(currency.getId(), 0L));
+				long bank = state.getBankItems().getOrDefault(currency.getId(), 0L);
+				long kit = state.getForestryKitItems() == null ? 0 : state.getForestryKitItems().getOrDefault(currency.getId(), 0L);
+				stored.put(currency.getId(), bank + kit);
+			}
+		}
+		progress.onItemCounts(inventory, stored);
+	}
+
+	/** An item currency picked up next to the player is the player's own drop coming back. */
+	@Subscribe
+	public void onItemDespawned(ItemDespawned event)
+	{
+		Currency currency = itemCurrencies.get(event.getItem().getId());
+		Player player = client.getLocalPlayer();
+		if (currency == null || player == null || event.getTile().getWorldLocation().distanceTo(player.getWorldLocation()) > 1)
+		{
+			return;
+		}
+		progress.onPickup(currency.getId(), event.getItem().getQuantity());
+	}
+
+	/** Every number read from the game passes here, so the on-screen progress sees what was earned. */
+	private void noteGameValue(String currencyId, Long before, long now)
+	{
+		ProgressTracker tracker = progress;
+		if (tracker != null)
+		{
+			tracker.onGameValue(currencyId, before, now);
+		}
 	}
 
 	/** Counts every material in a container, noted ones included; true when a count changed. */
@@ -471,6 +570,9 @@ public class RewardShopPlannerPlugin extends Plugin
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
+		progress.onGameTick(client);
+		settleBarkAward();
+		feedItemCounts();
 		readInterfaceBalances();
 		if (harvestApplyTick < 0 || client.getTickCount() < harvestApplyTick)
 		{
@@ -478,6 +580,7 @@ public class RewardShopPlannerPlugin extends Plugin
 		}
 		harvestApplyTick = -1;
 		int marked = 0;
+		int pagesSynced = 0;
 		synchronized (this)
 		{
 			for (int itemId : transmitHarvest)
@@ -491,18 +594,31 @@ public class RewardShopPlannerPlugin extends Plugin
 				}
 				for (String name : names)
 				{
-					if (!state.getOwned().contains(name))
+					// the log is the source of truth: it also drops a "I don't have this" correction
+					if (!state.getOwned().contains(name) || state.getOwnedOverrides().containsKey(name))
 					{
 						state.setLogOwned(name, true);
 						marked++;
 					}
 				}
 			}
+			// The transmit lists the whole log at once (e.g. the log's Search), so every page is
+			// now known, including pages where nothing was obtained yet.
+			if (transmitHarvest.size() >= FULL_LOG_MIN_ITEMS)
+			{
+				for (Activity activity : data.getActivities().values())
+				{
+					if (state.getSyncedPages().add(activity.getClogPage()))
+					{
+						pagesSynced++;
+					}
+				}
+			}
 		}
-		log.debug("Reward Shop Planner: collection log transmit had {} obtained items, {} newly marked owned",
-			transmitHarvest.size(), marked);
+		log.debug("Reward Shop Planner: collection log transmit had {} obtained items, {} newly marked owned, {} pages synced",
+			transmitHarvest.size(), marked, pagesSynced);
 		transmitHarvest.clear();
-		if (marked > 0)
+		if (marked > 0 || pagesSynced > 0)
 		{
 			saveState();
 			refresh();
@@ -512,11 +628,16 @@ public class RewardShopPlannerPlugin extends Plugin
 	@Subscribe
 	public void onChatMessage(ChatMessage event)
 	{
+		String message = cleanChat(event.getMessage());
+		// checked before the type filter: the award isn't necessarily a plain game message
+		if (trackForestryAward(message))
+		{
+			return;
+		}
 		if (event.getType() != ChatMessageType.GAMEMESSAGE && event.getType() != ChatMessageType.SPAM)
 		{
 			return;
 		}
-		String message = Text.removeTags(event.getMessage());
 		if (trackChompyKills(message) || trackChatBalance(message))
 		{
 			return;
@@ -538,6 +659,71 @@ public class RewardShopPlannerPlugin extends Plugin
 				return;
 			}
 			state.setLogOwned(item, true);
+		}
+		saveState();
+		refresh();
+	}
+
+	/**
+	 * "You've been awarded 12 Anima-infused bark." is a real gain. With the Forestry kit in the
+	 * inventory the bark goes straight into the kit, which the game doesn't report, so whatever
+	 * doesn't reach the inventory by the next tick is added to the kit's count.
+	 */
+	/**
+	 * Chat text without formatting: the usual &lt;col&gt; tags, and the game's newer inline markers
+	 * like "@mes_hl_blu@" in "You've been awarded @mes_hl_blu@11 Anima-infused bark".
+	 */
+	static String cleanChat(String message)
+	{
+		return CHAT_MARKER.matcher(Text.removeTags(message)).replaceAll("");
+	}
+
+	private boolean trackForestryAward(String message)
+	{
+		if (FEATHER_FOUND.matcher(message).find())
+		{
+			// the feathers go to the inventory, where they are counted; this only marks the gain
+			progress.earned(PHEASANT_FEATHER);
+			return true;
+		}
+		Matcher m = BARK_AWARD.matcher(message);
+		if (!m.find())
+		{
+			return false;
+		}
+		long amount = Long.parseLong(m.group(1).replace(",", ""));
+		progress.earned(ANIMA_BARK);
+		synchronized (this)
+		{
+			if (barkAwarded == 0)
+			{
+				barkInInventoryBefore = state.getInventoryItems().getOrDefault(ANIMA_BARK, 0L);
+			}
+			barkAwarded += amount;
+			barkAwardTick = client.getTickCount();
+		}
+		return true;
+	}
+
+	/** One tick after a bark award: the part that didn't reach the inventory went into the kit. */
+	private void settleBarkAward()
+	{
+		long toKit;
+		synchronized (this)
+		{
+			if (barkAwarded == 0 || client.getTickCount() <= barkAwardTick)
+			{
+				return;
+			}
+			long reachedInventory = Math.max(0, state.getInventoryItems().getOrDefault(ANIMA_BARK, 0L) - barkInInventoryBefore);
+			toKit = barkAwarded - reachedInventory;
+			barkAwarded = 0;
+			// with the kit's window open the game sends its real contents, which already include the award
+			if (toKit <= 0 || kitReadTick >= barkAwardTick)
+			{
+				return;
+			}
+			state.addToForestryKit(ANIMA_BARK, toKit);
 		}
 		saveState();
 		refresh();
@@ -575,7 +761,9 @@ public class RewardShopPlannerPlugin extends Plugin
 	{
 		synchronized (this)
 		{
-			if (Long.valueOf(value).equals(state.getManualBalances().put(currencyId, value)))
+			Long before = state.getManualBalances().put(currencyId, value);
+			noteGameValue(currencyId, before, value);
+			if (Long.valueOf(value).equals(before))
 			{
 				return;
 			}
@@ -601,6 +789,7 @@ public class RewardShopPlannerPlugin extends Plugin
 					return true; // the total is unknown until the bow is checked
 				}
 				total = known + 1;
+				progress.earned(CHOMPY_COUNTER);
 			}
 		}
 		if (total == null)
@@ -654,7 +843,13 @@ public class RewardShopPlannerPlugin extends Plugin
 
 	private boolean putIfChanged(String currencyId, Long value)
 	{
-		return value != null && !value.equals(state.getManualBalances().put(currencyId, value));
+		if (value == null)
+		{
+			return false;
+		}
+		Long before = state.getManualBalances().put(currencyId, value);
+		noteGameValue(currencyId, before, value);
+		return !value.equals(before);
 	}
 
 	private static void collectText(Widget widget, StringBuilder out, int depth)
@@ -763,6 +958,7 @@ public class RewardShopPlannerPlugin extends Plugin
 	private synchronized boolean updateVarBalance(Currency currency, long value)
 	{
 		Long previous = state.getVarBalances().put(currency.getId(), value);
+		noteGameValue(currency.getId(), previous, value);
 		if (Objects.equals(previous, value))
 		{
 			return false;
@@ -1116,6 +1312,11 @@ public class RewardShopPlannerPlugin extends Plugin
 				state.getKaramjaGlovesChoice() == null,
 				state.isKaramjaGlovesClaimed(),
 				config.hideCompleted());
+		}
+		ProgressTracker tracker = progress;
+		if (tracker != null)
+		{
+			tracker.update(model);
 		}
 		SwingUtilities.invokeLater(() -> target.update(model));
 	}

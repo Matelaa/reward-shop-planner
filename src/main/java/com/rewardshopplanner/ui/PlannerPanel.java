@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -47,6 +48,7 @@ import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 import javax.swing.JToolTip;
 import javax.swing.border.EmptyBorder;
 import net.runelite.client.ui.ColorScheme;
@@ -78,8 +80,8 @@ public class PlannerPanel extends PluginPanel
 	private final JPanel content = new JPanel();
 	private final IconTextField search = new IconTextField();
 	private PanelModel model;
-	/** Page being viewed, or null for the home screen. */
-	private String openActivity;
+	/** Pages opened as a dropdown in the list; they stay open until closed or the panel is hidden. */
+	private final Set<String> expanded = new LinkedHashSet<>();
 	private boolean extraGoalsOpen;
 	private boolean goalListOpen;
 
@@ -130,15 +132,32 @@ public class PlannerPanel extends PluginPanel
 		rebuild();
 	}
 
-	/** Opens a page, or the home screen when null. */
-	public void open(String activityId)
+	/** Opens only this page's dropdown, or closes them all when null. Used by the screenshot renderer. */
+	void open(String activityId)
 	{
-		openActivity = activityId;
-		rebuild();
-		if (getScrollPane() != null)
+		expanded.clear();
+		if (activityId != null)
 		{
-			getScrollPane().getVerticalScrollBar().setValue(0);
+			expanded.add(activityId);
 		}
+		rebuild();
+	}
+
+	@Override
+	public void onDeactivate()
+	{
+		// closing the plugin's tab folds every page back up
+		expanded.clear();
+		rebuild();
+	}
+
+	private void toggle(String activityId)
+	{
+		if (!expanded.remove(activityId))
+		{
+			expanded.add(activityId);
+		}
+		rebuild();
 	}
 
 	private void rebuild()
@@ -146,15 +165,7 @@ public class PlannerPanel extends PluginPanel
 		content.removeAll();
 		if (model != null)
 		{
-			Activity activity = openActivity == null ? null : model.getData().getActivities().get(openActivity);
-			if (activity == null)
-			{
-				buildHome();
-			}
-			else
-			{
-				buildPage(activity);
-			}
+			buildHome();
 		}
 		content.revalidate();
 		content.repaint();
@@ -196,7 +207,7 @@ public class PlannerPanel extends PluginPanel
 		}
 		else
 		{
-			addCurrencyBars(needed, true);
+			addCurrencyBars(content, needed, true);
 			// logs, bars... for the whole goal, in one line with the details in its tooltip
 			JComponent materials = detailsLine(plan.getTotal().getMaterialsNet(), List.of());
 			if (materials != null)
@@ -216,6 +227,18 @@ public class PlannerPanel extends PluginPanel
 		}
 
 		content.add(Box.createVerticalStrut(14));
+		long unsynced = model.getData().getActivities().values().stream()
+			.filter(a -> !model.getSyncedPages().contains(a.getClogPage()))
+			.count();
+		if (unsynced > 0)
+		{
+			JLabel sync = wrapped("Open your collection log and click Search once to sync every page.", ACCENT);
+			sync.setToolTipText("<html>The planner can't see your log until the game shows it.<br>"
+				+ "Search lists your whole log at once, so every page syncs in one go.<br>"
+				+ unsynced + " page(s) not synced yet.</html>");
+			content.add(sync);
+			content.add(Box.createVerticalStrut(8));
+		}
 		content.add(search);
 		content.add(Box.createVerticalStrut(8));
 
@@ -224,22 +247,37 @@ public class PlannerPanel extends PluginPanel
 			.filter(a -> filter.isEmpty() || a.getName().toLowerCase(Locale.ROOT).contains(filter))
 			.sorted(Comparator.comparing(Activity::getName))
 			.collect(Collectors.toList());
-		List<Activity> inProgress = pages.stream().filter(a -> !wantedMissing(a).isEmpty()).collect(Collectors.toList());
-		List<Activity> others = pages.stream()
-			.filter(a -> wantedMissing(a).isEmpty())
-			.filter(a -> !model.isHideCompleted() || !plan.getActivity(a.getId()).isComplete())
+		// Tracking: pages with something in the goal. Everything missing: the rest that still has
+		// something to buy. Completed: nothing left (hidden with "Hide completed pages").
+		List<Activity> tracking = pages.stream().filter(a -> !wantedMissing(a).isEmpty()).collect(Collectors.toList());
+		List<Activity> untracked = pages.stream()
+			.filter(a -> wantedMissing(a).isEmpty() && !pageMissing(a).isEmpty())
+			.collect(Collectors.toList());
+		List<Activity> completed = pages.stream()
+			.filter(a -> pageMissing(a).isEmpty())
+			.filter(a -> !model.isHideCompleted())
 			.collect(Collectors.toList());
 
-		if (!inProgress.isEmpty())
+		if (!tracking.isEmpty())
 		{
-			content.add(sectionTitle("In progress"));
-			inProgress.forEach(a -> content.add(pageRow(a)));
+			content.add(sectionTitle("Tracking"));
+			tracking.forEach(a -> content.add(pageRow(a)));
 			content.add(Box.createVerticalStrut(10));
 		}
-		if (!others.isEmpty())
+		if (!untracked.isEmpty() || filter.isEmpty())
 		{
-			content.add(sectionTitle(inProgress.isEmpty() ? "Pages" : "All pages"));
-			others.forEach(a -> content.add(pageRow(a)));
+			content.add(everythingMissingTitle());
+			if (untracked.isEmpty())
+			{
+				content.add(wrapped("Every page is tracked.", MUTED));
+			}
+			untracked.forEach(a -> content.add(pageRow(a)));
+			content.add(Box.createVerticalStrut(10));
+		}
+		if (!completed.isEmpty())
+		{
+			content.add(sectionTitle("Completed"));
+			completed.forEach(a -> content.add(pageRow(a)));
 		}
 		if (pages.isEmpty())
 		{
@@ -306,6 +344,7 @@ public class PlannerPanel extends PluginPanel
 		ActivityPlan activityPlan = model.getPlan().getActivity(activity.getId());
 		boolean complete = activityPlan.isComplete();
 		boolean synced = model.getSyncedPages().contains(activity.getClogPage());
+		boolean open = expanded.contains(activity.getId());
 
 		JPanel card = new JPanel()
 		{
@@ -322,7 +361,17 @@ public class PlannerPanel extends PluginPanel
 		card.setMaximumSize(new Dimension(Integer.MAX_VALUE, 40));
 
 		JPanel top = row();
-		top.add(label(activity.getName(), FontManager.getRunescapeSmallFont(), complete ? GOOD : Color.WHITE), BorderLayout.WEST);
+		JPanel title = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+		title.setOpaque(false);
+		List<String> missing = pageMissing(activity);
+		if (!missing.isEmpty())
+		{
+			JCheckBox track = trackBox(missing, "Track this page: put all " + missing.size() + " missing items in your goal", false);
+			track.setBorder(new EmptyBorder(0, 0, 0, 5));
+			title.add(track);
+		}
+		title.add(label((open ? "▾ " : "▸ ") + activity.getName(), FontManager.getRunescapeSmallFont(), complete ? GOOD : Color.WHITE));
+		top.add(title, BorderLayout.WEST);
 		top.add(label(activityPlan.getSlotsOwned() + "/" + activityPlan.getSlotsTotal(), FontManager.getRunescapeSmallFont(), MUTED),
 			BorderLayout.EAST);
 		card.add(top);
@@ -330,14 +379,14 @@ public class PlannerPanel extends PluginPanel
 		double fraction = activityPlan.getSlotsTotal() == 0 ? 0 : (double) activityPlan.getSlotsOwned() / activityPlan.getSlotsTotal();
 		card.add(new ProgressBar(fraction, complete ? GOOD : NEUTRAL_BAR, 3));
 
-		card.setToolTipText(synced ? null : "Open this page in the collection log to sync what you own");
+		card.setToolTipText(synced ? null : "Not synced yet: open this page in the collection log, or click Search there to sync every page");
 		card.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 		card.addMouseListener(new MouseAdapter()
 		{
 			@Override
 			public void mouseClicked(MouseEvent e)
 			{
-				open(activity.getId());
+				toggle(activity.getId());
 			}
 
 			@Override
@@ -357,8 +406,12 @@ public class PlannerPanel extends PluginPanel
 		wrapper.setOpaque(false);
 		wrapper.setAlignmentX(Component.LEFT_ALIGNMENT);
 		wrapper.setBorder(new EmptyBorder(0, 0, 3, 0));
-		wrapper.add(card, BorderLayout.CENTER);
-		wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, 43));
+		wrapper.add(card, BorderLayout.NORTH);
+		if (open)
+		{
+			wrapper.add(pageBody(activity), BorderLayout.CENTER);
+		}
+		wrapper.setMaximumSize(new Dimension(Integer.MAX_VALUE, wrapper.getPreferredSize().height));
 		return wrapper;
 	}
 
@@ -422,58 +475,52 @@ public class PlannerPanel extends PluginPanel
 	// Page
 	// ------------------------------------------------------------------
 
-	private void buildPage(Activity activity)
+	/** A page opened as a dropdown: its goal, sell-backs, materials and the item grid. */
+	private JPanel pageBody(Activity activity)
 	{
 		ActivityPlan activityPlan = model.getPlan().getActivity(activity.getId());
+		JPanel body = new JPanel();
+		body.setLayout(new BoxLayout(body, BoxLayout.Y_AXIS));
+		body.setOpaque(false);
+		body.setBorder(new EmptyBorder(8, 0, 10, 0));
 
-		JPanel header = row();
-		JLabel back = link("←", () -> open(null));
-		back.setFont(FontManager.getRunescapeBoldFont());
-		back.setToolTipText("Back to all pages");
-		back.setBorder(new EmptyBorder(0, 0, 0, 8));
-		header.add(back, BorderLayout.WEST);
-		header.add(label(activity.getName(), FontManager.getRunescapeBoldFont(), Color.WHITE), BorderLayout.CENTER);
-		header.add(label(activityPlan.getSlotsOwned() + "/" + activityPlan.getSlotsTotal(), FontManager.getRunescapeSmallFont(), MUTED),
-			BorderLayout.EAST);
-		content.add(header);
 		if (!model.getSyncedPages().contains(activity.getClogPage()))
 		{
-			content.add(Box.createVerticalStrut(4));
-			content.add(wrapped("Open this page in the collection log to sync it.", ACCENT));
+			body.add(wrapped("Open this page in the collection log to sync it, or click Search there to sync every page.", ACCENT));
+			body.add(Box.createVerticalStrut(8));
 		}
-		content.add(Box.createVerticalStrut(12));
 
 		Map<String, Long> cost = activityPlan.getCost().getNet();
 		if (wantedMissing(activity).isEmpty())
 		{
-			content.add(wrapped("Click the items you want to see what they cost.", MUTED));
+			body.add(wrapped("Click the items you want to see what they cost.", MUTED));
 		}
 		else
 		{
-			addCurrencyBars(cost, false);
+			addCurrencyBars(body, cost, false);
 			if (!activityPlan.getUndecided().isEmpty())
 			{
-				content.add(wrapped("Right-click the items marked ? to pick a shop.", ACCENT));
+				body.add(wrapped("Right-click the items marked ? to pick a shop.", ACCENT));
 			}
 			JComponent sellBacks = sellBackLine(activityPlan);
 			if (sellBacks != null)
 			{
-				content.add(sellBacks);
+				body.add(sellBacks);
 			}
 			JComponent details = detailsLine(activityPlan.getCost().getMaterialsNet(), activityPlan.getPrerequisites());
 			if (details != null)
 			{
-				content.add(details);
+				body.add(details);
 			}
 		}
 
 		if (hasGlovePrices(activity))
 		{
-			content.add(Box.createVerticalStrut(6));
-			content.add(glovesRow());
+			body.add(Box.createVerticalStrut(6));
+			body.add(glovesRow());
 		}
 
-		content.add(Box.createVerticalStrut(12));
+		body.add(Box.createVerticalStrut(12));
 		List<String> items = activity.getClogItems().stream()
 			.filter(i -> model.getData().getReward(i) != null)
 			.collect(Collectors.toList());
@@ -494,8 +541,8 @@ public class PlannerPanel extends PluginPanel
 		}
 		actions.add(link("all", () -> plugin.setWanted(missing, true)));
 		actions.add(link("none", () -> plugin.setWanted(items, false)));
-		content.add(actions);
-		content.add(Box.createVerticalStrut(4));
+		body.add(actions);
+		body.add(Box.createVerticalStrut(4));
 
 		JPanel grid = new JPanel(new GridLayout(0, GRID_COLUMNS, 3, 3));
 		grid.setOpaque(false);
@@ -506,10 +553,11 @@ public class PlannerPanel extends PluginPanel
 		}
 		int rows = (items.size() + GRID_COLUMNS - 1) / GRID_COLUMNS;
 		grid.setMaximumSize(new Dimension(Integer.MAX_VALUE, rows * (ItemSlot.HEIGHT + 3)));
-		content.add(grid);
+		body.add(grid);
 
-		content.add(Box.createVerticalStrut(8));
-		content.add(wrapped("Click to add or remove from your goal. Right-click for more.", MUTED));
+		body.add(Box.createVerticalStrut(8));
+		body.add(wrapped("Click to add or remove from your goal. Right-click for more.", MUTED));
+		return body;
 	}
 
 	private boolean hasGlovePrices(Activity activity)
@@ -724,7 +772,7 @@ public class PlannerPanel extends PluginPanel
 	 * One bar per currency: "have / need". On the home screen the colour says whether the goal is
 	 * met; on a page the balance is shared with other goals, so the bar stays neutral.
 	 */
-	private void addCurrencyBars(Map<String, Long> needed, boolean accountWide)
+	private void addCurrencyBars(JPanel target, Map<String, Long> needed, boolean accountWide)
 	{
 		for (Currency currency : model.getData().getCurrencies().values())
 		{
@@ -752,7 +800,7 @@ public class PlannerPanel extends PluginPanel
 			box.setBorder(new EmptyBorder(0, 0, 8, 0));
 
 			JPanel top = row();
-			top.add(label(currency.getName(), FontManager.getRunescapeSmallFont(), Color.WHITE), BorderLayout.WEST);
+			top.add(currencyLabel(currency), BorderLayout.WEST);
 			top.add(label((have == null ? "?" : fmtShort(current)) + " / " + fmtShort(need), FontManager.getRunescapeSmallFont(),
 				accountWide && done ? GOOD : MUTED), BorderLayout.EAST);
 			box.add(top);
@@ -787,8 +835,24 @@ public class PlannerPanel extends PluginPanel
 					}
 				}
 			});
-			content.add(box);
+			target.add(box);
 		}
+	}
+
+	/** The currency's name with its icon in front (an item, a stand-in item or a spell sprite). */
+	private JLabel currencyLabel(Currency currency)
+	{
+		JLabel name = label(currency.getName(), FontManager.getRunescapeSmallFont(), Color.WHITE);
+		SmallIcon icon = new SmallIcon(null, 14);
+		// a sprite may arrive later: fetch it again then (without asking to be told again) and repaint
+		icon.setImage(icons.currency(currency, () -> SwingUtilities.invokeLater(() ->
+		{
+			icon.setImage(icons.currency(currency, () -> { }));
+			name.repaint();
+		})));
+		name.setIcon(icon);
+		name.setIconTextGap(5);
+		return name;
 	}
 
 	private JPopupMenu balanceMenu(Currency currency)
@@ -1028,6 +1092,82 @@ public class PlannerPanel extends PluginPanel
 	}
 
 	/** Wanted slots of a page that are not owned yet. */
+	/** Slots of a page the planner covers that the player doesn't have yet. */
+	private List<String> pageMissing(Activity activity)
+	{
+		return activity.getClogItems().stream()
+			.filter(i -> model.getData().getReward(i) != null && !model.getOwned().contains(i))
+			.collect(Collectors.toList());
+	}
+
+	/** Every slot missing across all pages, each once. */
+	private List<String> allMissing()
+	{
+		return model.getData().getActivities().values().stream()
+			.flatMap(a -> pageMissing(a).stream())
+			.distinct()
+			.collect(Collectors.toList());
+	}
+
+	/**
+	 * A checkbox for tracking a group of slots: ticked when all are in the goal, half-ticked when
+	 * some are. Ticking it adds them all; unticking removes them.
+	 */
+	private JCheckBox trackBox(List<String> slots, String tooltip, boolean confirmUntrack)
+	{
+		long inGoal = slots.stream().filter(model.getWanted()::contains).count();
+		boolean all = !slots.isEmpty() && inGoal == slots.size();
+		JCheckBox box = new JCheckBox()
+		{
+			@Override
+			public JToolTip createToolTip()
+			{
+				return Tooltips.create(this);
+			}
+		};
+		box.setSelected(all);
+		if (!all && inGoal > 0)
+		{
+			// FlatLaf (RuneLite's look and feel) draws this as a half-ticked box
+			box.putClientProperty("JButton.selectedState", "indeterminate");
+		}
+		box.setOpaque(false);
+		box.setFocusPainted(false);
+		box.setBorder(new EmptyBorder(0, 0, 0, 0));
+		box.setToolTipText(tooltip);
+		box.addActionListener(e ->
+		{
+			if (!all)
+			{
+				plugin.setWanted(slots, true);
+				return;
+			}
+			if (confirmUntrack && JOptionPane.showConfirmDialog(this, "Remove all " + slots.size() + " items from your goal?",
+				"Reward Shop Planner", JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION)
+			{
+				box.setSelected(true);
+				return;
+			}
+			plugin.setWanted(slots, false);
+		});
+		return box;
+	}
+
+	/** "Everything missing" with a "Track all" box that puts every missing slot in the goal. */
+	private JComponent everythingMissingTitle()
+	{
+		JPanel title = row();
+		title.add(sectionTitle("Everything missing"), BorderLayout.WEST);
+		JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
+		right.setOpaque(false);
+		right.add(label("Track all", FontManager.getRunescapeSmallFont(), MUTED));
+		List<String> missing = allMissing();
+		right.add(trackBox(missing, "Put every slot you're missing, on every page, in your goal", true));
+		title.add(right, BorderLayout.EAST);
+		title.setMaximumSize(new Dimension(Integer.MAX_VALUE, title.getPreferredSize().height));
+		return title;
+	}
+
 	private List<String> wantedMissing(Activity activity)
 	{
 		return activity.getClogItems().stream()

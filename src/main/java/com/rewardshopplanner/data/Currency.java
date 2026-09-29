@@ -35,4 +35,14 @@ public class Currency
 	private Integer compositeFactor;
 	private String gameval;
 	private String notes;
+	/** For currencies that aren't items: an item whose icon stands for it (Mox paste for mox resin). */
+	private Integer iconItemId;
+	/** Or a game sprite, like a spell icon (Telekinetic Grab for telekinetic pizazz). */
+	private Integer iconSpriteId;
+
+	/** The item whose icon shows the currency: the currency itself, or its stand-in; null for a sprite or none. */
+	public Integer getIconItem()
+	{
+		return itemId != null ? itemId : iconItemId;
+	}
 }

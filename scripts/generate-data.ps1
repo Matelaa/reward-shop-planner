@@ -242,15 +242,19 @@ function Resolve-ItemIds([string[]]$names) {
         # match on the exact item name first (versioned pages like "Celestial ring"),
         # then fall back to the page name
         $ors = ($chunk | ForEach-Object { $e = Escape-Lua $_; "{'item_name','$e'},{'page_name','$e'}" }) -join ','
-        $rows = Invoke-Bucket ("bucket('infobox_item').select('page_name','item_id','item_name').where(bucket.Or($ors)).limit(1000).run()")
-        $byPage = @{}
+        $rows = Invoke-Bucket ("bucket('infobox_item').select('page_name','item_id','item_name','version_anchor').where(bucket.Or($ors)).limit(1000).run()")
+        $byPage = @{}; $byPageRank = @{}
         foreach ($r in $rows) {
             $id = @($r.item_id) | Where-Object { $_ } | Select-Object -First 1
             if (-not $id) { continue }
             $in = [System.Net.WebUtility]::HtmlDecode($r.item_name)
             $pn = [System.Net.WebUtility]::HtmlDecode($r.page_name)
             if ($chunk -contains $in -and -not $ids.ContainsKey($in)) { $ids[$in] = [int]$id }
-            if (-not $byPage.ContainsKey($pn)) { $byPage[$pn] = [int]$id }
+            # A page can list several versions (Castle Wars gold armour: Normal, Broken, Locked). The
+            # collection log shows the normal one, so broken and locked versions only fill in.
+            $anchor = "$($r.version_anchor)"
+            $rank = if ($anchor -match '(?i)broken|locked' -or $in -match '\((broken|l)\)$') { 2 } elseif ($anchor -eq '' -or $anchor -match '(?i)^normal$') { 0 } else { 1 }
+            if (-not $byPage.ContainsKey($pn) -or $rank -lt $byPageRank[$pn]) { $byPage[$pn] = [int]$id; $byPageRank[$pn] = $rank }
         }
         foreach ($n in $chunk) { if (-not $ids.ContainsKey($n) -and $byPage.ContainsKey($n)) { $ids[$n] = $byPage[$n] } }
     }
@@ -261,7 +265,8 @@ function Resolve-ItemIds([string[]]$names) {
 $allClogNames = @($clogItems.Values | ForEach-Object { $_ })
 # Materials (logs, bars...) are counted in the bank and inventory, so they need ids too.
 $materialNames = @($rewards.Values | Where-Object { $_.materials } | ForEach-Object { $_.materials.Keys } | Sort-Object -Unique)
-$ids = Resolve-ItemIds (@($rewards.Keys) + $allClogNames + $materialNames + @($sources.currencies | Where-Object { $_.wikiItem } | ForEach-Object { $_.wikiItem }))
+$iconItems = @($sources.currencies | Where-Object { $_.icon -and $_.icon.item } | ForEach-Object { $_.icon.item })
+$ids = Resolve-ItemIds (@($rewards.Keys) + $allClogNames + $materialNames + $iconItems + @($sources.currencies | Where-Object { $_.wikiItem } | ForEach-Object { $_.wikiItem }))
 foreach ($al in @($sources.clogAliases)) { if ($al) { $ids[$al.clogName] = [int]$al.itemId } }
 foreach ($rw in $rewards.Values) {
     if ($ids.ContainsKey($rw.name)) { $rw.itemId = $ids[$rw.name] }
@@ -277,6 +282,12 @@ foreach ($c in $sources.currencies) {
     if ($c.wikiItem) {
         if ($ids.ContainsKey($c.wikiItem)) { $o.itemId = $ids[$c.wikiItem] } else { Warn "No item id for currency: $($c.wikiItem)" }
     }
+    # currencies that aren't items show an item's icon, or a spell's sprite (Mage Training Arena)
+    $o.Remove('icon')
+    if ($c.icon -and $c.icon.item) {
+        if ($ids.ContainsKey($c.icon.item)) { $o.iconItemId = $ids[$c.icon.item] } else { Warn "No item id for currency icon: $($c.icon.item)" }
+    }
+    if ($c.icon -and $c.icon.sprite) { $o.iconSpriteId = [int]$c.icon.sprite }
     [void]$currencyOut.Add($o)
 }
 
@@ -326,6 +337,19 @@ foreach ($a in $sources.activities) {
         clogItemIds = $itemIds
         counts     = $counts
         totalCost  = $totalCost
+        # map regions where the on-screen progress shows; none means it shows after earning the currency
+        regions    = [object[]]@($a.regions | Where-Object { $null -ne $_ })
+        minPlane   = if ($a.minPlane) { [int]$a.minPlane } else { 0 }
+        # finer places: polygons (tile corners walked in game) or regions, optionally for some currencies only
+        areas      = [object[]]@($a.areas | Where-Object { $null -ne $_ } | ForEach-Object {
+            $area = [ordered]@{}
+            if ($null -ne $_.plane) { $area.plane = [int]$_.plane }
+            if ($_.regions) { $area.regions = [object[]]@($_.regions | ForEach-Object { [int]$_ }) }
+            # each point stays a two-element array, even through PowerShell's array flattening
+            if ($_.points) { $area.points = [object[]]@($_.points | ForEach-Object { ,[object[]]@([int]$_[0], [int]$_[1]) }) }
+            if ($_.currencies) { $area.currencies = [object[]]@($_.currencies) }
+            $area
+        })
         notes      = $a.notes
     })
 }
