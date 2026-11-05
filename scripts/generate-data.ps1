@@ -116,7 +116,7 @@ function Get-Reward([string]$item) {
     return $rewards[$item]
 }
 
-function Add-Offer($reward, [string]$activity, [string]$store, $cost, $buyBack = $null, $extra = $null) {
+function Add-Offer($reward, [string]$activity, [string]$store, $cost, $buyBack = $null) {
     foreach ($o in $reward.offers) {
         if ($o.store -eq $store -and (($o.cost | ConvertTo-Json -Compress) -eq ($cost | ConvertTo-Json -Compress))) {
             if ($o.activities -notcontains $activity) { $o.activities += $activity }
@@ -125,7 +125,6 @@ function Add-Offer($reward, [string]$activity, [string]$store, $cost, $buyBack =
     }
     $offer = [ordered]@{ activities = @($activity); store = $store; cost = $cost }
     if ($buyBack) { $offer.buyBack = $buyBack }
-    if ($extra) { foreach ($k in $extra.Keys) { $offer[$k] = $extra[$k] } }
     [void]$reward.offers.Add($offer)
 }
 
@@ -141,11 +140,9 @@ foreach ($al in @($sources.clogAliases)) { if ($al) { $aliasByWikiItem[$al.wikiI
 foreach ($a in $sources.activities) {
     $pageItems = $clogItems[$a.clogPage]
     if (-not $pageItems) { continue }
-    # Highest regular price per item across the activity's stores (TzHaar's two equipment
-    # stores sell the same items). Rows noted "(Karamja gloves)" are TzHaar's prices while
-    # wearing the gloves: kept separately. The store's buy price (what it pays when the item is
-    # sold back) comes from the same row.
-    $best = @{}; $bestStores = @{}; $bestCurrency = @{}; $bestBuy = @{}; $gloves = @{}; $glovesBuy = @{}
+    # Highest regular price per item across the activity's stores. The store's buy price (what it
+    # pays when the item is sold back) comes from the same row.
+    $best = @{}; $bestStores = @{}; $bestCurrency = @{}; $bestBuy = @{}
     foreach ($st in $a.stores) {
         $rows = Invoke-Bucket ("bucket('storeline').select('sold_item','store_sell_price','store_buy_price','store_currency','store_notes').where('page_name','" + (Escape-Lua $st.name) + "').limit(500).run()")
         if (-not $rows) { Warn "No wiki data for shop: $($st.name)"; continue }
@@ -157,10 +154,6 @@ foreach ($a in $sources.activities) {
             if ($null -eq $p -or $p -le 0) { continue }
             $buy = if ("$($r.store_buy_price)" -match '^[\d,]+$') { To-Int $r.store_buy_price } else { $null }
             $buy = if ($buy -gt 0) { [Math]::Min($buy, $p) } else { $null }
-            if ("$($r.store_notes)" -match 'Karamja gloves') {
-                $gloves[$n] = $p; $glovesBuy[$n] = $buy
-                continue
-            }
             if (-not $best.ContainsKey($n) -or $best[$n] -lt $p) {
                 $best[$n] = $p; $bestCurrency[$n] = $st.currency; $bestBuy[$n] = $buy
             }
@@ -171,12 +164,7 @@ foreach ($a in $sources.activities) {
     foreach ($n in $best.Keys) {
         $rw = Get-Reward $n
         $currency = $bestCurrency[$n]
-        $extra = $null
-        if ($gloves.ContainsKey($n)) {
-            $extra = [ordered]@{ karamjaGlovesCost = (Single-Cost $currency $gloves[$n]) }
-            if ($glovesBuy[$n]) { $extra.karamjaGlovesBuyBack = (Single-Cost $currency $glovesBuy[$n]) }
-        }
-        Add-Offer $rw $a.id ($bestStores[$n] -join ' / ') (Single-Cost $currency $best[$n]) (Single-Cost $currency $bestBuy[$n]) $extra
+        Add-Offer $rw $a.id ($bestStores[$n] -join ' / ') (Single-Cost $currency $best[$n]) (Single-Cost $currency $bestBuy[$n])
     }
 }
 

@@ -1501,62 +1501,6 @@
         "notes":  null
     },
     {
-        "id":  "tzhaar",
-        "name":  "TzHaar",
-        "clogTab":  "Other",
-        "clogPage":  "TzHaar",
-        "currencies":  [
-                           "tokkul"
-                       ],
-        "clogItems":  [
-                          "Obsidian cape",
-                          "Toktz-ket-xil",
-                          "Tzhaar-ket-om",
-                          "Toktz-xil-ak",
-                          "Toktz-xil-ek",
-                          "Toktz-mej-tal",
-                          "Toktz-xil-ul",
-                          "Obsidian helmet",
-                          "Obsidian platebody",
-                          "Obsidian platelegs"
-                      ],
-        "clogItemIds":  [
-                            6568,
-                            6524,
-                            6528,
-                            6523,
-                            6525,
-                            6526,
-                            6522,
-                            21298,
-                            21301,
-                            21304
-                        ],
-        "counts":  {
-                       "total":  10,
-                       "purchasable":  10,
-                       "random":  0,
-                       "milestone":  0,
-                       "notPurchasable":  0
-                   },
-        "totalCost":  {
-                          "tokkul":  693856
-                      },
-        "regions":  [
-                        9807,
-                        9808,
-                        10063,
-                        10064,
-                        9551,
-                        9552
-                    ],
-        "minPlane":  0,
-        "areas":  [
-
-                  ],
-        "notes":  "Standard price; about 13% cheaper while wearing Karamja gloves."
-    },
-    {
         "id":  "miscellaneous",
         "name":  "Miscellaneous",
         "clogTab":  "Other",

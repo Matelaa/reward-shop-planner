@@ -96,32 +96,6 @@ public class PlannerCalculatorTest
 	}
 
 	@Test
-	public void karamjaGlovesChangeTzhaarPrices()
-	{
-		PlannerInput.PlannerInputBuilder cape = PlannerInput.builder()
-			.wanted(Set.of("Obsidian cape"))
-			.sellBack(Set.of("Obsidian cape"));
-
-		Plan bare = calculator.plan(cape.build());
-		assertEquals(90_000, bare.getTotal().getGross("tokkul"));
-		// you must hold the full price once, even though 9,000 comes back
-		assertEquals(90_000, bare.getTotal().getNet("tokkul"));
-
-		Plan gloves = calculator.plan(cape.karamjaGloves(true).build());
-		assertEquals(78_000, gloves.getTotal().getGross("tokkul"));
-		assertEquals(78_000, gloves.getTotal().getNet("tokkul"));
-
-		// several items: the refunds pay for the next purchase
-		Plan set = calculator.plan(PlannerInput.builder()
-			.wanted(Set.of("Obsidian cape", "Obsidian helmet"))
-			.sellBack(Set.of("Obsidian cape", "Obsidian helmet"))
-			.karamjaGloves(true)
-			.build());
-		assertEquals(78_000 + 73_216, set.getTotal().getGross("tokkul"));
-		assertEquals(78_000 - 21_000 + 73_216, set.getTotal().getNet("tokkul"));
-	}
-
-	@Test
 	public void ultimateIronmanCannotSellBack()
 	{
 		Plan plan = calculator.plan(forestryGoal(AccountMode.ULTIMATE_IRONMAN));

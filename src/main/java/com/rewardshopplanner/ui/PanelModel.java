@@ -32,11 +32,5 @@ public class PanelModel
 	AccountMode accountMode;
 	/** Items the player will sell back once logged; the costs already account for them. */
 	Set<String> sellBack;
-	/** TzHaar prices are shown with Karamja gloves on. */
-	boolean karamjaGloves;
-	/** The gloves setting follows the Karamja diary (the player hasn't chosen). */
-	boolean karamjaGlovesAuto;
-	/** The Karamja easy diary gloves were claimed. */
-	boolean karamjaGlovesClaimed;
 	boolean hideCompleted;
 }

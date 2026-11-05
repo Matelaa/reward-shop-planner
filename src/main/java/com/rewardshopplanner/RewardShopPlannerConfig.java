@@ -409,18 +409,6 @@ public interface RewardShopPlannerConfig extends Config
 
 	@ConfigItem(
 		section = OVERLAY_ACTIVITIES,
-		keyName = OVERLAY_KEY_PREFIX + "tzhaar",
-		name = "TzHaar",
-		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",
-		position = 25
-	)
-	default OverlayMode overlayTzhaar()
-	{
-		return OverlayMode.AT_THE_ACTIVITY;
-	}
-
-	@ConfigItem(
-		section = OVERLAY_ACTIVITIES,
 		keyName = OVERLAY_KEY_PREFIX + "miscellaneous",
 		name = "Miscellaneous",
 		description = "At the activity: shows while you're there. Always: stays on screen. Off: never shows.",

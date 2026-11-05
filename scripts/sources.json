@@ -14,7 +14,6 @@
     { "id": "golden_nugget",    "name": "Golden nugget",             "source": "ITEM",  "wikiItem": "Golden nugget" },
     { "id": "mark_of_grace",    "name": "Mark of grace",             "source": "ITEM",  "wikiItem": "Mark of grace" },
     { "id": "stardust",         "name": "Stardust",                  "source": "ITEM",  "wikiItem": "Stardust" },
-    { "id": "tokkul",           "name": "Tokkul",                    "source": "ITEM",  "wikiItem": "Tokkul" },
     { "id": "unid_minerals",    "name": "Unidentified minerals",     "source": "ITEM",  "wikiItem": "Unidentified minerals" },
     { "id": "mermaids_tear",    "name": "Mermaid's tear",            "source": "ITEM",  "wikiItem": "Mermaid's tear" },
     { "id": "pheasant_feather", "name": "Pheasant tail feathers",    "source": "ITEM",  "wikiItem": "Pheasant tail feathers" },
@@ -74,7 +73,6 @@
     { "id": "motherlode_mine",   "name": "Motherlode Mine",         "clogPage": "Motherlode Mine", "regions": [14679, 14680, 14681, 14935, 14936, 14937, 15191, 15192, 15193],         "stores": [ { "name": "Prospector Percy's Nugget Shop", "currency": "golden_nugget" } ] },
     { "id": "rooftop_agility",   "name": "Rooftop Agility",         "clogPage": "Rooftop Agility", "regions": [12338, 13105, 12853, 13878, 12084, 10806, 13358, 10553, 10547], "minPlane": 1, "_regionsComment": "Rooftop courses that give marks of grace, only while on the rooftops",         "stores": [ { "name": "Grace's Graceful Clothing", "currency": "mark_of_grace" } ] },
     { "id": "shooting_stars",    "name": "Shooting Stars",          "clogPage": "Shooting Stars",          "stores": [ { "name": "Dusuri's Star Shop", "currency": "stardust" } ] },
-    { "id": "tzhaar",            "name": "TzHaar",                  "clogPage": "TzHaar", "regions": [9807, 9808, 10063, 10064, 9551, 9552],                  "stores": [ { "name": "TzHaar-Hur-Tel's Equipment Store", "currency": "tokkul" }, { "name": "TzHaar-Hur-Zal's Equipment Store", "currency": "tokkul" } ], "notes": "Standard price; about 13% cheaper while wearing Karamja gloves." },
     { "id": "miscellaneous",     "name": "Miscellaneous",           "clogPage": "Miscellaneous", "areas": [ { "currencies": ["unid_minerals"], "plane": 0, "points": [[3005, 9706], [3003, 9708], [3002, 9711], [3003, 9724], [3004, 9725], [3006, 9726], [3018, 9732], [3020, 9732], [3023, 9726], [3024, 9725], [3029, 9720], [3028, 9715], [3028, 9701], [3026, 9699], [3023, 9699], [3019, 9700], [3018, 9701]] }, { "currencies": ["mermaids_tear"], "regions": [15008, 15009, 15264, 15265] } ],           "stores": [ { "name": "Mining Guild Mineral Exchange", "currency": "unid_minerals" }, { "name": "Mairin's Market", "currency": "mermaids_tear" } ], "onlyPurchasableInSummary": true },
     { "id": "chompy",            "name": "Chompy Bird Hunting",     "clogPage": "Chompy Bird Hunting", "areas": [ { "plane": 0, "points": [[2407, 3059], [2407, 3036], [2399, 3031], [2389, 3030], [2379, 3031], [2349, 3033], [2331, 3039], [2322, 3061], [2333, 3073]] }, { "plane": 0, "points": [[2589, 2959], [2589, 2973], [2608, 2973], [2608, 2959]] } ],     "stores": [] }
   ],

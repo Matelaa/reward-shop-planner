@@ -85,13 +85,6 @@
         "itemId":  25527
     },
     {
-        "id":  "tokkul",
-        "name":  "Tokkul",
-        "source":  "ITEM",
-        "wikiItem":  "Tokkul",
-        "itemId":  6529
-    },
-    {
         "id":  "unid_minerals",
         "name":  "Unidentified minerals",
         "source":  "ITEM",

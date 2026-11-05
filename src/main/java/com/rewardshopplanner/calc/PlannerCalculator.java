@@ -187,9 +187,9 @@ public class PlannerCalculator
 			Reward.Offer offer = chooseOffer(reward, input);
 			boolean selling = input.isSellBack(item) && !tradedIn.contains(item);
 			Map<String, Long> back = selling
-				? sellBackValue(reward, offer, input.getAccountMode(), input.isKaramjaGloves())
+				? sellBackValue(reward, offer, input.getAccountMode())
 				: Collections.emptyMap();
-			for (Map.Entry<String, Integer> cost : offer.costFor(input.isKaramjaGloves()).entrySet())
+			for (Map.Entry<String, Integer> cost : offer.getCost().entrySet())
 			{
 				long amount = cost.getValue();
 				long returned = back.getOrDefault(cost.getKey(), 0L);
@@ -240,14 +240,14 @@ public class PlannerCalculator
 	 * What the player gets back by selling an item to the shop after logging it, per currency;
 	 * empty when it can't be sold back (or not by this account type).
 	 */
-	public static Map<String, Long> sellBackValue(Reward reward, Reward.Offer offer, AccountMode mode, boolean karamjaGloves)
+	public static Map<String, Long> sellBackValue(Reward reward, Reward.Offer offer, AccountMode mode)
 	{
 		Map<String, Long> back = new LinkedHashMap<>();
 		if (offer == null)
 		{
 			return back;
 		}
-		Map<String, Integer> cost = offer.costFor(karamjaGloves);
+		Map<String, Integer> cost = offer.getCost();
 		Reward.Refund refund = reward.getRefund();
 		if (refund != null)
 		{
@@ -268,7 +268,7 @@ public class PlannerCalculator
 			}
 			return back;
 		}
-		Map<String, Integer> buyBack = offer.buyBackFor(karamjaGloves);
+		Map<String, Integer> buyBack = offer.getBuyBack();
 		if (buyBack != null)
 		{
 			for (Map.Entry<String, Integer> entry : cost.entrySet())

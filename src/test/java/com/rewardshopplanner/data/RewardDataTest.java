@@ -27,7 +27,7 @@ public class RewardDataTest
 	@Test
 	public void loadsEveryFile()
 	{
-		assertEquals(28, data.getActivities().size());
+		assertEquals(27, data.getActivities().size());
 		assertFalse(data.getRewards().isEmpty());
 		assertFalse(data.getCurrencies().isEmpty());
 	}

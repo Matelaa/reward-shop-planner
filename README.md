@@ -10,7 +10,7 @@ from the game.
 
 ## Features
 
-- **28 minigames and activities**: Castle Wars, Pest Control, Mage Training Arena, Barbarian Assault,
+- **27 minigames and activities**: Castle Wars, Pest Control, Mage Training Arena, Barbarian Assault,
   Forestry, Mastering Mixology, Guardians of the Rift, Tithe Farm, Trouble Brewing and more.
 - **Your log, synced**: open the collection log and click Search once, and the planner knows what you already have.
 - **Balances read from the game**: bank and inventory items, the Forestry kit, reward shop screens and
@@ -37,7 +37,7 @@ from the game.
 Nothing is sold back unless you choose it. Right-click an item and pick **Sell back after logging it**, or use
 **sell back all** on a page (handy for Castle Wars). The goal then counts what you really spend, and never less
 than what you must hold to buy the items one at a time. Your account type is read from the game, so
-ultimate ironmen never count the Forestry sell-backs they can't make. TzHaar prices follow your Karamja gloves. Recoloured outfits
+ultimate ironmen never count the Forestry sell-backs they can't make. Recoloured outfits
 like the Varlamore graceful are one purchase for the whole set, and the planner adds the base set they trade in.
 
 ### On-screen progress
@@ -75,15 +75,6 @@ your place.
 Some rewards also take logs, bars or thread (the Forestry outfit, the funky shaped log, the log brace...).
 Hover **Materials** to see what you have against what you need. The count adds your bank (as of the last
 time you opened it), your inventory and your log basket, and updates as you go.
-
-### Tokkul and Karamja gloves
-
-![Karamja gloves](docs/marketing/feature-karamja-gloves.png)
-
-Wearing Karamja gloves makes the TzHaar shops about 13% cheaper and more than doubles what they pay back.
-Tick **I wear Karamja gloves** on the TzHaar page. It starts ticked once you've claimed the gloves from the
-Karamja easy diary, is saved per character, and **auto** goes back to following the diary. Buying the obsidian
-armour and cape to sell them back needs about 274K tokkul instead of 369K.
 
 ## How to use
 

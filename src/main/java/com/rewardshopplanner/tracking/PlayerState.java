@@ -47,10 +47,6 @@ public class PlayerState
 	private Map<String, Long> extraGoals = new LinkedHashMap<>();
 	/** Items the player will sell back to their shop once logged; nothing is sold back by default. */
 	private Set<String> sellBack = new LinkedHashSet<>();
-	/** Whether the Karamja gloves reward was claimed, as last read from the game. */
-	private boolean karamjaGlovesClaimed;
-	/** The player's own answer to "do you wear Karamja gloves at TzHaar"; null follows the diary. */
-	private Boolean karamjaGlovesChoice;
 	/** Account type as last read from the game, so it stays right while logged out. */
 	private AccountMode accountMode = AccountMode.MAIN;
 
@@ -85,20 +81,13 @@ public class PlayerState
 		return true;
 	}
 
-	public void setKaramjaGlovesClaimed(boolean claimed)
+	/** Drops picks of items and currencies the planner no longer offers, kept in older saved states. */
+	public void forgetRemoved(Set<String> items, Set<String> currencies)
 	{
-		karamjaGlovesClaimed = claimed;
-	}
-
-	public void setKaramjaGlovesChoice(Boolean choice)
-	{
-		karamjaGlovesChoice = choice;
-	}
-
-	/** TzHaar prices use Karamja gloves: the player's choice, else whether the diary gloves were claimed. */
-	public boolean wearsKaramjaGloves()
-	{
-		return karamjaGlovesChoice != null ? karamjaGlovesChoice : karamjaGlovesClaimed;
+		wanted.retainAll(items);
+		sellBack.retainAll(items);
+		preferredActivity.keySet().retainAll(items);
+		extraGoals.keySet().retainAll(currencies);
 	}
 
 	/** Owned slots after applying the player's corrections. */

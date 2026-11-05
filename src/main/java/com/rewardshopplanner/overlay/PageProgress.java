@@ -136,9 +136,9 @@ public class PageProgress
 			{
 				continue;
 			}
-			prices.add(offer.costFor(model.isKaramjaGloves()));
+			prices.add(offer.getCost());
 			refunds.add(model.getSellBack().contains(item)
-				? PlannerCalculator.sellBackValue(reward, offer, model.getAccountMode(), model.isKaramjaGloves())
+				? PlannerCalculator.sellBackValue(reward, offer, model.getAccountMode())
 				: Collections.emptyMap());
 		}
 

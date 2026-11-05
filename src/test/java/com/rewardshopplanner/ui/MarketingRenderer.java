@@ -70,14 +70,13 @@ public class MarketingRenderer
 	private final Set<String> wanted = new LinkedHashSet<>();
 	private final Set<String> sellBack = new LinkedHashSet<>();
 	private final Map<String, String> preferred = new HashMap<>();
-	private boolean gloves;
 	// simulated bank: some logs ready, some still to cut
 	private final Map<String, Long> materials = Map.of(
 		"Oak logs", 1_200L, "Willow logs", 900L, "Teak logs", 740L, "Maple logs", 1_340L, "Mahogany logs", 510L,
 		"Arctic pine logs", 120L, "Yew logs", 1_100L, "Magic logs", 260L, "Redwood logs", 0L, "Thread", 12L);
 	private final Map<String, Long> balances = Map.ofEntries(
 		Map.entry("anima_bark", 5_320L), Map.entry("pheasant_feather", 9L), Map.entry("golden_nugget", 150L),
-		Map.entry("pc_points", 135L), Map.entry("cw_ticket", 74L), Map.entry("termites", 410L), Map.entry("tokkul", 120_000L),
+		Map.entry("pc_points", 135L), Map.entry("cw_ticket", 74L), Map.entry("termites", 410L),
 		Map.entry("coins", 48_500L), Map.entry("ba_attacker", 1_240L), Map.entry("ba_collector", 860L),
 		Map.entry("ba_healer", 1_510L), Map.entry("ba_defender", 420L));
 
@@ -247,21 +246,7 @@ public class MarketingRenderer
 		add(frames, delays, trackingStill, 2400);
 		scrollTo(null);
 
-		// 6. TzHaar: the obsidian armour and cape, sold back, without and with Karamja gloves (the tooltip sits below the grid)
-		List<String> obsidian = List.of("Obsidian cape", "Obsidian helmet", "Obsidian platebody", "Obsidian platelegs");
-		wanted.addAll(obsidian);
-		sellBack.addAll(obsidian);
-		focus(panel, "tzhaar");
-		panel.update(model());
-		BufferedImage bare = withTooltip(snapshot(panel, null, 372), panel, "Obsidian platebody");
-		gloves = true;
-		panel.update(model());
-		BufferedImage withGloves = withTooltip(snapshot(panel, null, 372), panel, "Obsidian platebody");
-		gloves = false;
-		ImageIO.write(sideBySide(bare, "Without gloves", withGloves, "With Karamja gloves"), "png",
-			new File(OUT, "feature-karamja-gloves.png"));
-
-		// 7. for cloggers: tick a whole page, or track everything at once, and open pages right in the list
+		// 6. for cloggers: tick a whole page, or track everything at once, and open pages right in the list
 		Set<String> tour = new LinkedHashSet<>(wanted);
 		wanted.clear();
 		focus(panel, null);
@@ -302,10 +287,10 @@ public class MarketingRenderer
 	{
 		Plan plan = new PlannerCalculator(data).plan(PlannerInput.builder()
 			.owned(owned).wanted(wanted).balances(balances).preferredActivity(preferred)
-			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).karamjaGloves(gloves).build());
+			.accountMode(AccountMode.IRONMAN).sellBack(sellBack).build());
 		return new PanelModel(data, plan, balances, materials, owned, Set.of(),
 			data.getActivities().values().stream().map(a -> a.getClogPage()).collect(java.util.stream.Collectors.toSet()),
-			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, gloves, !gloves, false, false);
+			wanted, preferred, Map.of(), Map.of(), AccountMode.IRONMAN, sellBack, false);
 	}
 
 	private static BufferedImage icon(int itemId, Runnable onLoaded)
@@ -643,7 +628,7 @@ public class MarketingRenderer
 		Map<String, Long> points = Map.of("pieces_of_eight", 2_240L, "mta_tele", 1_900L, "mta_alch", 3_075L, "mta_ench", 12_400L, "mta_grave", 980L);
 		Plan plan = new PlannerCalculator(data).plan(PlannerInput.builder().wanted(goal).balances(points).build());
 		PanelModel sample = new PanelModel(data, plan, points, Map.of(), Set.of(), Set.of(), Set.of(), goal,
-			Map.of(), Map.of(), Map.of(), AccountMode.MAIN, Set.of(), false, true, false, false);
+			Map.of(), Map.of(), Map.of(), AccountMode.MAIN, Set.of(), false);
 		List<com.rewardshopplanner.overlay.PageProgress> brewing =
 			List.of(com.rewardshopplanner.overlay.PageProgress.of(sample, data.getActivities().get("trouble_brewing")));
 		List<com.rewardshopplanner.overlay.PageProgress> arena =
@@ -757,29 +742,6 @@ public class MarketingRenderer
 		return image;
 	}
 
-	/** Two panel snapshots next to each other, each with a caption above. */
-	private static BufferedImage sideBySide(BufferedImage left, String leftTitle, BufferedImage right, String rightTitle)
-	{
-		int gap = 24;
-		int top = 52;
-		int w = left.getWidth() + right.getWidth() + gap * 3;
-		int h = Math.max(left.getHeight(), right.getHeight()) + top + gap;
-		BufferedImage image = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g = image.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setPaint(new GradientPaint(0, 0, new Color(0x1b1b1b), w, h, new Color(0x2b2118)));
-		g.fillRect(0, 0, w, h);
-		g.setFont(FontManager.getRunescapeBoldFont().deriveFont(26f));
-		g.setColor(new Color(0xb5b5b5));
-		g.drawString(leftTitle, gap, 38);
-		g.setColor(ColorScheme.BRAND_ORANGE);
-		g.drawString(rightTitle, gap * 2 + left.getWidth(), 38);
-		g.drawImage(left, gap, top, null);
-		g.drawImage(right, gap * 2 + left.getWidth(), top, null);
-		g.dispose();
-		return image;
-	}
-
 	private static BufferedImage hero(BufferedImage home, BufferedImage page)
 	{
 		int w = 1280;
@@ -814,7 +776,7 @@ public class MarketingRenderer
 		g.setFont(new Font("SansSerif", Font.PLAIN, 19));
 		g.setColor(new Color(0xb5b5b5));
 		String[] points = {
-			"28 minigames and activities",
+			"27 minigames and activities",
 			"Balances read straight from the game",
 			"Pick items, see what's left to earn",
 			"Progress on screen while you play",

@@ -36,7 +36,7 @@ public class PageProgressTest
 	{
 		PlannerInput input = PlannerInput.builder().owned(owned).wanted(wanted).balances(balances).extraGoals(extraGoals).build();
 		return new PanelModel(data, new PlannerCalculator(data).plan(input), balances, Map.of(), owned, Set.of(), Set.of(), wanted,
-			Map.of(), extraGoals, Map.of(), AccountMode.MAIN, Set.of(), false, true, false, false);
+			Map.of(), extraGoals, Map.of(), AccountMode.MAIN, Set.of(), false);
 	}
 
 	@Test
@@ -63,20 +63,18 @@ public class PageProgressTest
 	@Test
 	public void readyCountsPurchasesOneAfterAnother()
 	{
-		// the whole TzHaar page, sold back as it's logged, with Karamja gloves and 99,629 tokkul:
-		// each item alone is affordable except the platebody, but in a row only three fit
-		Activity tzhaar = data.getActivities().get("tzhaar");
-		Set<String> page = tzhaar.getClogItems().stream().filter(i -> data.getReward(i) != null).collect(java.util.stream.Collectors.toSet());
-		Map<String, Long> balances = Map.of("tokkul", 99_629L);
-		PlannerInput input = PlannerInput.builder().wanted(page).balances(balances).sellBack(page).karamjaGloves(true).build();
+		// both sold back as they're logged, with 15,400 bark: each one alone is affordable, but the
+		// cape pouch (2,500, 2,000 back) leaves 14,900, short of the funky shaped log at 15,000
+		Activity forestry = data.getActivities().get("forestry");
+		Set<String> goal = Set.of("Cape pouch", "Funky shaped log");
+		Map<String, Long> balances = Map.of("anima_bark", 15_400L);
+		PlannerInput input = PlannerInput.builder().wanted(goal).balances(balances).sellBack(goal).build();
 		PanelModel model = new PanelModel(data, new PlannerCalculator(data).plan(input), balances, Map.of(), Set.of(), Set.of(), Set.of(),
-			page, Map.of(), Map.of(), Map.of(), AccountMode.MAIN, page, true, true, false, false);
+			goal, Map.of(), Map.of(), Map.of(), AccountMode.MAIN, goal, false);
 
-		PageProgress progress = PageProgress.of(model, tzhaar);
-		assertEquals(10, progress.getLeft());
-		// Toktz-xil-ul (325, 87 back), Toktz-xil-ek (32,500, 8,750 back), Toktz-mej-tal (45,500, 12,250 back)
-		// leave 42,391: not enough for the next cheapest, the Toktz-xil-ak at 52,000
-		assertEquals(3, progress.getReady());
+		PageProgress progress = PageProgress.of(model, forestry);
+		assertEquals(2, progress.getLeft());
+		assertEquals(1, progress.getReady());
 	}
 
 	@Test

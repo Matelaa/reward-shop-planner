@@ -192,11 +192,10 @@ public class PlannerPanel extends PluginPanel
 		int selling = (int) model.getSellBack().stream()
 			.filter(i -> model.getWanted().contains(i) && !model.getOwned().contains(i))
 			.count();
-		JLabel mode = label(modeName() + (selling > 0 ? " · selling back " + selling : "") + (model.isKaramjaGloves() ? " · Karamja gloves" : ""),
+		JLabel mode = label(modeName() + (selling > 0 ? " · selling back " + selling : ""),
 			FontManager.getRunescapeSmallFont(), MUTED);
 		mode.setToolTipText("<html>Your account type is read from the game; a few items can't be sold back by every type.<br>"
-			+ "Nothing is sold back unless you choose it: right-click an item, \"Sell back after logging it\".<br>"
-			+ "Karamja gloves (TzHaar prices) are ticked on the TzHaar page.</html>");
+			+ "Nothing is sold back unless you choose it: right-click an item, \"Sell back after logging it\".</html>");
 		content.add(mode);
 		content.add(Box.createVerticalStrut(8));
 
@@ -514,12 +513,6 @@ public class PlannerPanel extends PluginPanel
 			}
 		}
 
-		if (hasGlovePrices(activity))
-		{
-			body.add(Box.createVerticalStrut(6));
-			body.add(glovesRow());
-		}
-
 		body.add(Box.createVerticalStrut(12));
 		List<String> items = activity.getClogItems().stream()
 			.filter(i -> model.getData().getReward(i) != null)
@@ -558,52 +551,6 @@ public class PlannerPanel extends PluginPanel
 		body.add(Box.createVerticalStrut(8));
 		body.add(wrapped("Click to add or remove from your goal. Right-click for more.", MUTED));
 		return body;
-	}
-
-	private boolean hasGlovePrices(Activity activity)
-	{
-		return activity.getClogItems().stream()
-			.map(i -> model.getData().getReward(i))
-			.anyMatch(r -> r != null && r.getOffers().stream().anyMatch(o -> o.getKaramjaGlovesCost() != null));
-	}
-
-	/** "I wear Karamja gloves" checkbox; starts from the diary, with an "auto" link once changed. */
-	private JComponent glovesRow()
-	{
-		JPanel row = row();
-		JCheckBox box = new JCheckBox("I wear Karamja gloves", model.isKaramjaGloves())
-		{
-			@Override
-			public JToolTip createToolTip()
-			{
-				return Tooltips.create(this);
-			}
-		};
-		box.setFont(FontManager.getRunescapeSmallFont());
-		box.setForeground(Color.WHITE);
-		box.setOpaque(false);
-		box.setFocusPainted(false);
-		box.setBorder(new EmptyBorder(0, 0, 0, 0));
-		box.setToolTipText("<html>Karamja gloves make TzHaar items about 13% cheaper<br>and more than double what the shops pay back.</html>");
-		box.addActionListener(e -> plugin.setKaramjaGloves(box.isSelected()));
-		row.add(box, BorderLayout.WEST);
-		if (model.isKaramjaGlovesAuto())
-		{
-			JLabel auto = label("from diary", FontManager.getRunescapeSmallFont(), MUTED);
-			auto.setToolTipText(model.isKaramjaGlovesClaimed()
-				? "You claimed the gloves from the Karamja easy diary"
-				: "You haven't claimed the gloves from the Karamja easy diary");
-			row.add(auto, BorderLayout.EAST);
-		}
-		else
-		{
-			JLabel auto = link("auto", () -> plugin.setKaramjaGloves(null));
-			auto.setToolTipText("Go back to following the Karamja easy diary ("
-				+ (model.isKaramjaGlovesClaimed() ? "gloves claimed" : "gloves not claimed") + ")");
-			row.add(auto, BorderLayout.EAST);
-		}
-		row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 20));
-		return row;
 	}
 
 	private JComponent itemSlot(String item, Reward reward)
@@ -681,7 +628,7 @@ public class PlannerPanel extends PluginPanel
 			for (Reward.Offer offer : reward.getOffers())
 			{
 				String activityId = offer.getActivities().get(0);
-				JRadioButtonMenuItem choice = new JRadioButtonMenuItem(activityName(activityId) + " (" + formatCost(price(offer)) + ")",
+				JRadioButtonMenuItem choice = new JRadioButtonMenuItem(activityName(activityId) + " (" + formatCost(offer.getCost()) + ")",
 					offer.getActivities().contains(preferred));
 				choice.addActionListener(e -> plugin.setPreferredActivity(item, activityId));
 				group.add(choice);
@@ -987,9 +934,9 @@ public class PlannerPanel extends PluginPanel
 		{
 			return "Can be sold back to the shop after you log it.";
 		}
-		Map<String, Long> back = PlannerCalculator.sellBackValue(reward, offer, model.getAccountMode(), model.isKaramjaGloves());
+		Map<String, Long> back = PlannerCalculator.sellBackValue(reward, offer, model.getAccountMode());
 		Map<String, Long> spent = new LinkedHashMap<>();
-		price(offer).forEach((currency, amount) -> spent.put(currency, amount - back.getOrDefault(currency, 0L)));
+		offer.getCost().forEach((currency, amount) -> spent.put(currency, amount - back.getOrDefault(currency, 0L)));
 		if (model.getSellBack().contains(item))
 		{
 			return "↩ Selling back for " + formatAmounts(back) + " after you log it: you really spend " + formatAmounts(spent) + ".";
@@ -1006,13 +953,7 @@ public class PlannerPanel extends PluginPanel
 		}
 		Reward.Offer chosen = chosenOffer(item, reward);
 		List<Reward.Offer> offers = chosen != null ? List.of(chosen) : reward.getOffers();
-		return offers.stream().anyMatch(o -> !PlannerCalculator.sellBackValue(reward, o, model.getAccountMode(), model.isKaramjaGloves()).isEmpty());
-	}
-
-	/** What the player pays at this shop, with Karamja gloves when they wear them. */
-	private Map<String, Integer> price(Reward.Offer offer)
-	{
-		return offer.costFor(model.isKaramjaGloves());
+		return offers.stream().anyMatch(o -> !PlannerCalculator.sellBackValue(reward, o, model.getAccountMode()).isEmpty());
 	}
 
 	/** "↩ N currency back from sell-backs" for a page, when its goal includes any. */
@@ -1072,7 +1013,7 @@ public class PlannerPanel extends PluginPanel
 				if (reward.getOffers().size() > 1)
 				{
 					return reward.getOffers().stream()
-						.map(o -> formatCost(price(o)) + " (" + activityName(o.getActivities().get(0)) + ")")
+						.map(o -> formatCost(o.getCost()) + " (" + activityName(o.getActivities().get(0)) + ")")
 						.collect(Collectors.joining(" or "));
 				}
 				if (reward.getOffers().isEmpty())
@@ -1080,8 +1021,7 @@ public class PlannerPanel extends PluginPanel
 					return "";
 				}
 				Reward.Offer offer = reward.getOffers().get(0);
-				return formatCost(price(offer)) + (reward.getSet() != null ? " for the whole set" : "")
-					+ (model.isKaramjaGloves() && offer.getKaramjaGlovesCost() != null ? " (with Karamja gloves)" : "");
+				return formatCost(offer.getCost()) + (reward.getSet() != null ? " for the whole set" : "");
 		}
 	}
 

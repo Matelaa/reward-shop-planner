@@ -369,15 +369,6 @@ public class RewardShopPlannerPlugin extends Plugin
 			refresh();
 			return;
 		}
-		if (event.getVarbitId() == VarbitID.ATJUN_EASY_REWARD)
-		{
-			if (readKaramjaGloves())
-			{
-				saveState();
-			}
-			refresh();
-			return;
-		}
 		Currency composite = event.getVarbitId() != -1 ? compositeCurrencies.get(event.getVarbitId()) : null;
 		if (composite != null)
 		{
@@ -908,7 +899,6 @@ public class RewardShopPlannerPlugin extends Plugin
 	private void readGameValues()
 	{
 		boolean changed = detectAccountMode();
-		changed |= readKaramjaGloves();
 		for (Currency currency : varpCurrencies.values())
 		{
 			changed |= updateVarBalance(currency, client.getVarpValue(currency.getVarId()));
@@ -941,18 +931,6 @@ public class RewardShopPlannerPlugin extends Plugin
 			default:
 				return state.setAccountMode(AccountMode.IRONMAN);
 		}
-	}
-
-	/** Remembers whether the Karamja gloves were claimed; true when that changed. */
-	private synchronized boolean readKaramjaGloves()
-	{
-		boolean claimed = client.getVarbitValue(VarbitID.ATJUN_EASY_REWARD) == 1;
-		if (state.isKaramjaGlovesClaimed() == claimed)
-		{
-			return false;
-		}
-		state.setKaramjaGlovesClaimed(claimed);
-		return true;
 	}
 
 	private synchronized boolean updateVarBalance(Currency currency, long value)
@@ -1154,17 +1132,6 @@ public class RewardShopPlannerPlugin extends Plugin
 		refresh();
 	}
 
-	/** Whether the player wears Karamja gloves at TzHaar; null goes back to the diary. */
-	public void setKaramjaGloves(Boolean wears)
-	{
-		synchronized (this)
-		{
-			state.setKaramjaGlovesChoice(wears);
-		}
-		savePlayerChange();
-		refresh();
-	}
-
 	public void setExtraGoal(String currencyId, Long amount)
 	{
 		synchronized (this)
@@ -1219,6 +1186,7 @@ public class RewardShopPlannerPlugin extends Plugin
 			}
 		}
 		state = loaded != null ? loaded : new PlayerState();
+		state.forgetRemoved(data.getRewards().keySet(), data.getCurrencies().keySet());
 		log.debug("Reward Shop Planner: loaded state for profile {} ({} wanted, {} owned, {} corrections)",
 			configManager.getRSProfileKey(), state.getWanted().size(), state.getOwned().size(), state.getOwnedOverrides().size());
 	}
@@ -1274,7 +1242,6 @@ public class RewardShopPlannerPlugin extends Plugin
 
 			Set<String> owned = state.effectiveOwned();
 			AccountMode mode = state.getAccountMode();
-			boolean gloves = state.wearsKaramjaGloves();
 			Set<String> sellBack = new HashSet<>(state.getSellBack());
 			PlannerInput input = PlannerInput.builder()
 				.owned(owned)
@@ -1284,7 +1251,6 @@ public class RewardShopPlannerPlugin extends Plugin
 				.preferredActivity(new HashMap<>(state.getPreferredActivity()))
 				.accountMode(mode)
 				.sellBack(sellBack)
-				.karamjaGloves(gloves)
 				.build();
 			Plan plan = calculator.plan(input);
 
@@ -1308,9 +1274,6 @@ public class RewardShopPlannerPlugin extends Plugin
 				new HashMap<>(state.getManualBalances()),
 				mode,
 				sellBack,
-				gloves,
-				state.getKaramjaGlovesChoice() == null,
-				state.isKaramjaGlovesClaimed(),
 				config.hideCompleted());
 		}
 		ProgressTracker tracker = progress;

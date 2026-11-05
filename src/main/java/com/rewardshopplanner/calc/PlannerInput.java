@@ -45,10 +45,6 @@ public class PlannerInput
 	@Builder.Default
 	private final Set<String> sellBack = Collections.emptySet();
 
-	/** The player wears Karamja gloves at TzHaar: cheaper prices and better sell-backs. */
-	@Builder.Default
-	private final boolean karamjaGloves = false;
-
 	public boolean isSellBack(String item)
 	{
 		return sellBack.contains(item);

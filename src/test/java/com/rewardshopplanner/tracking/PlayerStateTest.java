@@ -5,6 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Map;
+import java.util.Set;
 import org.junit.Test;
 
 public class PlayerStateTest
@@ -98,20 +100,20 @@ public class PlayerStateTest
 	}
 
 	@Test
-	public void karamjaGlovesFollowTheDiaryUntilThePlayerChooses()
+	public void forgetsPicksThePlannerNoLongerOffers()
 	{
 		PlayerState state = new PlayerState();
-		assertFalse(state.wearsKaramjaGloves());
-		state.setKaramjaGlovesClaimed(true);
-		assertTrue(state.wearsKaramjaGloves());
+		state.getWanted().addAll(Set.of("Obsidian cape", "Forestry hat"));
+		state.getSellBack().addAll(Set.of("Obsidian cape", "Forestry hat"));
+		state.getPreferredActivity().put("Obsidian cape", "tzhaar");
+		state.getExtraGoals().put("tokkul", 1_000L);
+		state.getExtraGoals().put("anima_bark", 1_500L);
 
-		// the player's choice wins either way, and "auto" goes back to the diary
-		state.setKaramjaGlovesChoice(false);
-		assertFalse(state.wearsKaramjaGloves());
-		state.setKaramjaGlovesClaimed(false);
-		state.setKaramjaGlovesChoice(true);
-		assertTrue(state.wearsKaramjaGloves());
-		state.setKaramjaGlovesChoice(null);
-		assertFalse(state.wearsKaramjaGloves());
+		state.forgetRemoved(Set.of("Forestry hat"), Set.of("anima_bark"));
+
+		assertEquals(Set.of("Forestry hat"), state.getWanted());
+		assertEquals(Set.of("Forestry hat"), state.getSellBack());
+		assertTrue(state.getPreferredActivity().isEmpty());
+		assertEquals(Map.of("anima_bark", 1_500L), state.getExtraGoals());
 	}
 }
